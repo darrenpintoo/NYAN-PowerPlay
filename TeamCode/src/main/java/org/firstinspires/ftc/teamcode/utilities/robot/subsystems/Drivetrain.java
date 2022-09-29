@@ -11,7 +11,7 @@ public class Drivetrain implements Subsystem {
 
     private final DcMotorEx.ZeroPowerBehavior START_ZERO_POWER_BEHAVIOR = DcMotor.ZeroPowerBehavior.FLOAT;
 
-    private BNO055IMU internalIMU;
+    private InternalIMU internalIMU;
 
     private DcMotorEx rightFrontMotor;
     private DcMotorEx leftFrontMotor;
@@ -23,11 +23,7 @@ public class Drivetrain implements Subsystem {
     @Override
     public void onInit(HardwareMap hardwareMap) {
 
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.angleUnit = BNO055IMU.AngleUnit.RADIANS;
-
-        this.internalIMU = hardwareMap.get(BNO055IMU.class, "imu");
-        this.internalIMU.initialize(parameters);
+        this.internalIMU = InternalIMU.getInstance();
 
         this.rightFrontMotor = (DcMotorEx) hardwareMap.get(DcMotor.class, "rightFrontMotor");
         this.leftFrontMotor = (DcMotorEx) hardwareMap.get(DcMotor.class, "leftFrontMotor");
@@ -64,7 +60,7 @@ public class Drivetrain implements Subsystem {
     }
 
     public void fieldCentricDriveFromGamepad(double leftJoystickY, double leftJoystickX, double rightJoystickX) {
-        double currentRobotOrientation = -this.internalIMU.getAngularOrientation().firstAngle;
+        double currentRobotOrientation = this.internalIMU.getCurrentFrameHeadingCCW();
 
         // todo: write code for field centric drive
     }

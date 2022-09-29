@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.utilities.robot;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.Drivetrain;
+import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.InternalIMU;
 import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.Subsystem;
 
 import java.util.ArrayList;
@@ -9,8 +11,13 @@ import java.util.ArrayList;
 public class Robot {
     private static Robot robotInstance = null;
 
-    private static final Subsystem[] robotSubsystems = new Subsystem[] {
+    public final InternalIMU internalIMU = InternalIMU.getInstance();
 
+    public final Drivetrain drivetrain = new Drivetrain();
+
+    private final Subsystem[] robotSubsystems = new Subsystem[] {
+            drivetrain,
+            internalIMU
     };
 
     private Robot() {
@@ -20,27 +27,27 @@ public class Robot {
     }
 
     public static Robot getInstance() {
-        if (robotInstance == null) {
+        if (Robot.robotInstance == null) {
             Robot.robotInstance = new Robot();
         }
 
         return Robot.robotInstance;
     }
 
-    public static void init(HardwareMap hardwareMap) {
-        for (Subsystem subsystem : Robot.robotSubsystems) {
+    public void init(HardwareMap hardwareMap) {
+        for (Subsystem subsystem : this.robotSubsystems) {
             subsystem.onInit(hardwareMap);
         }
     }
 
-    public static void postInit() {
-        for (Subsystem subsystem : Robot.robotSubsystems) {
+    public void postInit() {
+        for (Subsystem subsystem : this.robotSubsystems) {
             subsystem.onOpmodeStarted();
         }
     }
 
-    public static void update() {
-        for (Subsystem subsystem : Robot.robotSubsystems) {
+    public void update() {
+        for (Subsystem subsystem : this.robotSubsystems) {
             subsystem.onCyclePassed();
         }
     }
