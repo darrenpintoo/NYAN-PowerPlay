@@ -24,6 +24,9 @@ public class TemplateTeleop extends LinearOpMode {
 
         waitForStart();
 
+        // Notify subsystems before loop
+        robot.postInit();
+
         if (isStopRequested()) return;
 
         // Initialize variables for loop
@@ -48,8 +51,8 @@ public class TemplateTeleop extends LinearOpMode {
 
             robot.drivetrain.robotCentricDriveFromGamepad(
                     currentFrameGamepad1.left_stick_y,
-                    currentFrameGamepad2.left_stick_x,
-                    currentFrameGamepad2.right_stick_x
+                    currentFrameGamepad1.left_stick_x,
+                    currentFrameGamepad1.right_stick_x
             );
 
             robot.update();

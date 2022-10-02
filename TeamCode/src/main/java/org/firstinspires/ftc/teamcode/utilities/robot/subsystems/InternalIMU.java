@@ -4,8 +4,10 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.teamcode.utilities.robot.Robot;
 
+/**
+ * Robot IMU
+ */
 public class InternalIMU implements Subsystem {
 
     private static InternalIMU imuInstance = null;
