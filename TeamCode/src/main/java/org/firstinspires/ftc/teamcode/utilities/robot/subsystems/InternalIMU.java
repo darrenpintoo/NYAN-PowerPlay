@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode.utilities.robot.subsystems;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.AngularVelocity;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 /**
@@ -14,6 +16,7 @@ public class InternalIMU implements Subsystem {
     private BNO055IMU internalIMU;
 
     private Orientation currentFrameOrientation;
+    private AngularVelocity currentFrameVelocity;
 
     private InternalIMU() {
         if (InternalIMU.imuInstance != null) {
@@ -29,12 +32,15 @@ public class InternalIMU implements Subsystem {
         return InternalIMU.imuInstance;
     }
     @Override
-    public void onInit(HardwareMap hardwareMap) {
+    public void onInit(HardwareMap hardwareMap, Telemetry telemetry) {
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.RADIANS;
 
         this.internalIMU = hardwareMap.get(BNO055IMU.class, "imu");
         this.internalIMU.initialize(parameters);
+
+        telemetry.addData("Finished Initializing", this.internalIMU);
+
     }
 
     @Override
@@ -45,6 +51,7 @@ public class InternalIMU implements Subsystem {
     @Override
     public void onCyclePassed() {
         this.currentFrameOrientation = internalIMU.getAngularOrientation();
+        this.currentFrameVelocity = internalIMU.getAngularVelocity();
     }
 
     public Orientation getCurrentFrameOrientation() {
@@ -56,9 +63,24 @@ public class InternalIMU implements Subsystem {
         return this.currentFrameOrientation.firstAngle;
     }
 
+    public AngularVelocity getCurrentFrameVelocity() {
+        return this.currentFrameVelocity;
+    }
+
+    public double getCurrentFrameTiltVelocity() {
+        return this.getCurrentFrameVelocity().yRotationRate;
+    }
+
+    public double getCurrentFrameTilt() {
+        return this.currentFrameOrientation.secondAngle;
+    }
+
     public double getCurrentFrameHeadingCCW() {
-        // todo: find out which index represents orientation
         return -this.getCurrentFrameHeadingCW();
+    }
+
+    public boolean isRobotTilted() {
+        return Math.abs(this.getCurrentFrameTiltVelocity()) > 1;
     }
 
 }

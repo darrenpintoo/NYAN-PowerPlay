@@ -1,7 +1,9 @@
 package org.firstinspires.ftc.teamcode.utilities.robot;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.Drivetrain;
 import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.InternalIMU;
 import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.Subsystem;
@@ -12,6 +14,9 @@ public class Robot {
     public final InternalIMU internalIMU = InternalIMU.getInstance();
 
     public final Drivetrain drivetrain = new Drivetrain();
+
+
+    private final ElapsedTime frameTimer = new ElapsedTime();
 
     private final Subsystem[] robotSubsystems = new Subsystem[] {
             drivetrain,
@@ -32,10 +37,12 @@ public class Robot {
         return Robot.robotInstance;
     }
 
-    public void init(HardwareMap hardwareMap) {
+    public void init(HardwareMap hardwareMap, Telemetry telemetry) {
         for (Subsystem subsystem : this.robotSubsystems) {
-            subsystem.onInit(hardwareMap);
+            subsystem.onInit(hardwareMap, telemetry);
         }
+
+        telemetry.update();
     }
 
     public void postInit() {
@@ -44,10 +51,14 @@ public class Robot {
         }
     }
 
-    public void update() {
+    public double update() {
         for (Subsystem subsystem : this.robotSubsystems) {
             subsystem.onCyclePassed();
         }
+
+        double frameTime = frameTimer.milliseconds();
+        frameTimer.reset();
+        return frameTime;
     }
 
 }
