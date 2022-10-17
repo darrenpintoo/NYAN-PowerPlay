@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.Drivetrain;
+import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.InternalIMU;
 import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.Subsystem;
 
@@ -14,11 +15,12 @@ public class Robot {
     public final InternalIMU internalIMU = InternalIMU.getInstance();
 
     public final Drivetrain drivetrain = new Drivetrain();
-
+    public final Intake intake = new Intake();
 
     private final ElapsedTime frameTimer = new ElapsedTime();
 
     private final Subsystem[] robotSubsystems = new Subsystem[] {
+            intake,
             drivetrain,
             internalIMU
     };

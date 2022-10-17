@@ -10,13 +10,14 @@ import org.firstinspires.ftc.teamcode.utilities.robot.Robot;
 /**
  * Example teleop code for a basic mecanum drive
  */
-@TeleOp(name = "Template Teleop")
-public class TemplateTeleop extends LinearOpMode {
+@TeleOp(name = "Main Mecanum Drive")
+public class MainMecanumDrive extends LinearOpMode {
 
     // Create new Instance of the robot
     Robot robot = Robot.getInstance();
 
-    private boolean fieldCentric = false;
+    private boolean intakeOn = false;
+    private int intakeDirection = 1;
 
     @Override
     public void runOpMode() {
@@ -55,27 +56,40 @@ public class TemplateTeleop extends LinearOpMode {
 
             }
 
-            telemetry.addData("Field Centric: ", fieldCentric);
+            telemetry.addData("IMU orientation: ", robot.internalIMU.getCurrentFrameOrientation());
+            telemetry.addData("CCW IMU orientation: ", robot.internalIMU.getCurrentFrameHeadingCCW());
+
+            telemetry.addData("CW IMU orientation: ", robot.internalIMU.getCurrentFrameHeadingCW());
+            telemetry.addData("Robot Tilt : ", robot.internalIMU.getCurrentFrameTilt());
+            telemetry.addData("Time to get: ", robot.internalIMU.getCurrentFrameOrientation().acquisitionTime);
+            telemetry.addData("Robot Tilt Acceleration y: ", robot.internalIMU.getCurrentFrameVelocity().yRotationRate);
+            telemetry.addLine(String.valueOf(intakeDirection));
+
+            telemetry.addData("Intake on: ", intakeOn);
 
             telemetry.update();
 
             if (currentFrameGamepad1.a != previousFrameGamepad1.a && currentFrameGamepad1.a) {
-                fieldCentric = !fieldCentric;
+                intakeOn = !intakeOn;
+                intakeDirection = 1;
             }
 
-            if (fieldCentric) {
-                robot.drivetrain.fieldCentricDriveFromGamepad(
-                        currentFrameGamepad1.left_stick_y,
-                        currentFrameGamepad1.left_stick_x,
-                        currentFrameGamepad1.right_stick_x
-                );
-            } else {
-                robot.drivetrain.robotCentricDriveFromGamepad(
-                        currentFrameGamepad1.left_stick_y,
-                        currentFrameGamepad1.left_stick_x,
-                        currentFrameGamepad1.right_stick_x
-                );
+            if (currentFrameGamepad1.b != previousFrameGamepad1.b && currentFrameGamepad1.b) {
+                intakeOn = !intakeOn;
+                intakeDirection = -1;
             }
+
+            if (intakeOn) {
+                robot.intake.enableIntakeMotor(intakeDirection);
+            } else {
+                robot.intake.disableIntakeMotor();
+            }
+
+            robot.drivetrain.fieldCentricDriveFromGamepad(
+                    currentFrameGamepad1.left_stick_y,
+                    currentFrameGamepad1.left_stick_x,
+                    currentFrameGamepad1.right_stick_x
+            );
 
             double frameTime = robot.update();
 

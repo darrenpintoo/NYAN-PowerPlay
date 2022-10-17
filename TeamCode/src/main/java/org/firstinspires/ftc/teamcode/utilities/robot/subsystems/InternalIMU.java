@@ -80,7 +80,7 @@ public class InternalIMU implements Subsystem {
     }
 
     public boolean isRobotTilted() {
-        return Math.abs(this.getCurrentFrameTiltVelocity()) > 1;
+        return Math.abs(this.getCurrentFrameTilt()) > 0.25;
     }
 
 }
