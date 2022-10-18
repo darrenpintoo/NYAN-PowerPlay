@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.exception.RobotCoreException;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
+import org.firstinspires.ftc.teamcode.utilities.controltheory.feedback.GeneralPIDController;
 import org.firstinspires.ftc.teamcode.utilities.robot.Robot;
 
 /**
@@ -16,8 +17,7 @@ public class MainMecanumDrive extends LinearOpMode {
     // Create new Instance of the robot
     Robot robot = Robot.getInstance();
 
-    private boolean intakeOn = false;
-    private int intakeDirection = 1;
+    GeneralPIDController pid = new GeneralPIDController(5, 0, 2, 0);
 
     @Override
     public void runOpMode() {
@@ -63,25 +63,14 @@ public class MainMecanumDrive extends LinearOpMode {
             telemetry.addData("Robot Tilt : ", robot.internalIMU.getCurrentFrameTilt());
             telemetry.addData("Time to get: ", robot.internalIMU.getCurrentFrameOrientation().acquisitionTime);
             telemetry.addData("Robot Tilt Acceleration y: ", robot.internalIMU.getCurrentFrameVelocity().yRotationRate);
-            telemetry.addLine(String.valueOf(intakeDirection));
-
-            telemetry.addData("Intake on: ", intakeOn);
 
             telemetry.update();
 
             if (currentFrameGamepad1.a != previousFrameGamepad1.a && currentFrameGamepad1.a) {
-                intakeOn = !intakeOn;
-                intakeDirection = 1;
-            }
-
-            if (currentFrameGamepad1.b != previousFrameGamepad1.b && currentFrameGamepad1.b) {
-                intakeOn = !intakeOn;
-                intakeDirection = -1;
-            }
-
-            if (intakeOn) {
-                robot.intake.enableIntakeMotor(intakeDirection);
-            } else {
+                robot.intake.enableIntakeMotor(false);
+            } else if (currentFrameGamepad1.b != previousFrameGamepad1.b && currentFrameGamepad1.b) {
+                robot.intake.enableIntakeMotor(true);
+            } else if (currentFrameGamepad1.a != previousFrameGamepad1.a || currentFrameGamepad1.b != previousFrameGamepad1.b) {
                 robot.intake.disableIntakeMotor();
             }
 
@@ -94,6 +83,7 @@ public class MainMecanumDrive extends LinearOpMode {
             double frameTime = robot.update();
 
             telemetry.addData("Frame Time: ", frameTime);
+            telemetry.addData("Refresh Rate: ", (frameTime != 0) ? (1 / frameTime) : "inf");
         }
     }
 }

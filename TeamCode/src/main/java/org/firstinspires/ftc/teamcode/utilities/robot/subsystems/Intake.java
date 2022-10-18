@@ -33,7 +33,7 @@ public class Intake implements Subsystem {
 
     @Override
     public void onOpmodeStarted() {
-        this.enableIntakeMotor(1);
+        this.enableIntakeMotor(false);
     }
 
     @Override
@@ -41,7 +41,10 @@ public class Intake implements Subsystem {
 
     }
 
-    public void enableIntakeMotor(int intakeDirection) {
+    public void enableIntakeMotor(boolean directionReversed) {
+
+        int intakeDirection = directionReversed ? -1 : 1;
+
         t.addLine("Intake on");
         this.rightMotor.setPower(ON_MOTOR_POWER * intakeDirection);
         this.leftMotor.setPower(ON_MOTOR_POWER * intakeDirection);

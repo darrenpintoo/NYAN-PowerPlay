@@ -79,7 +79,6 @@ public class Drivetrain implements Subsystem {
         double rightFrontPower = (leftJoystickY - leftJoystickX - rightJoystickX) / denominator;
         double rightBackPower = (leftJoystickY + leftJoystickX - rightJoystickX) / denominator;
 
-
         if (enableAntiTip && this.internalIMU.isRobotTilted()) {
             leftBackPower = 0;
             leftFrontPower = 0;
