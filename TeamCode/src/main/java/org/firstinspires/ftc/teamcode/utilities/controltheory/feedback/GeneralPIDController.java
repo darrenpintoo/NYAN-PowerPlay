@@ -25,7 +25,7 @@ public class GeneralPIDController {
 
     private double[] getNumericalValues(double currentState, double targetState) {
 
-        double currentUpdateError = targetState - currentState;
+        double currentUpdateError = Math.abs(targetState - currentState);
 
         long deltaTime = this.lastUpdateTime == -1 ? 0 : System.currentTimeMillis() - lastUpdateTime;
         double changeInError = this.lastUpdateError == -1 ? 0 : currentUpdateError - this.lastUpdateError;;

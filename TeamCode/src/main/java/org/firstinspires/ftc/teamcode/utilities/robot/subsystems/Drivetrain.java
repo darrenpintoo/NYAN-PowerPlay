@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.utilities.controltheory.feedback.GeneralPIDController;
 
 /**
  * Robot Drivetrain
@@ -24,6 +25,10 @@ public class Drivetrain implements Subsystem {
     private DcMotorEx[] drivetrainMotors;
 
     private boolean enableAntiTip = false;
+
+    GeneralPIDController headingPID = new GeneralPIDController(1, 0, 0, 0);
+
+    Telemetry t;
 
     @Override
     public void onInit(HardwareMap hardwareMap, Telemetry telemetry) {
@@ -48,6 +53,7 @@ public class Drivetrain implements Subsystem {
             this.rightBackMotor
         };
 
+        this.t = telemetry;
     }
 
     public void enableAntiTip() {
@@ -101,6 +107,26 @@ public class Drivetrain implements Subsystem {
                 rightJoystickX
         );
         // todo: write code for field centric drive
+    }
+
+    public void fieldCentricRotationPIDFromGamepad(double leftJoystickY, double leftJoystickX, double rightJoystickY, double rightJoystickX) {
+/*        this.fieldCentricDriveFromGamepad(
+                leftJoystickY,
+                leftJoystickX,
+                this.headingPID.getOutputFromError(
+                        Math.atan2(rightJoystickY, rightJoystickX),
+                        rightJoystickX
+                )
+        );*/
+
+        double rotatedX = rightJoystickY;
+        double rotatedY = -rightJoystickX;
+        double rotationDegrees = Math.atan2(rotatedY, rotatedX) + Math.PI;
+
+        t.addData("Rotation Degrees: ", rotationDegrees);
+        t.addData("Error: ", rotationDegrees + this.internalIMU.getCurrentFrameHeadingCCW());
+
+
     }
 
     public void setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior newZeroPowerBehavior) {

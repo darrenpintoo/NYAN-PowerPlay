@@ -74,9 +74,10 @@ public class MainMecanumDrive extends LinearOpMode {
                 robot.intake.disableIntakeMotor();
             }
 
-            robot.drivetrain.fieldCentricDriveFromGamepad(
+            robot.drivetrain.fieldCentricRotationPIDFromGamepad(
                     currentFrameGamepad1.left_stick_y,
                     currentFrameGamepad1.left_stick_x,
+                    currentFrameGamepad1.right_stick_y,
                     currentFrameGamepad1.right_stick_x
             );
 
