@@ -14,7 +14,7 @@ public class GeneralPIDController {
     long lastUpdateTime = -1L;
     double lastUpdateError = -1D;
 
-    double integral = 0;
+    double integralCounter = 0;
 
     public GeneralPIDController(double kP, double kI, double kD, double kF) {
         this.kP = kP;
@@ -32,14 +32,14 @@ public class GeneralPIDController {
 
         double proportion = currentUpdateError * kP;
         double derivative = changeInError / deltaTime;
-        integral += currentUpdateError * deltaTime;
+        integralCounter += currentUpdateError * deltaTime;
 
         this.lastUpdateTime = System.currentTimeMillis();
         this.lastUpdateError = currentUpdateError;
 
         return new double [] {
                 proportion,
-                integral,
+                this.integralCounter,
                 derivative,
                 this.kF
         };
