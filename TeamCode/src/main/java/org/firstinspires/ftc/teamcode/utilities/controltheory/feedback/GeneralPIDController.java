@@ -17,10 +17,7 @@ public class GeneralPIDController {
     double integralCounter = 0;
 
     public GeneralPIDController(double kP, double kI, double kD, double kF) {
-        this.kP = kP;
-        this.kI = kI;
-        this.kD = kD;
-        this.kF = kF;
+        this.updateCoefficients(kP, kI, kD, kF);
     }
 
     private double[] getNumericalValues(double currentState, double targetState) {
@@ -55,6 +52,13 @@ public class GeneralPIDController {
         }
 
         return sum;
+    }
+
+    public void updateCoefficients(double kP, double kI, double kD, double kF) {
+        this.kP = kP;
+        this.kI = kI;
+        this.kD = kD;
+        this.kF = kF;
     }
 
 }
