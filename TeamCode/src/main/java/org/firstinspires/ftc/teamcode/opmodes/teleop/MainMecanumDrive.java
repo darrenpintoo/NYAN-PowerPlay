@@ -41,6 +41,8 @@ public class MainMecanumDrive extends LinearOpMode {
 
         // robot.drivetrain.enableAntiTip();
 
+        boolean intakeOn = false;
+        boolean intakeDirection = false;
         robot.update();
 
         while(opModeIsActive()) {
@@ -66,18 +68,27 @@ public class MainMecanumDrive extends LinearOpMode {
 
             telemetry.update();
 
+
             if (currentFrameGamepad1.a != previousFrameGamepad1.a && currentFrameGamepad1.a) {
-                robot.intake.enableIntakeMotor(false);
-            } else if (currentFrameGamepad1.b != previousFrameGamepad1.b && currentFrameGamepad1.b) {
-                robot.intake.enableIntakeMotor(true);
-            } else if (currentFrameGamepad1.a != previousFrameGamepad1.a || currentFrameGamepad1.b != previousFrameGamepad1.b) {
+                intakeOn = !intakeOn;
+                intakeDirection = false;
+            }
+
+            if (currentFrameGamepad1.b != previousFrameGamepad1.b && currentFrameGamepad1.b) {
+                intakeOn = !intakeOn;
+                intakeDirection = true;
+            }
+
+            if (intakeOn) {
+                robot.intake.enableIntakeMotor(intakeDirection);
+            } else {
                 robot.intake.disableIntakeMotor();
             }
 
-            robot.drivetrain.fieldCentricRotationPIDFromGamepad(
+
+            robot.drivetrain.fieldCentricDriveFromGamepad(
                     currentFrameGamepad1.left_stick_y,
                     currentFrameGamepad1.left_stick_x,
-                    currentFrameGamepad1.right_stick_y,
                     currentFrameGamepad1.right_stick_x
             );
 

@@ -124,8 +124,7 @@ public class Drivetrain implements Subsystem {
         double rotationDegrees = Math.atan2(rotatedY, rotatedX) + Math.PI;
 
         t.addData("Rotation Degrees: ", rotationDegrees);
-        t.addData("Error: ", rotationDegrees + this.internalIMU.getCurrentFrameHeadingCCW());
-
+        t.addData("Error: ", Math.abs(rotationDegrees - this.internalIMU.getCurrentFrameHeadingCCW()));
 
     }
 
