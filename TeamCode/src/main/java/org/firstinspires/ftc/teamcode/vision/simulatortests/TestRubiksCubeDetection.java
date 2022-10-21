@@ -15,10 +15,12 @@ import java.util.ArrayList;
 
 public class TestRubiksCubeDetection extends OpenCvPipeline {
 
+    public final int CAMERA_FOV = 180;
+
     Telemetry t;
 
-    public Scalar lowerBound = new Scalar(24.1, 79.3, 138.8); // new Scalar(170, 137.4, 80.8); // ;
-    public Scalar upperBound = new Scalar(43.9, 255, 255); // new Scalar(255, 255, 102); // ;
+    public Scalar lowerBound = new Scalar(7.1, 109.1, 236.6); // new Scalar(170, 137.4, 80.8); // ;
+    public Scalar upperBound = new Scalar(19.8, 168.6, 255); // new Scalar(255, 255, 102); // ;
 
     private Mat hsvMat       = new Mat();
     private Mat blurredMat = new Mat();
@@ -58,6 +60,7 @@ public class TestRubiksCubeDetection extends OpenCvPipeline {
     @Override
     public Mat processFrame(Mat input) {
 
+        t.addLine(input.size().width + " x " + input.size().height);
         long startComputationTime = System.nanoTime();
         hsvMat.release();
         thresholdMat.release();
@@ -71,6 +74,10 @@ public class TestRubiksCubeDetection extends OpenCvPipeline {
         Core.inRange(hsvMat, lowerBound, upperBound, thresholdMat);
 
         Imgproc.blur(thresholdMat, blurredMat, new Size(10, 10));
+
+        Mat kernel = Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(10, 10));
+        Imgproc.morphologyEx(blurredMat, blurredMat, Imgproc.MORPH_CLOSE, kernel);
+
         // Imgproc.GaussianBlur(thresholdMat, blurredMat, new Size(11, 11), 0, 0);
         Imgproc.findContours(blurredMat, listOfContours, new Mat(), Imgproc.RETR_TREE , Imgproc.CHAIN_APPROX_SIMPLE);
 
@@ -95,20 +102,23 @@ public class TestRubiksCubeDetection extends OpenCvPipeline {
             }
 
             Rect boundingBox = Imgproc.boundingRect(largestContour);
-            Imgproc.rectangle(contourMat, boundingBox, new Scalar(0, 0, 255));
+            Imgproc.rectangle(contourMat, boundingBox, new Scalar(0, 255 , 255));
 
+            int centerXCoordinate = boundingBox.x + boundingBox.width / 2;
 
-            t.addLine("Area of largest: " + largestContourArea);
+            double conversionPixelsToDegrees = CAMERA_FOV / input.size().width;
 
-            t.addLine("Dimension: " + boundingBox.width + " by " + boundingBox.height);
-            t.addLine("Ratio: " + (double) boundingBox.width/boundingBox.height);
+            double degreesError = -(centerXCoordinate - (input.size().width / 2)) * conversionPixelsToDegrees;
 
+            t.addData("X Cord Contour: ", centerXCoordinate);
+            // t.addLine("Area of largest: " + largestContourArea);
+            t.addData("Degrees Error: ", degreesError);
 
         }
 
 
-        t.addLine("Number of contours: " + listOfContours.size());
-        t.addLine("End Computation Time: " + (System.nanoTime() - startComputationTime));
+        t.addLine("Contours: " + listOfContours.size());
+        t.addLine("dt (s): " + (System.nanoTime() - startComputationTime) / 1e9);
         t.update();
 
 
