@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.vision.simulatortests;
 
+import com.qualcomm.robotcore.util.ElapsedTime;
+
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
@@ -15,12 +17,17 @@ import java.util.ArrayList;
 
 public class TestRubiksCubeDetection extends OpenCvPipeline {
 
-    public final int CAMERA_FOV = 180;
+
+    public final double CAMERA_FOV = CameraConstants.fovXDeg;
+
+    private final double CUBE_HEIGHT = 2.2;
+    private final double CUBE_WIDTH = 2.2;
 
     Telemetry t;
+    ElapsedTime frameTimer = new ElapsedTime();
 
-    public Scalar lowerBound = new Scalar(7.1, 109.1, 236.6); // new Scalar(170, 137.4, 80.8); // ;
-    public Scalar upperBound = new Scalar(19.8, 168.6, 255); // new Scalar(255, 255, 102); // ;
+    public Scalar lowerBound = new Scalar(126.1, 41.1, 0); // new Scalar(25.5, 80.8, 131.8);
+    public Scalar upperBound = new Scalar(230.9, 255, 83.6);// new Scalar(46.8, 255, 255);
 
     private Mat hsvMat       = new Mat();
     private Mat blurredMat = new Mat();
@@ -39,6 +46,10 @@ public class TestRubiksCubeDetection extends OpenCvPipeline {
     }
 
     Stage[] stages = Stage.values();
+
+    Mat kernel = Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(10, 10));
+
+    Size blurSize = new Size(10, 10);
 
     public TestRubiksCubeDetection(Telemetry t) {
         this.t = t;
@@ -59,30 +70,33 @@ public class TestRubiksCubeDetection extends OpenCvPipeline {
     }
     @Override
     public Mat processFrame(Mat input) {
+        frameTimer.reset();
 
-        t.addLine(input.size().width + " x " + input.size().height);
-        long startComputationTime = System.nanoTime();
+        // t.addLine(input.size().width + " x " + input.size().height);
         hsvMat.release();
         thresholdMat.release();
         contourMat.release();
         listOfContours.clear();
 
+        t.addData("Release Time: ", frameTimer.milliseconds());
 
-        Imgproc.cvtColor(input, hsvMat, Imgproc.COLOR_RGB2HSV);
 
+        Imgproc.cvtColor(input, hsvMat, Imgproc.COLOR_RGB2YCrCb);
 
         Core.inRange(hsvMat, lowerBound, upperBound, thresholdMat);
+        t.addData("Threshold Time: ", frameTimer.milliseconds());
 
-        Imgproc.blur(thresholdMat, blurredMat, new Size(10, 10));
+        Imgproc.blur(thresholdMat, blurredMat, blurSize);
 
-        Mat kernel = Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(10, 10));
         Imgproc.morphologyEx(blurredMat, blurredMat, Imgproc.MORPH_CLOSE, kernel);
-
+        t.addData("Post Processing Time: ", frameTimer.milliseconds());
         // Imgproc.GaussianBlur(thresholdMat, blurredMat, new Size(11, 11), 0, 0);
-        Imgproc.findContours(blurredMat, listOfContours, new Mat(), Imgproc.RETR_TREE , Imgproc.CHAIN_APPROX_SIMPLE);
+        Imgproc.findContours(blurredMat, listOfContours, new Mat(), Imgproc.RETR_EXTERNAL , Imgproc.CHAIN_APPROX_SIMPLE);
 
         input.copyTo(contourMat);
         // Imgproc.drawContours(contourMat, listOfContours, -1, new Scalar(0, 0, 255), 2, 8);
+
+        t.addData("Math Time: ", frameTimer.milliseconds());
 
         MatOfPoint largestContour = new MatOfPoint();
         double largestContourArea = -1;
@@ -99,6 +113,9 @@ public class TestRubiksCubeDetection extends OpenCvPipeline {
                     largestContourArea = currentContourArea;
                 }
 
+                Rect boundingBox = Imgproc.boundingRect(currentContour);
+                Imgproc.rectangle(contourMat, boundingBox, new Scalar(255, 255 , 255));
+
             }
 
             Rect boundingBox = Imgproc.boundingRect(largestContour);
@@ -109,17 +126,34 @@ public class TestRubiksCubeDetection extends OpenCvPipeline {
             double conversionPixelsToDegrees = CAMERA_FOV / input.size().width;
 
             double degreesError = -(centerXCoordinate - (input.size().width / 2)) * conversionPixelsToDegrees;
+            double betterDegreesError = -Math.toDegrees(Math.atan2((centerXCoordinate - (input.size().width / 2)), CameraConstants.fx));
+
+            double ratioX = CUBE_WIDTH / boundingBox.width;
+            double ratioY = CUBE_HEIGHT / boundingBox.height;
+
+            double depthX = ratioX * CameraConstants.fx;
+            double depthY = ratioY * CameraConstants.fy;
+
 
             t.addData("X Cord Contour: ", centerXCoordinate);
             // t.addLine("Area of largest: " + largestContourArea);
-            t.addData("Degrees Error: ", degreesError);
+            t.addData("Degress Error+: ", betterDegreesError);
+            t.addData("Ratio (X): ", ratioX);
+            t.addData("Ratio (Y): ", ratioY);
+
+            t.addData("Depth (X): ", depthX);
+            t.addData("Depth (Y): ", depthY);
+            t.addData("Distance: ", Math.hypot(depthX, depthY));
+
 
         }
 
 
         t.addLine("Contours: " + listOfContours.size());
-        t.addLine("dt (s): " + (System.nanoTime() - startComputationTime) / 1e9);
+        t.addLine("dt (s): " + frameTimer.milliseconds());
         t.update();
+
+
 
 
         switch (stages[stageNum]) {
