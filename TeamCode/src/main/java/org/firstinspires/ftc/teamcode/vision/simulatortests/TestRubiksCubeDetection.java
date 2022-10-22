@@ -6,6 +6,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
+import org.opencv.core.Point;
 import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.core.Size;
@@ -26,8 +27,8 @@ public class TestRubiksCubeDetection extends OpenCvPipeline {
     Telemetry t;
     ElapsedTime frameTimer = new ElapsedTime();
 
-    public Scalar lowerBound = new Scalar(126.1, 41.1, 0); // new Scalar(25.5, 80.8, 131.8);
-    public Scalar upperBound = new Scalar(230.9, 255, 83.6);// new Scalar(46.8, 255, 255);
+    public Scalar lowerBound = new Scalar(70, 117, 0); // new Scalar(25.5, 80.8, 131.8);
+    public Scalar upperBound = new Scalar(230.9, 145, 98);// new Scalar(46.8, 255, 255);
 
     private Mat hsvMat       = new Mat();
     private Mat blurredMat = new Mat();
@@ -122,11 +123,15 @@ public class TestRubiksCubeDetection extends OpenCvPipeline {
             Imgproc.rectangle(contourMat, boundingBox, new Scalar(0, 255 , 255));
 
             int centerXCoordinate = boundingBox.x + boundingBox.width / 2;
+            int centerYCoordinate = boundingBox.y + boundingBox.height / 2;
+
+            Imgproc.circle(contourMat, new Point(centerXCoordinate, centerYCoordinate), 3, new Scalar(255, 0, 0));
 
             double conversionPixelsToDegrees = CAMERA_FOV / input.size().width;
 
-            double degreesError = -(centerXCoordinate - (input.size().width / 2)) * conversionPixelsToDegrees;
-            double betterDegreesError = -Math.toDegrees(Math.atan2((centerXCoordinate - (input.size().width / 2)), CameraConstants.fx));
+            double linearDegreesErrorX = -(centerXCoordinate - (input.size().width / 2)) * conversionPixelsToDegrees;
+            double curvedDegreesErrorX = -Math.toDegrees(Math.atan2((centerXCoordinate - (input.size().width / 2)), CameraConstants.fx));
+            double curvedDegreesErrorY = -Math.toDegrees(Math.atan2((centerYCoordinate - (input.size().height / 2)), CameraConstants.fy));
 
             double ratioX = CUBE_WIDTH / boundingBox.width;
             double ratioY = CUBE_HEIGHT / boundingBox.height;
@@ -134,16 +139,24 @@ public class TestRubiksCubeDetection extends OpenCvPipeline {
             double depthX = ratioX * CameraConstants.fx;
             double depthY = ratioY * CameraConstants.fy;
 
+            double rayDistance = Math.hypot(depthX, depthY); // true distance
 
-            t.addData("X Cord Contour: ", centerXCoordinate);
-            // t.addLine("Area of largest: " + largestContourArea);
-            t.addData("Degress Error+: ", betterDegreesError);
-            t.addData("Ratio (X): ", ratioX);
-            t.addData("Ratio (Y): ", ratioY);
+            double hypotenuseY = rayDistance / Math.cos(Math.toRadians(curvedDegreesErrorY)); // have angle and adj, need hyp
+            double hypotenuseX = Math.abs(rayDistance * Math.tan(Math.toRadians(curvedDegreesErrorX))); // have angle and adj, need opp
+
+            double distanceToCamera = Math.hypot(hypotenuseX, hypotenuseY);
+
+            t.addData("Horizontial Degrees Error: ", curvedDegreesErrorX);
+            t.addData("Vertical Degrees Error: ", curvedDegreesErrorY);
 
             t.addData("Depth (X): ", depthX);
             t.addData("Depth (Y): ", depthY);
-            t.addData("Distance: ", Math.hypot(depthX, depthY));
+
+            t.addData("Ray Distance: ", rayDistance);
+
+            t.addData("Hypotenuse Y: ", hypotenuseY);
+            t.addData("Hypotenuse X: ", hypotenuseX);
+            t.addData("Distance: ", distanceToCamera);
 
 
         }
