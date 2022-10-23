@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode.vision.simulatortests;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.opencv.calib3d.Calib3d;
+import org.opencv.core.Algorithm;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
@@ -141,12 +143,15 @@ public class TestRubiksCubeDetection extends OpenCvPipeline {
 
             double rayDistance = Math.hypot(depthX, depthY); // true distance
 
+            // <ignore>
             double hypotenuseY = rayDistance / Math.cos(Math.toRadians(curvedDegreesErrorY)); // have angle and adj, need hyp
             double hypotenuseX = Math.abs(rayDistance * Math.tan(Math.toRadians(curvedDegreesErrorX))); // have angle and adj, need opp
 
             double distanceToCamera = Math.hypot(hypotenuseX, hypotenuseY);
+            // </ignore>
 
-            t.addData("Horizontial Degrees Error: ", curvedDegreesErrorX);
+
+            t.addData("Horizontal Degrees Error: ", curvedDegreesErrorX);
             t.addData("Vertical Degrees Error: ", curvedDegreesErrorY);
 
             t.addData("Depth (X): ", depthX);
