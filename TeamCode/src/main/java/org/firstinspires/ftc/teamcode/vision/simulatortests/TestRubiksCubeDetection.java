@@ -29,8 +29,8 @@ public class TestRubiksCubeDetection extends OpenCvPipeline {
     Telemetry t;
     ElapsedTime frameTimer = new ElapsedTime();
 
-    public Scalar lowerBound = new Scalar(70, 117, 0); // new Scalar(25.5, 80.8, 131.8);
-    public Scalar upperBound = new Scalar(230.9, 145, 98);// new Scalar(46.8, 255, 255);
+    public Scalar lowerBound = new Scalar(70, 0, 0); // new Scalar(25.5, 80.8, 131.8);
+    public Scalar upperBound = new Scalar(230.9, 145, 50);// new Scalar(46.8, 255, 255);
 
     private Mat hsvMat       = new Mat();
     private Mat blurredMat = new Mat();
@@ -147,12 +147,12 @@ public class TestRubiksCubeDetection extends OpenCvPipeline {
             double hypotenuseY = rayDistance / Math.cos(Math.toRadians(curvedDegreesErrorY)); // have angle and adj, need hyp
             double hypotenuseX = Math.abs(rayDistance * Math.tan(Math.toRadians(curvedDegreesErrorX))); // have angle and adj, need opp
 
-            double distanceToCamera = Math.hypot(hypotenuseX, hypotenuseY);
+            double distanceToCamera = Math.cbrt(Math.pow(hypotenuseX, 3)  + Math.pow(hypotenuseY, 3) + Math.pow(rayDistance, 3)); // inaccurate
             // </ignore>
 
 
-            t.addData("Horizontal Degrees Error: ", curvedDegreesErrorX);
-            t.addData("Vertical Degrees Error: ", curvedDegreesErrorY);
+            t.addData("X Degrees Error: ", curvedDegreesErrorX);
+            t.addData("Y Degrees Error: ", curvedDegreesErrorY);
 
             t.addData("Depth (X): ", depthX);
             t.addData("Depth (Y): ", depthY);
@@ -161,7 +161,7 @@ public class TestRubiksCubeDetection extends OpenCvPipeline {
 
             t.addData("Hypotenuse Y: ", hypotenuseY);
             t.addData("Hypotenuse X: ", hypotenuseX);
-            t.addData("Distance: ", distanceToCamera);
+            // t.addData("Distance: ", distanceToCamera);
 
 
         }
