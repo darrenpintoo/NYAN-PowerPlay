@@ -5,9 +5,8 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngularVelocity;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.teamcode.utilities.robot.Robot;
 
 /**
  * Robot IMU
@@ -20,10 +19,19 @@ public class InternalIMU implements Subsystem {
     private Orientation currentFrameOrientation;
     private AngularVelocity currentFrameVelocity;
 
+    private Orientation lastFrameOrientation;
+
+    private double absoluteOrientation;
+
+    private Drivetrain drivetrain;
+
     private InternalIMU() {
         if (InternalIMU.imuInstance != null) {
             throw new IllegalStateException("Robot already instantiated");
         }
+
+        drivetrain = Robot.getInstance().drivetrain;
+        absoluteOrientation = 0;
     }
 
     public static InternalIMU getInstance() {
@@ -52,14 +60,44 @@ public class InternalIMU implements Subsystem {
 
     @Override
     public void onCyclePassed() {
+
+        double changeInHeading = 0;
+
+        this.lastFrameOrientation = this.currentFrameOrientation;
+
+        double previousFrameHeading = this.getPreviousFrameHeadingCCW();
+
         this.currentFrameOrientation = internalIMU.getAngularOrientation();
         this.currentFrameVelocity = internalIMU.getAngularVelocity();
+
+        double currentFrameHeading = this.getCurrentFrameHeadingCCW();
+
+
+        if (this.drivetrain.getTurnDirection() == Drivetrain.TurnDirection.LEFT) {
+            if (currentFrameHeading < previousFrameHeading) {
+                this.absoluteOrientation += (180 - previousFrameHeading) + (-180 - currentFrameHeading);
+            } else {
+                this.absoluteOrientation += currentFrameHeading - previousFrameHeading;
+            }
+        } else if (this.drivetrain.getTurnDirection() == Drivetrain.TurnDirection.RIGHT) {
+            if (currentFrameHeading > previousFrameHeading) {
+                 this.absoluteOrientation += (-180 - previousFrameHeading) + (180 - currentFrameHeading);
+            } else {
+                this.absoluteOrientation += currentFrameHeading - previousFrameHeading;
+            }
+        }
     }
 
     public Orientation getCurrentFrameOrientation() {
         return this.currentFrameOrientation;
     }
+    public double getPreviousFrameHeadingCCW() {
+        return -this.getPreviousFrameHeadingCW();
+    }
 
+    public double getPreviousFrameHeadingCW() {
+        return this.lastFrameOrientation.firstAngle;
+    }
 
     public double getCurrentFrameHeadingCW() {
         return this.currentFrameOrientation.firstAngle;
@@ -85,4 +123,7 @@ public class InternalIMU implements Subsystem {
         return Math.abs(this.getCurrentFrameTilt()) > 0.25;
     }
 
+    public double getAbsoluteOrientation() {
+        return this.absoluteOrientation;
+    }
 }

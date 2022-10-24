@@ -33,7 +33,7 @@ public class Intake implements Subsystem {
 
     @Override
     public void onOpmodeStarted() {
-        this.enableIntakeMotor(false);
+
     }
 
     @Override

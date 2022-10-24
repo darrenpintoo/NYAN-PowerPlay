@@ -17,8 +17,8 @@ public class PoleDetection extends OpenCvPipeline {
 
     Telemetry t;
 
-    public Scalar lowerBound = new Scalar(24.1, 79.3, 138.8); // new Scalar(170, 137.4, 80.8); // ;
-    public Scalar upperBound = new Scalar(43.9, 255, 255); // new Scalar(255, 255, 102); // ;
+    public Scalar lowerBound = new Scalar(14.2, 17, 213.9); // new Scalar(170, 137.4, 80.8); // ;
+    public Scalar upperBound = new Scalar(32.6, 109.1, 255); // new Scalar(255, 255, 102); // ;
 
     private Mat hsvMat       = new Mat();
     private Mat blurredMat = new Mat();

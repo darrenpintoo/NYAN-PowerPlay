@@ -66,6 +66,7 @@ public class MainMecanumDrive extends LinearOpMode {
             telemetry.addData("Time to get: ", robot.internalIMU.getCurrentFrameOrientation().acquisitionTime);
             telemetry.addData("Robot Tilt Acceleration y: ", robot.internalIMU.getCurrentFrameVelocity().yRotationRate);
 
+            telemetry.addData("Joystick Orientation: ", Math.atan2(-currentFrameGamepad1.right_stick_x, -currentFrameGamepad1.right_stick_y) + Math.PI / 2);
             telemetry.update();
 
 
@@ -86,11 +87,11 @@ public class MainMecanumDrive extends LinearOpMode {
             }
 
 
-            robot.drivetrain.fieldCentricDriveFromGamepad(
+            /* robot.drivetrain.fieldCentricDriveFromGamepad(
                     currentFrameGamepad1.left_stick_y,
                     currentFrameGamepad1.left_stick_x,
                     currentFrameGamepad1.right_stick_x
-            );
+            ); */
 
             double frameTime = robot.update();
 

@@ -13,6 +13,9 @@ import org.firstinspires.ftc.teamcode.utilities.controltheory.feedback.GeneralPI
  */
 public class Drivetrain implements Subsystem {
 
+    public enum TurnDirection {
+        LEFT, RIGHT
+    }
     private final DcMotorEx.ZeroPowerBehavior START_ZERO_POWER_BEHAVIOR = DcMotor.ZeroPowerBehavior.FLOAT;
 
     private InternalIMU internalIMU;
@@ -22,6 +25,11 @@ public class Drivetrain implements Subsystem {
     private DcMotorEx leftBackMotor;
     private DcMotorEx rightBackMotor;
 
+    private double rightFrontPower = 0;
+    private double leftFrontPower = 0;
+    private double leftBackPower = 0;
+    private double rightBackPower = 0;
+
     private DcMotorEx[] drivetrainMotors;
 
     private boolean enableAntiTip = false;
@@ -29,6 +37,7 @@ public class Drivetrain implements Subsystem {
     GeneralPIDController headingPID = new GeneralPIDController(1, 0, 0, 0);
 
     Telemetry t;
+
 
     @Override
     public void onInit(HardwareMap hardwareMap, Telemetry telemetry) {
@@ -72,19 +81,6 @@ public class Drivetrain implements Subsystem {
     @Override
     public void onCyclePassed() {
 
-    }
-
-    public void robotCentricDriveFromGamepad(double leftJoystickY, double leftJoystickX, double rightJoystickX) {
-        // todo: write code for robot centric drive
-
-        leftJoystickY = -leftJoystickY;
-
-        double denominator = Math.max(Math.abs(leftJoystickY) + Math.abs(leftJoystickX) + Math.abs(rightJoystickX), 1);
-        double leftFrontPower = (leftJoystickY + leftJoystickX + rightJoystickX) / denominator;
-        double leftBackPower = (leftJoystickY - leftJoystickX + rightJoystickX) / denominator;
-        double rightFrontPower = (leftJoystickY - leftJoystickX - rightJoystickX) / denominator;
-        double rightBackPower = (leftJoystickY + leftJoystickX - rightJoystickX) / denominator;
-
         if (enableAntiTip && this.internalIMU.isRobotTilted()) {
             leftBackPower = 0;
             leftFrontPower = 0;
@@ -96,6 +92,24 @@ public class Drivetrain implements Subsystem {
         this.rightFrontMotor.setPower(rightFrontPower);
         this.leftBackMotor.setPower(leftBackPower);
         this.leftFrontMotor.setPower(leftFrontPower);
+
+        this.rightBackPower = 0;
+        this.leftBackPower = 0;
+        this.leftFrontPower = 0;
+        this.rightFrontPower = 0;
+    }
+
+    public void robotCentricDriveFromGamepad(double leftJoystickY, double leftJoystickX, double rightJoystickX) {
+        // todo: write code for robot centric drive
+
+        leftJoystickY = -leftJoystickY;
+
+        double denominator = Math.max(Math.abs(leftJoystickY) + Math.abs(leftJoystickX) + Math.abs(rightJoystickX), 1);
+        this.leftFrontPower += (leftJoystickY + leftJoystickX + rightJoystickX) / denominator;
+        this.leftBackPower += (leftJoystickY - leftJoystickX + rightJoystickX) / denominator;
+        this.rightFrontPower += (leftJoystickY - leftJoystickX - rightJoystickX) / denominator;
+        this.rightBackPower += (leftJoystickY + leftJoystickX - rightJoystickX) / denominator;
+
     }
 
     public void fieldCentricDriveFromGamepad(double leftJoystickY, double leftJoystickX, double rightJoystickX) {
@@ -123,8 +137,8 @@ public class Drivetrain implements Subsystem {
         double rotatedY = -rightJoystickX;
         double rotationDegrees = Math.atan2(rotatedY, rotatedX) + Math.PI;
 
-        t.addData("Rotation Degrees: ", rotationDegrees);
-        t.addData("Error: ", Math.abs(rotationDegrees - this.internalIMU.getCurrentFrameHeadingCCW()));
+        // t.addData("Rotation Degrees: ", rotationDegrees);
+        // t.addData("Error: ", Math.abs(rotationDegrees - this.internalIMU.getCurrentFrameHeadingCCW()));
 
     }
 
@@ -139,4 +153,12 @@ public class Drivetrain implements Subsystem {
             drivetrainMotor.setMode(newRunMode);
         }
     }
+
+    public TurnDirection getTurnDirection() {
+        double leftPower = this.leftBackPower + this.leftFrontPower;
+        double rightPower = this.rightBackPower + this.rightFrontPower;
+
+        return leftPower - rightPower > 0 ? TurnDirection.LEFT : TurnDirection.RIGHT;
+    }
 }
+
