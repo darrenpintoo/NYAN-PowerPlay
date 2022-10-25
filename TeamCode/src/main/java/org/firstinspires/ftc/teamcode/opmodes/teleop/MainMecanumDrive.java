@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.exception.RobotCoreException;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.teamcode.utilities.controltheory.feedback.GeneralPIDController;
-import org.firstinspires.ftc.teamcode.utilities.robot.Robot;
+import org.firstinspires.ftc.teamcode.utilities.robot.RobotEx;
 
 /**
  * Example teleop code for a basic mecanum drive
@@ -15,7 +15,7 @@ import org.firstinspires.ftc.teamcode.utilities.robot.Robot;
 public class MainMecanumDrive extends LinearOpMode {
 
     // Create new Instance of the robot
-    Robot robot = Robot.getInstance();
+    RobotEx robot = RobotEx.getInstance();
 
     GeneralPIDController pid = new GeneralPIDController(5, 0, 2, 0);
 

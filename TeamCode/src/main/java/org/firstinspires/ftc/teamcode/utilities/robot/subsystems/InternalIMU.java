@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngularVelocity;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.teamcode.utilities.robot.Robot;
+import org.firstinspires.ftc.teamcode.utilities.robot.RobotEx;
 
 /**
  * Robot IMU
@@ -30,7 +30,7 @@ public class InternalIMU implements Subsystem {
             throw new IllegalStateException("Robot already instantiated");
         }
 
-        drivetrain = Robot.getInstance().drivetrain;
+        drivetrain = RobotEx.getInstance().drivetrain;
         absoluteOrientation = 0;
     }
 

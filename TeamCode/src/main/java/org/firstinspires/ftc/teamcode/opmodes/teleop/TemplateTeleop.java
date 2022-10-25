@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.exception.RobotCoreException;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
-import org.firstinspires.ftc.teamcode.utilities.robot.Robot;
+import org.firstinspires.ftc.teamcode.utilities.robot.RobotEx;
 
 /**
  * Example teleop code for a basic mecanum drive
@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.utilities.robot.Robot;
 public class TemplateTeleop extends LinearOpMode {
 
     // Create new Instance of the robot
-    Robot robot = Robot.getInstance();
+    RobotEx robot = RobotEx.getInstance();
 
     private boolean fieldCentric = false;
 

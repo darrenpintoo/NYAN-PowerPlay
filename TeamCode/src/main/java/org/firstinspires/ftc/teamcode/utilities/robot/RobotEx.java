@@ -9,8 +9,8 @@ import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.InternalIMU;
 import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.Subsystem;
 
-public class Robot {
-    private static Robot robotInstance = null;
+public class RobotEx {
+    private static RobotEx robotInstance = null;
 
     public final InternalIMU internalIMU = InternalIMU.getInstance();
 
@@ -25,18 +25,18 @@ public class Robot {
             internalIMU
     };
 
-    private Robot() {
-        if (Robot.robotInstance != null) {
+    private RobotEx() {
+        if (RobotEx.robotInstance != null) {
             throw new IllegalStateException("Robot already instantiated");
         }
     }
 
-    public static Robot getInstance() {
-        if (Robot.robotInstance == null) {
-            Robot.robotInstance = new Robot();
+    public static RobotEx getInstance() {
+        if (RobotEx.robotInstance == null) {
+            RobotEx.robotInstance = new RobotEx();
         }
 
-        return Robot.robotInstance;
+        return RobotEx.robotInstance;
     }
 
     public void init(HardwareMap hardwareMap, Telemetry telemetry) {

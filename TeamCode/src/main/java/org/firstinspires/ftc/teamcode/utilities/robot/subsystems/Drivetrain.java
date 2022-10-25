@@ -34,8 +34,8 @@ public class Drivetrain implements Subsystem {
 
     private boolean enableAntiTip = false;
 
-    GeneralPIDController headingPID = new GeneralPIDController(1, 0, 0, 0);
-
+    public GeneralPIDController headingPID = new GeneralPIDController(1, 0, 0, 0);
+    public GeneralPIDController translationalPID = new GeneralPIDController(1, 0, 0, 0);
     Telemetry t;
 
 
@@ -159,6 +159,19 @@ public class Drivetrain implements Subsystem {
         double rightPower = this.rightBackPower + this.rightFrontPower;
 
         return leftPower - rightPower > 0 ? TurnDirection.LEFT : TurnDirection.RIGHT;
+    }
+
+    public int[] getCWMotorTicks() {
+        return new int[] {
+                this.rightFrontMotor.getCurrentPosition(),
+                this.leftFrontMotor.getCurrentPosition(),
+                this.leftBackMotor.getCurrentPosition(),
+                this.rightBackMotor.getCurrentPosition()
+        };
+    }
+
+    public static double getAverageMotorTick(int[] motorTicks) {
+
     }
 }
 
