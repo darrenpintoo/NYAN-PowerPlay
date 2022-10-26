@@ -170,7 +170,14 @@ public class Drivetrain implements Subsystem {
         };
     }
 
-    public static double getAverageMotorTick(int[] motorTicks) {
+    public static double getAverageFromArray(int[] array) {
+        int sum = 0;
+
+        for (int currentMotorTick : array) {
+            sum += currentMotorTick;
+        }
+
+        return (double) sum / array.length;
 
     }
 }

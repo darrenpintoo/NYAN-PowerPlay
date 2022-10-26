@@ -14,7 +14,7 @@ public class RobotEx {
 
     public final InternalIMU internalIMU = InternalIMU.getInstance();
 
-    public final Drivetrain drivetrain = new Drivetrain();
+    public Drivetrain drivetrain = new Drivetrain();
     public final Intake intake = new Intake();
 
     private final ElapsedTime frameTimer = new ElapsedTime();
@@ -62,5 +62,6 @@ public class RobotEx {
         frameTimer.reset();
         return frameTime;
     }
+
 
 }
