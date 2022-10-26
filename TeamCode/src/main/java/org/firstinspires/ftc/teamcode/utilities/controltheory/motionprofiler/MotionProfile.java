@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.utilities.robot.extensions.motionprofiler;
+package org.firstinspires.ftc.teamcode.utilities.controltheory.motionprofiler;
 
 public class MotionProfile implements MotionProfileTemplate {
 
@@ -7,6 +7,7 @@ public class MotionProfile implements MotionProfileTemplate {
     @Override
     public void buildTrajectoryFromConstraints(double vMax, double aMax) {
         // Initializes trajectoryPhase
+        // Make sure to handle both cases
     }
 
     @Override

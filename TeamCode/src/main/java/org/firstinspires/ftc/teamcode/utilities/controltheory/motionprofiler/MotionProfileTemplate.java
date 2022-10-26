@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.utilities.robot.extensions.motionprofiler;
+package org.firstinspires.ftc.teamcode.utilities.controltheory.motionprofiler;
 
 public interface  MotionProfileTemplate {
 
