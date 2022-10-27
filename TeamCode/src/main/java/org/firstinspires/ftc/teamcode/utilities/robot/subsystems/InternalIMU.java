@@ -25,6 +25,8 @@ public class InternalIMU implements Subsystem {
 
     private Drivetrain drivetrain;
 
+    private Telemetry telemetry;
+
     private InternalIMU() {
         if (InternalIMU.imuInstance != null) {
             throw new IllegalStateException("Robot already instantiated");
@@ -48,9 +50,9 @@ public class InternalIMU implements Subsystem {
 
         this.internalIMU = hardwareMap.get(BNO055IMU.class, "imu");
         this.internalIMU.initialize(parameters);
+        this.telemetry = telemetry;
 
         telemetry.addData("Finished Initializing", this.internalIMU);
-
     }
 
     @Override

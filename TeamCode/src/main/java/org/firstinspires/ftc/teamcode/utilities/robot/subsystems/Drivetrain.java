@@ -36,7 +36,8 @@ public class Drivetrain implements Subsystem {
 
     public GeneralPIDController headingPID = new GeneralPIDController(1, 0, 0, 0);
     public GeneralPIDController translationalPID = new GeneralPIDController(1, 0, 0, 0);
-    Telemetry t;
+
+    private Telemetry telemetry;
 
 
     @Override
@@ -50,10 +51,10 @@ public class Drivetrain implements Subsystem {
         this.rightBackMotor = (DcMotorEx) hardwareMap.get(DcMotor.class, "rightBackMotor");
 
         // todo: figure out the directions
-        rightFrontMotor.setDirection(DcMotorEx.Direction.FORWARD);
-        leftFrontMotor.setDirection(DcMotorEx.Direction.REVERSE);
-        leftBackMotor.setDirection(DcMotorEx.Direction.REVERSE);
-        rightBackMotor.setDirection(DcMotorEx.Direction.FORWARD);
+        this.rightFrontMotor.setDirection(DcMotorEx.Direction.FORWARD);
+        this.leftFrontMotor.setDirection(DcMotorEx.Direction.REVERSE);
+        this.leftBackMotor.setDirection(DcMotorEx.Direction.REVERSE);
+        this.rightBackMotor.setDirection(DcMotorEx.Direction.FORWARD);
 
         this.drivetrainMotors = new DcMotorEx[] {
             this.rightFrontMotor,
@@ -62,7 +63,7 @@ public class Drivetrain implements Subsystem {
             this.rightBackMotor
         };
 
-        this.t = telemetry;
+        this.telemetry = telemetry;
     }
 
     public void enableAntiTip() {

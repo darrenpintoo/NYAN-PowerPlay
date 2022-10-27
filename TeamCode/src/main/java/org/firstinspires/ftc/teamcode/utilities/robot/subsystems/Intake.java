@@ -17,7 +17,7 @@ public class Intake implements Subsystem {
 
     private final int ON_MOTOR_POWER = 1;
 
-    private Telemetry t;
+    private Telemetry telemetry;
 
     @Override
     public void onInit(HardwareMap hardwareMap, Telemetry telemetry) {
@@ -28,7 +28,7 @@ public class Intake implements Subsystem {
         rightMotor.setDirection(DcMotorEx.Direction.FORWARD);
         leftMotor.setDirection(DcMotorEx.Direction.REVERSE);
 
-        t = telemetry;
+        telemetry = telemetry;
     }
 
     @Override
@@ -45,16 +45,16 @@ public class Intake implements Subsystem {
 
         int intakeDirection = directionReversed ? -1 : 1;
 
-        t.addLine("Intake on");
+        telemetry.addLine("Intake on");
         this.rightMotor.setPower(ON_MOTOR_POWER * intakeDirection);
         this.leftMotor.setPower(ON_MOTOR_POWER * intakeDirection);
-        t.addData("Intake Power: ", this.rightMotor.getPower());
-        t.addData("Intake Power: ", this.leftMotor.getPower());
+        telemetry.addData("Intake Power: ", this.rightMotor.getPower());
+        telemetry.addData("Intake Power: ", this.leftMotor.getPower());
 
     }
 
     public void disableIntakeMotor() {
-        t.addLine("Intake off");
+        telemetry.addLine("Intake off");
         this.rightMotor.setPower(0);
         this.leftMotor.setPower(0);
     }

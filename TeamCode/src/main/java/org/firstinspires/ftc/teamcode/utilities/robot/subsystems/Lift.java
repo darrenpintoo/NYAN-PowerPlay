@@ -33,6 +33,8 @@ public class Lift implements Subsystem {
 
     GeneralPIDController liftPID = new GeneralPIDController(kP, kI, kD, kF);
 
+    private Telemetry telemetry;
+
     @Override
     public void onInit(HardwareMap hardwareMap, Telemetry telemetry) {
 
@@ -44,6 +46,8 @@ public class Lift implements Subsystem {
         leftLiftMotor.setDirection(DcMotorEx.Direction.REVERSE);
 
         liftMotors = new MotorGroup<>(leftLiftMotor, rightLiftMotor);
+
+        this.telemetry = telemetry;
     }
 
     @Override

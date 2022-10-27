@@ -73,6 +73,7 @@ public class SleeveDetectionPipeline extends OpenCvPipeline {
     public SleeveDetectionPipeline(Telemetry t) {
         this.t = t;
     }
+    public SleeveDetectionPipeline() {}
 
     @Override
     public void onViewportTapped()

@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.utilities.robot;
 
+import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.LynxModuleMeta;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -9,8 +11,12 @@ import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.InternalIMU;
 import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.Subsystem;
 
+import java.util.List;
+
 public class RobotEx {
     private static RobotEx robotInstance = null;
+
+    List<LynxModule> allHubs;
 
     public final InternalIMU internalIMU = InternalIMU.getInstance();
 
@@ -40,6 +46,13 @@ public class RobotEx {
     }
 
     public void init(HardwareMap hardwareMap, Telemetry telemetry) {
+
+        this.allHubs = hardwareMap.getAll(LynxModule.class);
+
+        for (LynxModule hub: allHubs) {
+            hub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
+        }
+
         for (Subsystem subsystem : this.robotSubsystems) {
             subsystem.onInit(hardwareMap, telemetry);
         }
@@ -54,6 +67,11 @@ public class RobotEx {
     }
 
     public double update() {
+
+        for (LynxModule hub : allHubs) {
+            hub.clearBulkCache();
+        }
+
         for (Subsystem subsystem : this.robotSubsystems) {
             subsystem.onCyclePassed();
         }

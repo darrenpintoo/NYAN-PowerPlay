@@ -1,6 +1,8 @@
-package org.firstinspires.ftc.teamcode.utilities.robot.subsystems;
+package org.firstinspires.ftc.teamcode.utilities.robot.extensions;
 
 import org.firstinspires.ftc.teamcode.utilities.robot.RobotEx;
+import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.Drivetrain;
+import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.InternalIMU;
 
 public class EncoderDrive {
 
@@ -57,6 +59,8 @@ public class EncoderDrive {
                     0
             );
 
+            this.robot.update();
+
 
         }
 
@@ -79,6 +83,8 @@ public class EncoderDrive {
             );
 
             currentIMUPosition = this.imu.getAbsoluteOrientation();
+
+            this.robot.update();
         }
 
 
