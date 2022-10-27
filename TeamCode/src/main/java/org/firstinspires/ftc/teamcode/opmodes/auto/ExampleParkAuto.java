@@ -66,16 +66,16 @@ public class ExampleParkAuto extends LinearOpMode {
 
         SleeveDetectionPipeline.ParkingPosition parkPosition = sleeveDetection.getPosition();
 
-        robotDrivetrain.driveForwardFromInchesBB(20);
+        robotDrivetrain.driveForwardFromInchesBB(27);
 
         switch (parkPosition) {
             case LEFT:
                 robotDrivetrain.turnToAbsoluteAngle(90);
-                robotDrivetrain.driveForwardFromInchesBB(20);
+                robotDrivetrain.driveForwardFromInchesBB(25);
                 break;
             case RIGHT:
                 robotDrivetrain.turnToAbsoluteAngle(270);
-                robotDrivetrain.driveForwardFromInchesBB(20);
+                robotDrivetrain.driveForwardFromInchesBB(25);
                 break;
             case CENTER:
                 break;

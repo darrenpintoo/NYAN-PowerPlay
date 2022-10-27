@@ -23,7 +23,7 @@ public class InternalIMU implements Subsystem {
 
     private double absoluteOrientation;
 
-    private Drivetrain drivetrain;
+    // private Drivetrain drivetrain;
 
     private Telemetry telemetry;
 
@@ -32,7 +32,7 @@ public class InternalIMU implements Subsystem {
             throw new IllegalStateException("Robot already instantiated");
         }
 
-        drivetrain = RobotEx.getInstance().drivetrain;
+        // drivetrain = RobotEx.getInstance().drivetrain;
         absoluteOrientation = 0;
     }
 
@@ -53,6 +53,7 @@ public class InternalIMU implements Subsystem {
         this.telemetry = telemetry;
 
         telemetry.addData("Finished Initializing", this.internalIMU);
+        telemetry.update();
     }
 
     @Override
@@ -67,7 +68,7 @@ public class InternalIMU implements Subsystem {
 
         this.lastFrameOrientation = this.currentFrameOrientation;
 
-        double previousFrameHeading = this.getPreviousFrameHeadingCCW();
+        // double previousFrameHeading = this.getPreviousFrameHeadingCCW();
 
         this.currentFrameOrientation = internalIMU.getAngularOrientation();
         this.currentFrameVelocity = internalIMU.getAngularVelocity();
@@ -75,7 +76,7 @@ public class InternalIMU implements Subsystem {
         double currentFrameHeading = this.getCurrentFrameHeadingCCW();
 
 
-        if (this.drivetrain.getTurnDirection() == Drivetrain.TurnDirection.LEFT) {
+/*        if (this.drivetrain.getTurnDirection() == Drivetrain.TurnDirection.LEFT) {
             if (currentFrameHeading < previousFrameHeading) {
                 this.absoluteOrientation += (180 - previousFrameHeading) + (-180 - currentFrameHeading);
             } else {
@@ -87,7 +88,7 @@ public class InternalIMU implements Subsystem {
             } else {
                 this.absoluteOrientation += currentFrameHeading - previousFrameHeading;
             }
-        }
+        }*/
     }
 
     public Orientation getCurrentFrameOrientation() {

@@ -124,19 +124,19 @@ public class Drivetrain implements Subsystem {
         // todo: write code for field centric drive
     }
 
-    public void fieldCentricRotationPIDFromGamepad(double leftJoystickY, double leftJoystickX, double rightJoystickY, double rightJoystickX) {
-/*        this.fieldCentricDriveFromGamepad(
+    public void fieldCentricRotationPIDFromGamepad(double leftJoystickY, double leftJoystickX, double targetAngle) {
+        this.fieldCentricDriveFromGamepad(
                 leftJoystickY,
                 leftJoystickX,
                 this.headingPID.getOutputFromError(
-                        Math.atan2(rightJoystickY, rightJoystickX),
-                        rightJoystickX
+                        targetAngle,
+                        this.internalIMU.getAbsoluteOrientation()
                 )
-        );*/
+        );
 
-        double rotatedX = rightJoystickY;
+  /*      double rotatedX = rightJoystickY;
         double rotatedY = -rightJoystickX;
-        double rotationDegrees = Math.atan2(rotatedY, rotatedX) + Math.PI;
+        double rotationDegrees = Math.atan2(rotatedY, rotatedX) + Math.PI;*/
 
         // t.addData("Rotation Degrees: ", rotationDegrees);
         // t.addData("Error: ", Math.abs(rotationDegrees - this.internalIMU.getCurrentFrameHeadingCCW()));

@@ -28,7 +28,7 @@ public class Intake implements Subsystem {
         rightMotor.setDirection(DcMotorEx.Direction.FORWARD);
         leftMotor.setDirection(DcMotorEx.Direction.REVERSE);
 
-        telemetry = telemetry;
+        this.telemetry = telemetry;
     }
 
     @Override
