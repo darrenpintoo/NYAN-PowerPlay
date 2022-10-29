@@ -4,6 +4,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.utilities.controltheory.feedback.GeneralPIDController;
@@ -17,8 +18,11 @@ public class Lift implements Subsystem {
     public static double kD;
     public static double kF;
 
-    private DcMotorEx leftLiftMotor;
-    private DcMotorEx rightLiftMotor;
+    public DcMotorEx leftLiftMotor;
+    public DcMotorEx rightLiftMotor;
+
+    public Servo clawExtensionServo;
+    public Servo clawGrabberServo;
 
     private MotorGroup<DcMotorEx> liftMotors;
 
@@ -40,12 +44,16 @@ public class Lift implements Subsystem {
 
         this.leftLiftMotor = (DcMotorEx) hardwareMap.get(DcMotor.class, "leftLiftMotor");
         this.rightLiftMotor = (DcMotorEx) hardwareMap.get(DcMotor.class, "rightLiftMotor");
+        this.clawGrabberServo = hardwareMap.get(Servo.class, "clawGrabber");
+        this.clawExtensionServo = hardwareMap.get(Servo.class, "clawExtension");
 
         // todo: figure out the directions
         rightLiftMotor.setDirection(DcMotorEx.Direction.FORWARD);
         leftLiftMotor.setDirection(DcMotorEx.Direction.REVERSE);
 
         liftMotors = new MotorGroup<>(leftLiftMotor, rightLiftMotor);
+        liftMotors.setRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        liftMotors.setRunMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         this.telemetry = telemetry;
     }
@@ -57,13 +65,14 @@ public class Lift implements Subsystem {
 
     @Override
     public void onCyclePassed() {
-
-        liftPID.updateCoefficients(kP, kI, kD, kF);
+        telemetry.addData("Left Lift Pos: ", this.leftLiftMotor.getCurrentPosition());
+        telemetry.addData("Right Lift Pos: ", this.rightLiftMotor.getCurrentPosition());
+/*        liftPID.updateCoefficients(kP, kI, kD, kF);
 
         int targetPosition = this.getEncoderPositionFromLevel(currentLiftPosition);
         double currentFrameOutput = liftPID.getOutputFromError(targetPosition, this.liftMotors.getAveragePosition());
 
-        this.liftMotors.setPower(currentFrameOutput);
+        this.liftMotors.setPower(currentFrameOutput);*/
 
     }
 

@@ -48,4 +48,16 @@ public class MotorGroup<T extends DcMotor> {
 
         return Math.floorDiv(sum, this.size) ;
     }
+
+    public void setZeroPowerBehavior(DcMotor.ZeroPowerBehavior newBehavior) {
+        for (T motor : motors) {
+            motor.setZeroPowerBehavior(newBehavior);
+        }
+    }
+
+    public void setRunMode(DcMotor.RunMode mode) {
+        for (T motor : motors) {
+            motor.setMode(mode);
+        }
+    }
 }

@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.utilities.robot.subsystems;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -11,6 +12,8 @@ import org.firstinspires.ftc.teamcode.utilities.controltheory.feedback.GeneralPI
 /**
  * Robot Drivetrain
  */
+
+@Config
 public class Drivetrain implements Subsystem {
 
     public enum TurnDirection {
@@ -40,6 +43,9 @@ public class Drivetrain implements Subsystem {
     private Telemetry telemetry;
 
 
+    public static double kP = 1;
+    public static double kI = 0;
+    public static double kD = 100;
     @Override
     public void onInit(HardwareMap hardwareMap, Telemetry telemetry) {
 
@@ -64,6 +70,8 @@ public class Drivetrain implements Subsystem {
         };
 
         this.telemetry = telemetry;
+        this.headingPID.setTelemetry(telemetry);
+        // this.headingPID.updateCoefficients(1, 0, 0, 0);
     }
 
     public void enableAntiTip() {
@@ -82,6 +90,8 @@ public class Drivetrain implements Subsystem {
     @Override
     public void onCyclePassed() {
 
+        this.headingPID.updateCoefficients(Drivetrain.kP, Drivetrain.kI, Drivetrain.kD, 0);
+
         if (enableAntiTip && this.internalIMU.isRobotTilted()) {
             leftBackPower = 0;
             leftFrontPower = 0;
@@ -98,6 +108,16 @@ public class Drivetrain implements Subsystem {
         this.leftBackPower = 0;
         this.leftFrontPower = 0;
         this.rightFrontPower = 0;
+
+        this.telemetry.addData("LF Pos: ", this.leftFrontMotor.getCurrentPosition());
+        this.telemetry.addData("LB Pos: ", this.leftBackMotor.getCurrentPosition());
+        this.telemetry.addData("RB Pos: ", this.rightBackMotor.getCurrentPosition());
+        this.telemetry.addData("RF Pos: ", this.rightFrontMotor.getCurrentPosition());
+
+        this.telemetry.addData("LF Vel: ", this.leftFrontMotor.getVelocity());
+        this.telemetry.addData("LB Vel: ", this.leftBackMotor.getVelocity());
+        this.telemetry.addData("RB Vel: ", this.rightBackMotor.getVelocity());
+        this.telemetry.addData("RF Vel: ", this.rightFrontMotor.getVelocity());
     }
 
     public void robotCentricDriveFromGamepad(double leftJoystickY, double leftJoystickX, double rightJoystickX) {
@@ -124,15 +144,44 @@ public class Drivetrain implements Subsystem {
         // todo: write code for field centric drive
     }
 
-    public void fieldCentricRotationPIDFromGamepad(double leftJoystickY, double leftJoystickX, double targetAngle) {
+    public void fieldCentricRotationPIDFromGamepad(double leftJoystickY, double leftJoystickX, double rightJoystickY, double rightJoystickX) {
+
+        double targetAngle = Math.atan2(-rightJoystickX, -rightJoystickY);
+        double currentAngle = this.internalIMU.getCurrentFrameHeadingCW();
+        double error = targetAngle - currentAngle;
+
+
+
+        if (Math.abs(error) > Math.PI) {
+            if (targetAngle < 0) {
+                currentAngle -= Math.PI;
+                error = (targetAngle - error);
+            } else if (targetAngle > 0) {
+                currentAngle += Math.PI;
+                error = (targetAngle - error);
+            }
+        }
+
+
+        if (rightJoystickY == 0 && rightJoystickX == 0) {
+            targetAngle = currentAngle;
+            error = 0;
+        }
+
+        this.telemetry.addData("Error: ", error);
+
+        double output = this.headingPID.getOutputFromError(
+                targetAngle,
+                currentAngle
+        );
+
         this.fieldCentricDriveFromGamepad(
                 leftJoystickY,
                 leftJoystickX,
-                this.headingPID.getOutputFromError(
-                        targetAngle,
-                        this.internalIMU.getAbsoluteOrientation()
-                )
+                -Math.min(Math.max(output, -1), 1)
         );
+
+        this.telemetry.addData("PID output: ", output);
 
   /*      double rotatedX = rightJoystickY;
         double rotatedY = -rightJoystickX;
@@ -149,7 +198,7 @@ public class Drivetrain implements Subsystem {
         }
     }
 
-    public void setZeroPowerBehavior(DcMotor.RunMode newRunMode) {
+    public void setRunMode(DcMotor.RunMode newRunMode) {
         for (DcMotorEx drivetrainMotor : this.drivetrainMotors) {
             drivetrainMotor.setMode(newRunMode);
         }

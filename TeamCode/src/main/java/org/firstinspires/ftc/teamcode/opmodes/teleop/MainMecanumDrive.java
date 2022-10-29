@@ -63,14 +63,13 @@ public class MainMecanumDrive extends LinearOpMode {
 
             telemetry.addData("CW IMU orientation: ", robot.internalIMU.getCurrentFrameHeadingCW());
             telemetry.addData("Robot Tilt : ", robot.internalIMU.getCurrentFrameTilt());
-            telemetry.addData("Time to get: ", robot.internalIMU.getCurrentFrameOrientation().acquisitionTime);
             telemetry.addData("Robot Tilt Acceleration y: ", robot.internalIMU.getCurrentFrameVelocity().yRotationRate);
 
             telemetry.addData("Joystick Orientation: ", Math.atan2(-currentFrameGamepad1.right_stick_x, -currentFrameGamepad1.right_stick_y));
-            telemetry.addData(
+/*            telemetry.addData(
                     "Updated Joystick Orientation: ",
                     Math.atan2(currentFrameGamepad1.right_stick_y, currentFrameGamepad1.right_stick_x) - Math.PI / 2
-            );
+            );*/
             // ^ https://www.desmos.com/calculator/jp45vcfcbt
             telemetry.update();
 
@@ -91,18 +90,32 @@ public class MainMecanumDrive extends LinearOpMode {
                 robot.intake.disableIntakeMotor();
             }
 
-
+            /*
             robot.drivetrain.fieldCentricDriveFromGamepad(
                     currentFrameGamepad1.left_stick_y,
                     currentFrameGamepad1.left_stick_x,
                     currentFrameGamepad1.right_stick_x
-            );
-            /* robot.drivetrain.fieldCentricDriveFromGamepad(
+            );*/
+
+            robot.drivetrain.fieldCentricRotationPIDFromGamepad(
                     currentFrameGamepad1.left_stick_y,
                     currentFrameGamepad1.left_stick_x,
+                    currentFrameGamepad1.right_stick_y,
                     currentFrameGamepad1.right_stick_x
-            ); */
+            );
 
+
+            if (gamepad1.right_trigger > 0.3) {
+                robot.lift.leftLiftMotor.setPower(gamepad1.right_trigger * 0.5);
+                robot.lift.rightLiftMotor.setPower(gamepad1.right_trigger * 0.5);
+            } else if (gamepad1.left_trigger > 0.3) {
+
+                robot.lift.leftLiftMotor.setPower(-gamepad1.left_trigger * 0.5);
+                robot.lift.rightLiftMotor.setPower(-gamepad1.left_trigger* 0.5);
+            } else {
+                robot.lift.leftLiftMotor.setPower(0);
+                robot.lift.rightLiftMotor.setPower(0);
+            }
             double frameTime = robot.update();
 
             telemetry.addData("Frame Time: ", frameTime);

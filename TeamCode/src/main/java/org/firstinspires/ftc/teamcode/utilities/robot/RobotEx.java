@@ -9,6 +9,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.Drivetrain;
 import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.InternalIMU;
+import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.Lift;
 import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.Subsystem;
 
 import java.util.List;
@@ -23,12 +24,15 @@ public class RobotEx {
     public Drivetrain drivetrain = new Drivetrain();
     public Intake intake = new Intake();
 
+    public Lift lift = new Lift();
+
     private final ElapsedTime frameTimer = new ElapsedTime();
 
     private final Subsystem[] robotSubsystems = new Subsystem[] {
             internalIMU,
             intake,
-           drivetrain
+           drivetrain,
+            lift
 
     };
 

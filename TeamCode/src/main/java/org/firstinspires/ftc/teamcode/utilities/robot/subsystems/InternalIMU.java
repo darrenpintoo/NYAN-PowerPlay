@@ -16,10 +16,10 @@ public class InternalIMU implements Subsystem {
     private static InternalIMU imuInstance = null;
     private BNO055IMU internalIMU;
 
-    private Orientation currentFrameOrientation;
+    private Orientation currentFrameOrientation = new Orientation();
     private AngularVelocity currentFrameVelocity;
 
-    private Orientation lastFrameOrientation;
+    private Orientation lastFrameOrientation = new Orientation();
 
     private double absoluteOrientation;
 
@@ -68,7 +68,7 @@ public class InternalIMU implements Subsystem {
 
         this.lastFrameOrientation = this.currentFrameOrientation;
 
-        // double previousFrameHeading = this.getPreviousFrameHeadingCCW();
+        double previousFrameHeading = this.getPreviousFrameHeadingCCW();
 
         this.currentFrameOrientation = internalIMU.getAngularOrientation();
         this.currentFrameVelocity = internalIMU.getAngularVelocity();
