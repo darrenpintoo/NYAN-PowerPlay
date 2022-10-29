@@ -1,3 +1,7 @@
+package org.firstinspires.ftc.teamcode.vision.simulatortests;
+
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfDouble;
@@ -11,7 +15,9 @@ import org.openftc.easyopencv.OpenCvPipeline;
 import java.util.ArrayList;
 import java.util.List;
 
+@Disabled
 public class RingDetection extends OpenCvPipeline {
+    /*
     private static final Mat EMPTY_MAT = new Mat();
 
     public static Scalar HSV_LOWER = new Scalar(6, 100, 50);
@@ -206,4 +212,6 @@ public class RingDetection extends OpenCvPipeline {
         Mat[] mats = new Mat[] { outputMat, denoisedMat, input };
         return mats[stageNum % mats.length];
     }
+    
+     */
 }
