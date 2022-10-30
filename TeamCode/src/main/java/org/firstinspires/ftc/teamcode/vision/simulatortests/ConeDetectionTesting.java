@@ -202,7 +202,7 @@ public class ConeDetectionTesting extends OpenCvPipeline {
         }
 
 
-        return new Mat();//contourMat;
+        return contourMat;
     }
 
 }

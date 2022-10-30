@@ -28,6 +28,11 @@ public class GeneralPIDController {
 
         double currentUpdateError = targetState - currentState;
 
+        return this.getNumericalValues(currentUpdateError);
+    }
+
+    private double[] getNumericalValues(double currentUpdateError) {
+
         long deltaTime = this.lastUpdateTime == -1 ? 0 : System.currentTimeMillis() - lastUpdateTime;
         double changeInError = this.lastUpdateError == -1 ? 0 : currentUpdateError - this.lastUpdateError;;
 
@@ -53,16 +58,22 @@ public class GeneralPIDController {
         };
     }
 
-    public double getOutputFromError(double targetState, double currentState) {
-        double[] numericalValues = getNumericalValues(currentState, targetState);
-
+    private double sumArray(double[] array) {
         double sum = 0;
 
-        for (double numericalValue : numericalValues) {
+        for (double numericalValue : array) {
             sum += numericalValue;
         }
 
         return sum;
+    }
+
+    public double getOutputFromError(double targetState, double currentState) {
+        return sumArray(getNumericalValues(currentState, targetState));
+    }
+
+    public double getOutputFromError(double error) {
+        return sumArray(getNumericalValues(error));
     }
 
     public void updateCoefficients(double kP, double kI, double kD, double kF) {

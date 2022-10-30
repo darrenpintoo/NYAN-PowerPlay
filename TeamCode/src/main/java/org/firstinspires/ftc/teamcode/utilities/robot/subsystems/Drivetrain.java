@@ -154,11 +154,11 @@ public class Drivetrain implements Subsystem {
 
         if (Math.abs(error) > Math.PI) {
             if (targetAngle < 0) {
-                currentAngle -= Math.PI;
-                error = (targetAngle - error);
+                // currentAngle -= Math.PI;
+                error = -((-Math.PI - targetAngle) + (Math.PI - currentAngle));
             } else if (targetAngle > 0) {
-                currentAngle += Math.PI;
-                error = (targetAngle - error);
+                // currentAngle += Math.PI;
+                error = (Math.PI - targetAngle) + (-Math.PI - currentAngle);
             }
         }
 
@@ -171,8 +171,7 @@ public class Drivetrain implements Subsystem {
         this.telemetry.addData("Error: ", error);
 
         double output = this.headingPID.getOutputFromError(
-                targetAngle,
-                currentAngle
+                error
         );
 
         this.fieldCentricDriveFromGamepad(
@@ -208,7 +207,7 @@ public class Drivetrain implements Subsystem {
         double leftPower = this.leftBackPower + this.leftFrontPower;
         double rightPower = this.rightBackPower + this.rightFrontPower;
 
-        return leftPower - rightPower > 0 ? TurnDirection.LEFT : TurnDirection.RIGHT;
+        return Math.abs(leftPower) > Math.abs(rightPower) ? TurnDirection.LEFT : TurnDirection.RIGHT;
     }
 
     public int[] getCWMotorTicks() {

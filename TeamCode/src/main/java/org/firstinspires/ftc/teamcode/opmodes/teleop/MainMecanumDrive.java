@@ -119,7 +119,7 @@ public class MainMecanumDrive extends LinearOpMode {
             double frameTime = robot.update();
 
             telemetry.addData("Frame Time: ", frameTime);
-            telemetry.addData("Refresh Rate: ", (frameTime != 0) ? (1 / frameTime) : "inf");
+            telemetry.addData("Refresh Rate: ", (frameTime != 0) ? (1000 / frameTime) : "inf");
         }
     }
 }

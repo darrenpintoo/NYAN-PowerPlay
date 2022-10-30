@@ -64,7 +64,7 @@ public class ExampleParkAuto extends LinearOpMode {
 
         if (isStopRequested()) return;
 
-        EncoderDrive robotDrivetrain = new EncoderDrive(telemetry);
+        EncoderDrive robotDrivetrain = new EncoderDrive(this, telemetry);
 
         robot.drivetrain.setRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.drivetrain.setRunMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);

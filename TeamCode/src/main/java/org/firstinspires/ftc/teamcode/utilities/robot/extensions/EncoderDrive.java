@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.utilities.robot.extensions;
 
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.checkerframework.checker.index.qual.LTEqLengthOf;
@@ -35,9 +36,17 @@ public class EncoderDrive {
 
     Telemetry telemetry;
 
-    public EncoderDrive() {}
+    LinearOpMode currentOpmode;
 
-    public EncoderDrive(Telemetry t) {this.telemetry = t; }
+    public EncoderDrive(LinearOpMode linearOpMode) {
+        this.currentOpmode = linearOpMode;
+    }
+
+    public EncoderDrive(LinearOpMode linearOpMode, Telemetry telemetry)  {
+        this.currentOpmode = linearOpMode;
+        this.telemetry = telemetry;
+    }
+
     public void driveForwardFromInchesBB(double inches) {
         double ticksToMove = EncoderDrive.getEncoderTicksFromInches(inches);
 
@@ -48,9 +57,8 @@ public class EncoderDrive {
 
         boolean targetReached = false;
 
-        while (!targetReached) {
+        while (!targetReached && !this.currentOpmode.isStopRequested()) {
 
-            ;
             double currentFramePosition = Drivetrain.getAverageFromArray(this.dt.getCWMotorTicks());
 
             double error = targetPosition - currentFramePosition;
@@ -97,7 +105,8 @@ public class EncoderDrive {
         boolean atTarget = false;
 
         double atTargetStartTime = -1;
-        while (!atTarget) {
+
+        while (!atTarget && !this.currentOpmode.isStopRequested()) {
             turnError = this.dt.headingPID.getOutputFromError(angle, currentIMUPosition);
 
 
@@ -119,7 +128,6 @@ public class EncoderDrive {
                 atTargetStartTime = -1;
             }
 
-            telemetry.addData("Time in between: ", atTargetStartTime);
             this.robot.update();
         }
 
