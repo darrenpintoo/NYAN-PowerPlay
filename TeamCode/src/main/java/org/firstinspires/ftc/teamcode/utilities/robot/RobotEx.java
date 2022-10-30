@@ -17,7 +17,7 @@ import java.util.List;
 public class RobotEx {
     private static RobotEx robotInstance = null;
 
-    // List<LynxModule> allHubs;
+    List<LynxModule> allHubs;
 
     public InternalIMU internalIMU = InternalIMU.getInstance();
 
@@ -51,12 +51,12 @@ public class RobotEx {
     }
 
     public void init(HardwareMap hardwareMap, Telemetry telemetry) {
-/*
+
         this.allHubs = hardwareMap.getAll(LynxModule.class);
 
         for (LynxModule hub: allHubs) {
             hub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
-        }*/
+        }
 
         for (Subsystem subsystem : this.robotSubsystems) {
             subsystem.onInit(hardwareMap, telemetry);
@@ -73,9 +73,9 @@ public class RobotEx {
 
     public double update() {
 
-/*        for (LynxModule hub : allHubs) {
+        for (LynxModule hub : allHubs) {
             hub.clearBulkCache();
-        }*/
+        }
 
         for (Subsystem subsystem : this.robotSubsystems) {
             subsystem.onCyclePassed();
