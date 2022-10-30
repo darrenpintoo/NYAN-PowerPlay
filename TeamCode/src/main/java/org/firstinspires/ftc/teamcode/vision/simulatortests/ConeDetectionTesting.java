@@ -94,30 +94,34 @@ public class ConeDetectionTesting extends OpenCvPipeline {
         contourMat.release();
         listOfContours.clear();
 
-        t.addData("Release Time (ms): ", frameTimer.milliseconds());
-
+        if (this.t != null) {
+            t.addData("Release Time (ms): ", frameTimer.milliseconds());
+        }
 
         Imgproc.cvtColor(input, hsvMat, Imgproc.COLOR_RGB2HSV);
 
         Core.inRange(hsvMat, lowerBound, upperBound, thresholdMat);
-        t.addData("Threshold Time (ms): ", frameTimer.milliseconds());
-
+        if (this.t != null) {
+            t.addData("Threshold Time (ms): ", frameTimer.milliseconds());
+        }
         Imgproc.morphologyEx(thresholdMat, thresholdMat, Imgproc.MORPH_OPEN, kernel);
 
         // Imgproc.morphologyEx(thresholdMat, thresholdMat, Imgproc.MORPH_ERODE, kernel1);
         // Imgproc.morphologyEx(thresholdMat, thresholdMat, Imgproc.MORPH_DILATE, kernel2);
         // Imgproc.morphologyEx(thresholdMat, thresholdMat, Imgproc.MORPH_CLOSE, new MatOfDouble(4, 4));
         Imgproc.blur(thresholdMat, blurredMat, blurSize);
-
-        t.addData("Post Processing Time (ms): ", frameTimer.milliseconds());
+        if (this.t != null) {
+            t.addData("Post Processing Time (ms): ", frameTimer.milliseconds());
+        }
         // Imgproc.GaussianBlur(thresholdMat, blurredMat, new Size(11, 11), 0, 0);
         Imgproc.findContours(blurredMat, listOfContours, new Mat(), Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
 
         input.copyTo(contourMat);
         // Imgproc.drawContours(contourMat, listOfContours, -1, new Scalar(0, 0, 255), 2, 8);
 
-        t.addData("Math Time (ms): ", frameTimer.milliseconds());
-
+        if (this.t != null) {
+            t.addData("Math Time (ms): ", frameTimer.milliseconds());
+        }
         MatOfPoint largestContour = new MatOfPoint();
         double largestContourArea = -1;
 
@@ -167,27 +171,29 @@ public class ConeDetectionTesting extends OpenCvPipeline {
             double distanceToCamera = Math.cbrt(Math.pow(hypotenuseX, 3)  + Math.pow(hypotenuseY, 3) + Math.pow(rayDistance, 3)); // inaccurate
             // </ignore>
 
+            if (this.t != null) {
+                t.addData("X D`egrees Error: ", curvedDegreesErrorX);
+                t.addData("Y Degrees Error: ", curvedDegreesErrorY);
 
-            t.addData("X Degrees Error: ", curvedDegreesErrorX);
-            t.addData("Y Degrees Error: ", curvedDegreesErrorY);
+                t.addData("Depth (X): ", depthX);
+                t.addData("Depth (Y): ", depthY);
 
-            t.addData("Depth (X): ", depthX);
-            t.addData("Depth (Y): ", depthY);
+                t.addData("Ray Distance: ", rayDistance);
 
-            t.addData("Ray Distance: ", rayDistance);
-
-            t.addData("Hypotenuse Y: ", hypotenuseY);
-            t.addData("Hypotenuse X: ", hypotenuseX);
-            t.addData("Distance: ", distanceToCamera);
-
+                t.addData("Hypotenuse Y: ", hypotenuseY);
+                t.addData("Hypotenuse X: ", hypotenuseX);
+                t.addData("Distance: ", distanceToCamera);
+            }
 
         }
 
 
-        t.addLine("Contours: " + listOfContours.size());
-        t.addData("Frame Output (ms):", frameTimer.milliseconds());
-        t.addLine("dt (ms): " + frameTimer.milliseconds());
-        t.update();
+        if (this.t != null) {
+            t.addLine("Contours: " + listOfContours.size());
+            t.addData("Frame Output (ms):", frameTimer.milliseconds());
+            t.addLine("dt (ms): " + frameTimer.milliseconds());
+            t.update();
+        }
 
 
 

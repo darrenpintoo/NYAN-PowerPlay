@@ -151,25 +151,28 @@ public class TestRubiksCubeDetection extends OpenCvPipeline {
             // </ignore>
 
 
-            t.addData("X Degrees Error: ", curvedDegreesErrorX);
-            t.addData("Y Degrees Error: ", curvedDegreesErrorY);
+            if (this.t != null) {
+                t.addData("X Degrees Error: ", curvedDegreesErrorX);
+                t.addData("Y Degrees Error: ", curvedDegreesErrorY);
 
-            t.addData("Depth (X): ", depthX);
-            t.addData("Depth (Y): ", depthY);
+                t.addData("Depth (X): ", depthX);
+                t.addData("Depth (Y): ", depthY);
 
-            t.addData("Ray Distance: ", rayDistance);
+                t.addData("Ray Distance: ", rayDistance);
 
-            t.addData("Hypotenuse Y: ", hypotenuseY);
-            t.addData("Hypotenuse X: ", hypotenuseX);
-            // t.addData("Distance: ", distanceToCamera);
-
+                t.addData("Hypotenuse Y: ", hypotenuseY);
+                t.addData("Hypotenuse X: ", hypotenuseX);
+                // t.addData("Distance: ", distanceToCamera);
+            }
 
         }
 
 
-        t.addLine("Contours: " + listOfContours.size());
-        t.addLine("dt (s): " + frameTimer.milliseconds());
-        t.update();
+        if (this.t != null) {
+            t.addLine("Contours: " + listOfContours.size());
+            t.addLine("dt (s): " + frameTimer.milliseconds());
+            t.update();
+        }
 
 
 

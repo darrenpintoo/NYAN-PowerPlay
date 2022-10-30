@@ -173,8 +173,10 @@ public class SleeveDetectionPipeline extends OpenCvPipeline {
         }
 
 
-        t.addData("Current Stage Index: ", stageNum);
-        t.update();
+        if (this.t != null) {
+            t.addData("Current Stage Index: ", stageNum);
+            t.update();
+        }
 
         switch (stages[stageNum]) {
             case BLURRED:

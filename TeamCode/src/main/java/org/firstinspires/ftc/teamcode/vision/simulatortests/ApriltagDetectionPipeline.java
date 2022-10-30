@@ -146,16 +146,18 @@ public class ApriltagDetectionPipeline extends OpenCvPipeline {
         // OpenCV because I haven't yet figured out how to re-use AprilTag's pose in OpenCV.
         for(AprilTagDetection detection : detections)
         {
-            t.addLine("Detection!");
             Pose pose = poseFromTrapezoid(detection.corners, cameraMatrix, tagsizeX, tagsizeY);
             drawAxisMarker(input, tagsizeY/2.0, 6, pose.rvec, pose.tvec, cameraMatrix);
             draw3dCubeMarker(input, tagsizeX, tagsizeX, tagsizeY, 5, pose.rvec, pose.tvec, cameraMatrix);
         }
 
-        t.addData("Detection: ", this.getLatestDetections().size() != 0 ? this.getLatestDetections().get(0).id : "None");
-        t.addData("Position: ", this.getParkingPosition());
-        t.addData("Dt: ", System.currentTimeMillis() - start);
-        t.update();
+        if (this.t != null) {
+            t.addData("Detection: ", this.getLatestDetections().size() != 0 ? this.getLatestDetections().get(0).id : "None");
+            t.addData("Position: ", this.getParkingPosition());
+            t.addData("Dt: ", System.currentTimeMillis() - start);
+            t.update();
+        }
+
         try {
             Thread.sleep(50);
         } catch (InterruptedException e) {
