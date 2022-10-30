@@ -69,6 +69,7 @@ public class ExampleParkAuto extends LinearOpMode {
         robot.drivetrain.setRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.drivetrain.setRunMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         robot.drivetrain.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
         SleeveDetectionPipeline.ParkingPosition parkPosition = SleeveDetectionPipeline.ParkingPosition.LEFT;
 
         robotDrivetrain.driveForwardFromInchesBB(27);

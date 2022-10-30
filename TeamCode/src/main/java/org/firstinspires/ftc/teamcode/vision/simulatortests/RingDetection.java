@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Disabled
-public class RingDetection extends OpenCvPipeline {
+public class RingDetection {// extends OpenCvPipeline {
     /*
     private static final Mat EMPTY_MAT = new Mat();
 
@@ -212,6 +212,6 @@ public class RingDetection extends OpenCvPipeline {
         Mat[] mats = new Mat[] { outputMat, denoisedMat, input };
         return mats[stageNum % mats.length];
     }
-    
+
      */
 }
