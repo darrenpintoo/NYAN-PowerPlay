@@ -21,6 +21,8 @@ dependencies {
     implementation 'org.firstinspires.ftc:gameAssets-PowerPlay:1.0.0'
     implementation 'org.openftc:easyopencv:1.5.2'
     implementation 'com.acmerobotics.dashboard:dashboard:0.4.6'
+    implementation 'org.openftc:apriltag:1.1.0'
+
 
 }
 
