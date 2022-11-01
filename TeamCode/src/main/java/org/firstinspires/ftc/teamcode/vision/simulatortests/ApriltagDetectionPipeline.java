@@ -100,6 +100,21 @@ public class ApriltagDetectionPipeline extends OpenCvPipeline {
         nativeApriltagPtr = AprilTagDetectorJNI.createApriltagDetector(AprilTagDetectorJNI.TagFamily.TAG_36h11.string, 1, 1);
     }
 
+    public ApriltagDetectionPipeline()
+    {
+        this.tagsize = 0.03556;
+        this.tagsizeX = 0.03556;
+        this.tagsizeY = 0.03556;
+        this.fx = CameraConstants.fx;
+        this.fy = CameraConstants.fy;
+        this.cx = CameraConstants.cx;
+        this.cy = CameraConstants.cy;
+
+        constructMatrix();
+
+        nativeApriltagPtr = AprilTagDetectorJNI.createApriltagDetector(AprilTagDetectorJNI.TagFamily.TAG_36h11.string, 1, 1);
+    }
+
     @Override
     protected void finalize()
     {

@@ -8,6 +8,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.utilities.robot.extensions.EncoderDrive;
 import org.firstinspires.ftc.teamcode.utilities.robot.RobotEx;
+import org.firstinspires.ftc.teamcode.vision.simulatortests.ApriltagDetectionPipeline;
+import org.firstinspires.ftc.teamcode.vision.simulatortests.ParkingPosition;
 import org.firstinspires.ftc.teamcode.vision.simulatortests.SleeveDetectionPipeline;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
@@ -22,7 +24,7 @@ public class ExampleParkAuto extends LinearOpMode {
     // Create new Instance of the robot
     RobotEx robot = RobotEx.getInstance();
 
-    SleeveDetectionPipeline sleeveDetection = new SleeveDetectionPipeline();
+    ApriltagDetectionPipeline sleeveDetection;
     OpenCvCamera camera;
     String webcamName = "Webcam 1";
 
@@ -31,9 +33,9 @@ public class ExampleParkAuto extends LinearOpMode {
 
         robot.init(hardwareMap, telemetry);
 
-/*        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, webcamName), cameraMonitorViewId);
-        sleeveDetection = new SleeveDetectionPipeline();
+        sleeveDetection = new ApriltagDetectionPipeline();
         camera.setPipeline(sleeveDetection);
 
         camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
@@ -41,7 +43,7 @@ public class ExampleParkAuto extends LinearOpMode {
             @Override
             public void onOpened()
             {
-                camera.startStreaming(320,240, OpenCvCameraRotation.SIDEWAYS_LEFT);
+                camera.startStreaming(640,480, OpenCvCameraRotation.UPRIGHT);
             }
 
             @Override
@@ -49,9 +51,9 @@ public class ExampleParkAuto extends LinearOpMode {
         });
 
         while (!isStarted()) {
-            telemetry.addData("ROTATION: ", sleeveDetection.getPosition());
+            telemetry.addData("ROTATION: ", sleeveDetection.getParkingPosition());
             telemetry.update();
-        }*/
+        }
 
         // scan sleeve
 
@@ -70,25 +72,25 @@ public class ExampleParkAuto extends LinearOpMode {
         robot.drivetrain.setRunMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         robot.drivetrain.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        SleeveDetectionPipeline.ParkingPosition parkPosition = SleeveDetectionPipeline.ParkingPosition.LEFT;
+        ParkingPosition parkPosition = sleeveDetection.getParkingPosition();
 
-        robotDrivetrain.driveForwardFromInchesBB(27);
+        robotDrivetrain.driveForwardFromInchesBB(-27);
 
         switch (parkPosition) {
             case LEFT:
                 robotDrivetrain.turnToIMUAngle(-Math.toRadians(90));
-                robotDrivetrain.driveForwardFromInchesBB(25);
+                robotDrivetrain.driveForwardFromInchesBB(-25);
                 break;
             case RIGHT:
                 robotDrivetrain.turnToIMUAngle(Math.toRadians(90));
-                robotDrivetrain.driveForwardFromInchesBB(25);
+                robotDrivetrain.driveForwardFromInchesBB(-25);
                 break;
             case CENTER:
                 break;
         }
 
         robotDrivetrain.turnToIMUAngle(0);
-        robotDrivetrain.driveForwardFromInchesBB(10);
+        robotDrivetrain.driveForwardFromInchesBB(-10);
 
         // robot.drivetrain.enableAntiTip();
 

@@ -5,7 +5,9 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.LynxModuleMeta;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.checkerframework.checker.units.qual.C;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.Claw;
 import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.Drivetrain;
 import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.InternalIMU;
@@ -26,13 +28,16 @@ public class RobotEx {
 
     public Lift lift = new Lift();
 
+    public Claw claw = new Claw();
+
     private final ElapsedTime frameTimer = new ElapsedTime();
 
     private final Subsystem[] robotSubsystems = new Subsystem[] {
             internalIMU,
             intake,
-           drivetrain,
-            lift
+            drivetrain,
+            lift,
+            claw
 
     };
 

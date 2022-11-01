@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.utilities.robot.subsystems;
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -20,9 +21,6 @@ public class Lift implements Subsystem {
 
     public DcMotorEx leftLiftMotor;
     public DcMotorEx rightLiftMotor;
-
-    public Servo clawExtensionServo;
-    public Servo clawGrabberServo;
 
     private MotorGroup<DcMotorEx> liftMotors;
 
@@ -44,12 +42,11 @@ public class Lift implements Subsystem {
 
         this.leftLiftMotor = (DcMotorEx) hardwareMap.get(DcMotor.class, "leftLiftMotor");
         this.rightLiftMotor = (DcMotorEx) hardwareMap.get(DcMotor.class, "rightLiftMotor");
-        this.clawGrabberServo = hardwareMap.get(Servo.class, "clawGrabber");
-        this.clawExtensionServo = hardwareMap.get(Servo.class, "clawExtension");
+
 
         // todo: figure out the directions
-        rightLiftMotor.setDirection(DcMotorEx.Direction.FORWARD);
-        leftLiftMotor.setDirection(DcMotorEx.Direction.REVERSE);
+        rightLiftMotor.setDirection(DcMotorEx.Direction.REVERSE);
+        leftLiftMotor.setDirection(DcMotorEx.Direction.FORWARD);
 
         liftMotors = new MotorGroup<>(leftLiftMotor, rightLiftMotor);
         liftMotors.setRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);

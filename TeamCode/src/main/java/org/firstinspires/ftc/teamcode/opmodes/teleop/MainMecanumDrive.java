@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.teamcode.utilities.controltheory.feedback.GeneralPIDController;
 import org.firstinspires.ftc.teamcode.utilities.robot.RobotEx;
+import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.Claw;
 
 /**
  * Example teleop code for a basic mecanum drive
@@ -90,6 +91,13 @@ public class MainMecanumDrive extends LinearOpMode {
                 robot.intake.disableIntakeMotor();
             }
 
+            if (currentFrameGamepad2.a) {
+                robot.claw.setServoPosition(Claw.ClawPositions.OPEN);
+            } else if (currentFrameGamepad2.b) {
+                robot.claw.setServoPosition(Claw.ClawPositions.CLOSE);
+            }
+
+
 
             /*
             robot.drivetrain.fieldCentricDriveFromGamepad(
@@ -100,23 +108,25 @@ public class MainMecanumDrive extends LinearOpMode {
 
              */
 
-            robot.drivetrain.fieldCentricRotationPIDFromGamepad(
-                    currentFrameGamepad1.left_stick_y,
-                    currentFrameGamepad1.left_stick_x,
-                    currentFrameGamepad1.right_stick_y,
-                    currentFrameGamepad1.right_stick_x
-            );
+
+            if (gamepad1.right_bumper) {
+                robot.drivetrain.fieldCentricRotationPIDFromGamepad(
+                        currentFrameGamepad1.left_stick_y,
+                        currentFrameGamepad1.left_stick_x,
+                        currentFrameGamepad1.right_stick_y,
+                        currentFrameGamepad1.right_stick_x
+                );
+            }
 
 
 
+            if (gamepad1.right_trigger > 0.1) {
+                robot.lift.leftLiftMotor.setPower(gamepad1.right_trigger);
+                robot.lift.rightLiftMotor.setPower(gamepad1.right_trigger);
+            } else if (gamepad1.left_trigger > 0.1) {
 
-            if (gamepad1.right_trigger > 0.3) {
-                robot.lift.leftLiftMotor.setPower(gamepad1.right_trigger * 0.5);
-                robot.lift.rightLiftMotor.setPower(gamepad1.right_trigger * 0.5);
-            } else if (gamepad1.left_trigger > 0.3) {
-
-                robot.lift.leftLiftMotor.setPower(-gamepad1.left_trigger * 0.5);
-                robot.lift.rightLiftMotor.setPower(-gamepad1.left_trigger* 0.5);
+                robot.lift.leftLiftMotor.setPower(-gamepad1.left_trigger);
+                robot.lift.rightLiftMotor.setPower(-gamepad1.left_trigger);
             } else {
                 robot.lift.leftLiftMotor.setPower(0);
                 robot.lift.rightLiftMotor.setPower(0);
