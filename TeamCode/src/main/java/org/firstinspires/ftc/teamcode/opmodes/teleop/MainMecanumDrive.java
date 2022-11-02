@@ -20,10 +20,6 @@ public class MainMecanumDrive extends LinearOpMode {
     // Create new Instance of the robot
     RobotEx robot = RobotEx.getInstance();
 
-    Debounce debounces = new Debounce(
-            new DebounceObject("Claw", 1000)
-    );
-
     @Override
     public void runOpMode() {
 
@@ -109,6 +105,11 @@ public class MainMecanumDrive extends LinearOpMode {
             robot.lift.driveLiftFromGamepad(
                     gamepad2.left_trigger,
                     gamepad2.right_trigger
+            );
+
+            // Handle Manual Extension State
+            robot.clawExtension.driveLiftFromGamepad(
+                    -gamepad2.right_stick_y
             );
 
             /*

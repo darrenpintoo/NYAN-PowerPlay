@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.checkerframework.checker.units.qual.C;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.Claw;
+import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.ClawExtension;
 import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.Drivetrain;
 import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.InternalIMU;
@@ -27,6 +28,7 @@ public class RobotEx {
     public Intake intake = new Intake();
     public Lift lift = new Lift();
     public Claw claw = new Claw();
+    public ClawExtension clawExtension = new ClawExtension();
 
     private final ElapsedTime frameTimer = new ElapsedTime();
 
@@ -36,7 +38,6 @@ public class RobotEx {
             drivetrain,
             lift,
             claw
-
     };
 
     private RobotEx() {
