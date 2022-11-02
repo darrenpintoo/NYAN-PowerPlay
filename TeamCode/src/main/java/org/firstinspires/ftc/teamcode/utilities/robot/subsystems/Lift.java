@@ -29,15 +29,19 @@ public class Lift implements Subsystem {
         EXTENDED
     }
 
-    public static double kP;
-    public static double kI;
-    public static double kD;
-    public static double kF;
+    private final double GAMEPAD_THRESHOLD = 0.1;
+
+    public static double kP = 0;
+    public static double kI = 0;
+    public static double kD = 0;
+    public static double kF = 0;
 
     public DcMotorEx leftLiftMotor;
     public DcMotorEx rightLiftMotor;
 
     private MotorGroup<DcMotorEx> liftMotors;
+
+    private double currentFrameOutput = 0;
 
     LIFT_POSITIONS currentLiftTargetPosition = LIFT_POSITIONS.DEFAULT;
     LIFT_STATES currentLiftState = LIFT_STATES.DEFAULT;
@@ -78,7 +82,12 @@ public class Lift implements Subsystem {
         liftPID.updateCoefficients(kP, kI, kD, kF);
 
         int targetPosition = this.getEncoderPositionFromLevel(this.currentLiftTargetPosition);
-        double currentFrameOutput = liftPID.getOutputFromError(targetPosition, this.liftMotors.getAveragePosition());
+
+        if (this.currentFrameOutput == 0) {
+            currentFrameOutput = liftPID.getOutputFromError(targetPosition, this.liftMotors.getAveragePosition());
+        } else {
+            this.currentFrameOutput += kF;
+        }
 
         this.liftMotors.setPower(currentFrameOutput);
         /*
@@ -97,6 +106,16 @@ public class Lift implements Subsystem {
 
         this.liftMotors.setPower(currentFrameOutput);*/
 
+        this.currentFrameOutput = 0;
+
+    }
+
+    public void driveLiftFromGamepad(double leftTrigger, double rightTrigger) {
+        if (leftTrigger > GAMEPAD_THRESHOLD) {
+             this.currentFrameOutput = -leftTrigger;
+        } else if (rightTrigger > GAMEPAD_THRESHOLD) {
+            this.currentFrameOutput = rightTrigger;
+        }
     }
 
     public int getEncoderPositionFromLevel(LIFT_POSITIONS currentLiftPosition) {

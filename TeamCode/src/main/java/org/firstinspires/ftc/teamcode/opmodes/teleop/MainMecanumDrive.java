@@ -106,6 +106,12 @@ public class MainMecanumDrive extends LinearOpMode {
             }
 
             // Handle Manual Lift State
+            robot.lift.driveLiftFromGamepad(
+                    gamepad2.left_trigger,
+                    gamepad2.right_trigger
+            );
+
+            /*
             if (gamepad1.right_trigger > 0.1) {
                 robot.lift.leftLiftMotor.setPower(gamepad1.right_trigger);
                 robot.lift.rightLiftMotor.setPower(gamepad1.right_trigger);
@@ -116,6 +122,8 @@ public class MainMecanumDrive extends LinearOpMode {
                 robot.lift.leftLiftMotor.setPower(0);
                 robot.lift.rightLiftMotor.setPower(0);
             }
+
+             */
 
             double frameTime = robot.update();
 

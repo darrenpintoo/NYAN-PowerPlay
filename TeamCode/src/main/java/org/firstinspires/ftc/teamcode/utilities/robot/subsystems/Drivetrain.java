@@ -150,8 +150,6 @@ public class Drivetrain implements Subsystem {
         double currentAngle = this.internalIMU.getCurrentFrameHeadingCW();
         double error = targetAngle - currentAngle;
 
-
-
         if (Math.abs(error) > Math.PI) {
             if (targetAngle < 0) {
                 // currentAngle -= Math.PI;
@@ -179,14 +177,6 @@ public class Drivetrain implements Subsystem {
         );
 
         this.telemetry.addData("PID output: ", output);
-
-  /*      double rotatedX = rightJoystickY;
-        double rotatedY = -rightJoystickX;
-        double rotationDegrees = Math.atan2(rotatedY, rotatedX) + Math.PI;*/
-
-        // t.addData("Rotation Degrees: ", rotationDegrees);
-        // t.addData("Error: ", Math.abs(rotationDegrees - this.internalIMU.getCurrentFrameHeadingCCW()));
-
     }
 
     public void setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior newZeroPowerBehavior) {
