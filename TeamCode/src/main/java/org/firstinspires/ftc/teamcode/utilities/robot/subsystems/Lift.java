@@ -14,6 +14,21 @@ import org.firstinspires.ftc.teamcode.utilities.robot.extensions.MotorGroup;
 @Config
 public class Lift implements Subsystem {
 
+    public enum LIFT_POSITIONS {
+        DEFAULT,
+        GROUND_JUNCTION,
+        LOW_JUNCTION,
+        MIDDLE_JUNCTION,
+        HIGH_JUNCTION
+    }
+
+    public enum LIFT_STATES {
+        DEFAULT,
+        RETRACTING,
+        EXTENDING,
+        EXTENDED
+    }
+
     public static double kP;
     public static double kI;
     public static double kD;
@@ -24,14 +39,8 @@ public class Lift implements Subsystem {
 
     private MotorGroup<DcMotorEx> liftMotors;
 
-    enum LIFT_POSITIONS {
-        DEFAULT,
-        LEVEL_1,
-        LEVEL_2,
-        LEVEL_3
-    }
-
-    LIFT_POSITIONS currentLiftPosition = LIFT_POSITIONS.DEFAULT;
+    LIFT_POSITIONS currentLiftTargetPosition = LIFT_POSITIONS.DEFAULT;
+    LIFT_STATES currentLiftState = LIFT_STATES.DEFAULT;
 
     GeneralPIDController liftPID = new GeneralPIDController(kP, kI, kD, kF);
 
@@ -49,6 +58,7 @@ public class Lift implements Subsystem {
         leftLiftMotor.setDirection(DcMotorEx.Direction.FORWARD);
 
         liftMotors = new MotorGroup<>(leftLiftMotor, rightLiftMotor);
+
         liftMotors.setRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         liftMotors.setRunMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
@@ -64,6 +74,22 @@ public class Lift implements Subsystem {
     public void onCyclePassed() {
         telemetry.addData("Left Lift Pos: ", this.leftLiftMotor.getCurrentPosition());
         telemetry.addData("Right Lift Pos: ", this.rightLiftMotor.getCurrentPosition());
+
+        liftPID.updateCoefficients(kP, kI, kD, kF);
+
+        int targetPosition = this.getEncoderPositionFromLevel(this.currentLiftTargetPosition);
+        double currentFrameOutput = liftPID.getOutputFromError(targetPosition, this.liftMotors.getAveragePosition());
+
+        this.liftMotors.setPower(currentFrameOutput);
+        /*
+        switch (this.currentLiftState) {
+            case DEFAULT:
+            case EXTENDING:
+            case EXTENDED:
+            case RETRACTING:
+        }
+
+         */
 /*        liftPID.updateCoefficients(kP, kI, kD, kF);
 
         int targetPosition = this.getEncoderPositionFromLevel(currentLiftPosition);
@@ -77,12 +103,15 @@ public class Lift implements Subsystem {
         switch (currentLiftPosition) {
             case DEFAULT:
                 return 0;
-            case LEVEL_1:
+            case GROUND_JUNCTION:
                 return 100;
-            case LEVEL_2:
+            case LOW_JUNCTION:
                 return 200;
-            case LEVEL_3:
+            case MIDDLE_JUNCTION:
                 return 300;
+            case HIGH_JUNCTION:
+                return 400;
+
         }
 
         return 0;

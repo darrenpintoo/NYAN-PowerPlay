@@ -25,9 +25,7 @@ public class RobotEx {
 
     public Drivetrain drivetrain = new Drivetrain();
     public Intake intake = new Intake();
-
     public Lift lift = new Lift();
-
     public Claw claw = new Claw();
 
     private final ElapsedTime frameTimer = new ElapsedTime();
@@ -88,6 +86,7 @@ public class RobotEx {
 
         double frameTime = frameTimer.milliseconds();
         frameTimer.reset();
+
         return frameTime;
     }
 

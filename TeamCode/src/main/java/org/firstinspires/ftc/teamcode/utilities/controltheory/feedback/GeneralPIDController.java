@@ -44,11 +44,10 @@ public class GeneralPIDController {
         this.lastUpdateError = currentUpdateError;
 
         if (this.telemetry != null) {
-            telemetry.addData("e: ", currentUpdateError);
-            telemetry.addData("P: ", proportion);
-            telemetry.addData("kP: ", this.kP);
-            telemetry.addData("I: ", integralCounter);
-            telemetry.addData("D: ", derivative);
+            telemetry.addData("Error: ", currentUpdateError);
+            telemetry.addData("Proportion: ", proportion);
+            telemetry.addData("Integral: ", integralCounter);
+            telemetry.addData("Derivative: ", derivative);
         }
         return new double [] {
                 proportion,

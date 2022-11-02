@@ -114,10 +114,10 @@ public class Drivetrain implements Subsystem {
         this.telemetry.addData("RB Pos: ", this.rightBackMotor.getCurrentPosition());
         this.telemetry.addData("RF Pos: ", this.rightFrontMotor.getCurrentPosition());
 
-        this.telemetry.addData("LF Vel: ", this.leftFrontMotor.getVelocity());
+/*        this.telemetry.addData("LF Vel: ", this.leftFrontMotor.getVelocity());
         this.telemetry.addData("LB Vel: ", this.leftBackMotor.getVelocity());
         this.telemetry.addData("RB Vel: ", this.rightBackMotor.getVelocity());
-        this.telemetry.addData("RF Vel: ", this.rightFrontMotor.getVelocity());
+        this.telemetry.addData("RF Vel: ", this.rightFrontMotor.getVelocity());*/
     }
 
     public void robotCentricDriveFromGamepad(double leftJoystickY, double leftJoystickX, double rightJoystickX) {
@@ -167,8 +167,6 @@ public class Drivetrain implements Subsystem {
             targetAngle = currentAngle;
             error = 0;
         }
-
-        this.telemetry.addData("Error: ", error);
 
         double output = this.headingPID.getOutputFromError(
                 error
