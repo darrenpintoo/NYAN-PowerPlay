@@ -82,7 +82,7 @@ public class MainMecanumDrive extends LinearOpMode {
             if (currentFrameGamepad2.a) {
                 robot.claw.setClawState(Claw.ClawStates.CLOSED);
             } else if (currentFrameGamepad2.b) {
-                robot.claw.setClawState(Claw.ClawStates.OPEN_REQUESTED);
+                robot.claw.setClawState(Claw.ClawStates.OPENED);
             }
 
             // Handle Drivetrain
@@ -102,15 +102,20 @@ public class MainMecanumDrive extends LinearOpMode {
             }
 
             // Handle Manual Lift State
+            /*
             robot.lift.driveLiftFromGamepad(
                     gamepad2.left_trigger,
                     gamepad2.right_trigger
             );
 
+             */
+
             // Handle Manual Extension State
+
             robot.clawExtension.driveLiftFromGamepad(
                     -gamepad2.right_stick_y
             );
+
 
             /*
             if (gamepad1.right_trigger > 0.1) {
