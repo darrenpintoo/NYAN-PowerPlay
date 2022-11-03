@@ -31,6 +31,8 @@ public class ClawExtension implements Subsystem {
     public void driveLiftFromGamepad(double joystick) {
         if (Math.abs(joystick) > JOYSTICK_THRESHOLD) {
             this.currentFrameOutput = joystick;
+        } else {
+            this.currentFrameOutput = 0;
         }
     }
 }

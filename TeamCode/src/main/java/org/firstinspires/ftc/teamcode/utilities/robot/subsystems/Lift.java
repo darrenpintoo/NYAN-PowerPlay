@@ -41,7 +41,7 @@ public class Lift implements Subsystem {
 
     private MotorGroup<DcMotorEx> liftMotors;
 
-    private double currentFrameOutput = 0;
+    private double currentFrameOutput = -Double.MAX_VALUE;
 
     LIFT_POSITIONS currentLiftTargetPosition = LIFT_POSITIONS.DEFAULT;
     LIFT_STATES currentLiftState = LIFT_STATES.DEFAULT;
@@ -83,7 +83,7 @@ public class Lift implements Subsystem {
 
         int targetPosition = this.getEncoderPositionFromLevel(this.currentLiftTargetPosition);
 
-        if (this.currentFrameOutput == 0) {
+        if (this.currentFrameOutput == -Double.MAX_VALUE) {
             currentFrameOutput = liftPID.getOutputFromError(targetPosition, this.liftMotors.getAveragePosition());
         } else {
             this.currentFrameOutput += kF;
@@ -115,6 +115,8 @@ public class Lift implements Subsystem {
              this.currentFrameOutput = -leftTrigger;
         } else if (rightTrigger > GAMEPAD_THRESHOLD) {
             this.currentFrameOutput = rightTrigger;
+        } else {
+            this.currentFrameOutput = 0;
         }
     }
 

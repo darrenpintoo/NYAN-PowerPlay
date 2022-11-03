@@ -23,7 +23,7 @@ public class Claw implements Subsystem {
     );
 
     public static int RED_THRESHOLD = 500;
-    public static int BLUE_THRESHOLD = 200;
+    public static int BLUE_THRESHOLD = 100;
 
     public enum ClawStates {
         OPENED, CLOSED, OPEN_REQUESTED
@@ -40,12 +40,14 @@ public class Claw implements Subsystem {
 
     //need to tune still
     public static double openPosition = 0.3;
-    public static double closePosition = 0.48;
+    public static double closePosition = 0.55;
 
     private ClawStates currentClawState = ClawStates.OPENED;
 
     private int currentFrameBlue;
     private int currentFrameRed;
+
+    private boolean coneInClawLast = false;
 
     @Override
     public void onInit(HardwareMap hardwareMap, Telemetry telemetry) {
@@ -76,9 +78,12 @@ public class Claw implements Subsystem {
         // Set actual servo obj position here '.setPosition()'
         telemetry.addData("Cone in grabber", this.checkConeInClaw());
 
-        if (this.checkConeInClaw()) {
+        if (this.checkConeInClaw() != this.coneInClawLast && this.checkConeInClaw()) {
             this.setClawState(ClawStates.CLOSED);
         }
+
+        this.coneInClawLast = this.checkConeInClaw();
+
         /*
         switch (this.currentClawState) {
             case OPENED:
