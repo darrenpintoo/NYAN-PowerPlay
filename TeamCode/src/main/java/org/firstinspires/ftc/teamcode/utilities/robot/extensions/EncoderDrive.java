@@ -23,7 +23,7 @@ public class EncoderDrive {
         return ticks;
     }
 
-    private final double BANG_BANG_POWER = -0.5;
+    private final double BANG_BANG_POWER = -0.25;
     private final double TICK_THRESHOLD = 50;
     private final double ANGLE_AT_TIME = 3;
 

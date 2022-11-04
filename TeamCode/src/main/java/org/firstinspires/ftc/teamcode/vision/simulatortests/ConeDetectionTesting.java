@@ -42,6 +42,10 @@ public class ConeDetectionTesting extends OpenCvPipeline {
 
     private int stageNum = 2;
 
+    public ConeDetectionTesting() {
+
+    }
+
     private enum Stage
     {
         FILTERED,
@@ -57,6 +61,8 @@ public class ConeDetectionTesting extends OpenCvPipeline {
     Mat kernel3 = Imgproc.getStructuringElement(Imgproc.MORPH_CLOSE, new Size(3, 3));
 */
     Size blurSize = new Size(10, 10);
+
+    private double degreesError = 0;
 
     public ConeDetectionTesting(Telemetry t) {
         this.t = t;
@@ -171,8 +177,10 @@ public class ConeDetectionTesting extends OpenCvPipeline {
             double distanceToCamera = Math.cbrt(Math.pow(hypotenuseX, 3)  + Math.pow(hypotenuseY, 3) + Math.pow(rayDistance, 3)); // inaccurate
             // </ignore>
 
+            this.degreesError = curvedDegreesErrorX;
+
             if (this.t != null) {
-                t.addData("X D`egrees Error: ", curvedDegreesErrorX);
+                t.addData("X Degrees Error: ", curvedDegreesErrorX);
                 t.addData("Y Degrees Error: ", curvedDegreesErrorY);
 
                 t.addData("Depth (X): ", depthX);
@@ -207,8 +215,11 @@ public class ConeDetectionTesting extends OpenCvPipeline {
                 return contourMat;
         }
 
-
         return contourMat;
+    }
+
+    public double getDegreesError() {
+        return this.degreesError;
     }
 
 }
