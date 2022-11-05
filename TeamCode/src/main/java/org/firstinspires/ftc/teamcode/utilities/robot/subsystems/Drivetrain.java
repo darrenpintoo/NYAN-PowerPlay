@@ -153,9 +153,19 @@ public class Drivetrain implements Subsystem {
         if (Math.abs(error) > Math.PI) {
             if (targetAngle < 0) {
                 // currentAngle -= Math.PI;
+                double alpha = Math.PI - currentAngle;
+                double beta = -Math.PI - targetAngle;
+
+                double difference = alpha + beta;
+
                 error = -((-Math.PI - targetAngle) + (Math.PI - currentAngle));
             } else if (targetAngle > 0) {
                 // currentAngle += Math.PI;
+                double alpha = Math.PI - targetAngle;
+                double beta = -Math.PI - currentAngle;
+
+                double difference = alpha + beta;
+                
                 error = (Math.PI - targetAngle) + (-Math.PI - currentAngle);
             }
         }

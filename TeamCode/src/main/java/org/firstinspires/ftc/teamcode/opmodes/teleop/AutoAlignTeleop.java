@@ -69,6 +69,8 @@ public class AutoAlignTeleop extends LinearOpMode {
 
         // robot.drivetrain.enableAntiTip();
 
+        double degreesError = 0;
+
         // Declare state variables
         boolean intakeOn = false;
         boolean intakeDirection = false;
@@ -113,16 +115,18 @@ public class AutoAlignTeleop extends LinearOpMode {
             }
 
             // Handle Drivetrain
-            if (gamepad1.right_bumper) {
+            if (currentFrameGamepad1.right_bumper) {
                 robot.drivetrain.fieldCentricRotationPIDFromGamepad(
                         currentFrameGamepad1.left_stick_y,
                         currentFrameGamepad1.left_stick_x,
                         currentFrameGamepad1.right_stick_y,
                         currentFrameGamepad1.right_stick_x
                 );
-            } else if (gamepad1.left_bumper) {
+            } else if (currentFrameGamepad1.left_bumper) {
 
-                double degreesError = coneDetection.getDegreesError();
+                if (currentFrameGamepad1.left_bumper != previousFrameGamepad1.left_bumper) {
+                    degreesError = coneDetection.getDegreesError();
+                }
 
                 robot.drivetrain.fieldCentricRotationPIDFromGamepad(
                         currentFrameGamepad1.left_stick_y,
@@ -142,8 +146,8 @@ public class AutoAlignTeleop extends LinearOpMode {
             // Handle Manual Lift State
 
             robot.lift.driveLiftFromGamepad(
-                    gamepad2.left_trigger,
-                    gamepad2.right_trigger
+                    currentFrameGamepad2.left_trigger,
+                    currentFrameGamepad2.right_trigger
             );
 
 
@@ -151,7 +155,7 @@ public class AutoAlignTeleop extends LinearOpMode {
             // Handle Manual Extension State
 
             robot.clawExtension.driveLiftFromGamepad(
-                    -gamepad2.right_stick_y
+                    -currentFrameGamepad2.right_stick_y
             );
 
 
