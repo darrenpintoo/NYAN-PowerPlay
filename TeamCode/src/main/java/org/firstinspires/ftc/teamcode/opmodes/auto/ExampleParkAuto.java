@@ -74,15 +74,17 @@ public class ExampleParkAuto extends LinearOpMode {
 
         ParkingPosition parkPosition = sleeveDetection.getParkingPosition();
 
+        robotDrivetrain.turnToIMUAngle(Math.toRadians(180));
+
         robotDrivetrain.driveForwardFromInchesBB(27);
 
         switch (parkPosition) {
             case LEFT:
-                robotDrivetrain.turnToIMUAngle(-Math.toRadians(90));
+                robotDrivetrain.turnToIMUAngle(Math.toRadians(90));
                 robotDrivetrain.driveForwardFromInchesBB(25);
                 break;
             case RIGHT:
-                robotDrivetrain.turnToIMUAngle(Math.toRadians(90));
+                robotDrivetrain.turnToIMUAngle(-Math.toRadians(90));
                 robotDrivetrain.driveForwardFromInchesBB(25);
                 break;
             case CENTER:
@@ -91,7 +93,7 @@ public class ExampleParkAuto extends LinearOpMode {
 
         robotDrivetrain.turnToIMUAngle(0);
         robotDrivetrain.driveForwardFromInchesBB(10);
-
+        robotDrivetrain.turnToIMUAngle(180);
         // robot.drivetrain.enableAntiTip();
 
 

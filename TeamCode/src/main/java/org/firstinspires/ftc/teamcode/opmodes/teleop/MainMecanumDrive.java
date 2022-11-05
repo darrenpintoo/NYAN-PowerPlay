@@ -116,9 +116,9 @@ public class MainMecanumDrive extends LinearOpMode {
 
             // Handle Manual Extension State
 
-            robot.clawExtension.driveLiftFromGamepad(
+/*            robot.clawExtension.driveLiftFromGamepad(
                     gamepad2.right_stick_y
-            );
+            );*/
 
 
             /*

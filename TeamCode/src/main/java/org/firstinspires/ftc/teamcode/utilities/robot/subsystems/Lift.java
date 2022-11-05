@@ -81,6 +81,7 @@ public class Lift implements Subsystem {
         telemetry.addData("Left Lift Pos: ", this.leftLiftMotor.getCurrentPosition());
         telemetry.addData("Right Lift Pos: ", this.rightLiftMotor.getCurrentPosition());
 
+/*
         liftPID.updateCoefficients(kP, kI, kD, kF);
 
         int targetPosition = this.getEncoderPositionFromLevel(this.currentLiftTargetPosition);
@@ -90,6 +91,7 @@ public class Lift implements Subsystem {
         } else {
             this.currentFrameOutput += kF;
         }
+*/
 
         this.liftMotors.setPower(currentFrameOutput);
         /*
@@ -117,6 +119,8 @@ public class Lift implements Subsystem {
              this.currentFrameOutput = -leftTrigger;
         } else if (rightTrigger > GAMEPAD_THRESHOLD) {
             this.currentFrameOutput = rightTrigger;
+        } else {
+            this.currentFrameOutput = 0;
         }
     }
 

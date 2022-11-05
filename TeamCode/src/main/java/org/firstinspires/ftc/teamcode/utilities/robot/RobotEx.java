@@ -28,7 +28,7 @@ public class RobotEx {
     public Intake intake = new Intake();
     public Lift lift = new Lift();
     public Claw claw = new Claw();
-    public ClawExtension clawExtension = new ClawExtension();
+    //public ClawExtension clawExtension = new ClawExtension();
 
     private final ElapsedTime frameTimer = new ElapsedTime();
 
@@ -37,8 +37,8 @@ public class RobotEx {
             intake,
             drivetrain,
             lift,
-            claw,
-            clawExtension
+            claw//,
+           //  clawExtension
     };
 
     private RobotEx() {
