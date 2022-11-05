@@ -57,7 +57,7 @@ public class EncoderDrive {
 
         boolean targetReached = false;
 
-        while (!targetReached && !this.currentOpmode.isStopRequested()) {
+        while (!targetReached) {
 
             double currentFramePosition = Drivetrain.getAverageFromArray(this.dt.getCWMotorTicks());
 
@@ -66,6 +66,7 @@ public class EncoderDrive {
             double currentFramePower;
 
             if (error < TICK_THRESHOLD) {
+                telemetry.addLine("Reached");
                 currentFramePower = 0;
                 targetReached = true;
             } else if (error > 0) {
@@ -87,6 +88,12 @@ public class EncoderDrive {
                 telemetry.update();
 
             }
+
+            try {
+                Thread.sleep(5000);
+            }catch (InterruptedException e) {
+
+            }
             this.robot.update();
 
 
@@ -106,7 +113,7 @@ public class EncoderDrive {
 
         double atTargetStartTime = -1;
 
-        while (!atTarget && !this.currentOpmode.isStopRequested()) {
+        while (!atTarget) {
             turnError = this.dt.headingPID.getOutputFromError(angle, currentIMUPosition);
 
 

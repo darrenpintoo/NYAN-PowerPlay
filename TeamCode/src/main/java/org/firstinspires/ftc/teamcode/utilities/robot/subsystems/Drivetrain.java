@@ -156,7 +156,7 @@ public class Drivetrain implements Subsystem {
                 error = -((-Math.PI - targetAngle) + (Math.PI - currentAngle));
             } else if (targetAngle > 0) {
                 // currentAngle += Math.PI;
-                error = (Math.PI - targetAngle) + (-Math.PI - currentAngle);
+                error = -((Math.PI - targetAngle) + (-Math.PI - currentAngle));
             }
         }
 

@@ -37,7 +37,8 @@ public class RobotEx {
             intake,
             drivetrain,
             lift,
-            claw
+            claw,
+            clawExtension
     };
 
     private RobotEx() {

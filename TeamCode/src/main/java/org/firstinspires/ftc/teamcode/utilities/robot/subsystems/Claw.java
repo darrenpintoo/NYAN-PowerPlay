@@ -22,7 +22,7 @@ public class Claw implements Subsystem {
             new DebounceObject("OPEN_REQUESTED", 2000)
     );
 
-    public static int RED_THRESHOLD = 500;
+    public static int RED_THRESHOLD = 100;
     public static int BLUE_THRESHOLD = 100;
 
     public enum ClawStates {
@@ -40,7 +40,7 @@ public class Claw implements Subsystem {
 
     //need to tune still
     public static double openPosition = 0.3;
-    public static double closePosition = 0.55;
+    public static double closePosition = 0.4;
 
     private ClawStates currentClawState = ClawStates.OPENED;
 
