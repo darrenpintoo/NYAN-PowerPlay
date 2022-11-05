@@ -16,13 +16,14 @@ public class InternalIMU implements Subsystem {
     private static InternalIMU imuInstance = null;
     private BNO055IMU internalIMU;
 
-    private Orientation currentFrameOrientation = new Orientation();
+    private Orientation currentFrameOrientation = new Orientation() ;
     private AngularVelocity currentFrameVelocity;
 
     private Orientation lastFrameOrientation = new Orientation();
 
     private double absoluteOrientation;
 
+    private double startTilt = 0;
     // private Drivetrain drivetrain;
 
     private Telemetry telemetry;
@@ -58,7 +59,8 @@ public class InternalIMU implements Subsystem {
 
     @Override
     public void onOpmodeStarted() {
-
+        this.onCyclePassed();
+        this.startTilt = this.getCurrentFrameTilt();
     }
 
     @Override
@@ -123,7 +125,7 @@ public class InternalIMU implements Subsystem {
     }
 
     public boolean isRobotTilted() {
-        return Math.abs(this.getCurrentFrameTilt()) > 0.25;
+        return Math.abs(this.getCurrentFrameTilt() - this.startTilt) > 0.1;
     }
 
     public double getAbsoluteOrientation() {

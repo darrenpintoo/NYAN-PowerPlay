@@ -12,6 +12,7 @@ import org.firstinspires.ftc.teamcode.utilities.robot.RobotEx;
 import org.firstinspires.ftc.teamcode.utilities.robot.statehandling.Debounce;
 import org.firstinspires.ftc.teamcode.utilities.robot.statehandling.DebounceObject;
 import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.Claw;
+import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.Lift;
 
 /**
  * Example teleop code for a basic mecanum drive
@@ -44,7 +45,7 @@ public class MainMecanumDrive extends LinearOpMode {
         Gamepad previousFrameGamepad1 = new Gamepad();
         Gamepad previousFrameGamepad2 = new Gamepad();
 
-        // robot.drivetrain.enableAntiTip();
+        robot.drivetrain.enableAntiTip();
 
         // Declare state variables
         boolean intakeOn = false;
@@ -108,10 +109,23 @@ public class MainMecanumDrive extends LinearOpMode {
             // Handle Manual Lift State
 
             robot.lift.driveLiftFromGamepad(
-                    gamepad2.left_trigger,
-                    gamepad2.right_trigger
+                    currentFrameGamepad2.left_trigger,
+                    currentFrameGamepad2.right_trigger
             );
 
+            if (currentFrameGamepad2.dpad_up) {
+                robot.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.HIGH_JUNCTION);
+            } else if (currentFrameGamepad2.dpad_left) {
+                robot.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.MIDDLE_JUNCTION);
+            } else if (currentFrameGamepad2.dpad_right) {
+                robot.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.LOW_JUNCTION);
+            } else if (currentFrameGamepad2.dpad_down){
+                robot.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.GROUND_JUNCTION);
+            }
+
+            if (currentFrameGamepad1.x) {
+                robot.drivetrain.disbaleAntiTip();
+            }
 
 
             // Handle Manual Extension State

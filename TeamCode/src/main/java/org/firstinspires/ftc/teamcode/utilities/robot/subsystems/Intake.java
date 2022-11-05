@@ -45,16 +45,16 @@ public class Intake implements Subsystem {
 
         int intakeDirection = directionReversed ? -1 : 1;
 
-        telemetry.addLine("Intake on");
+        //telemetry.addLine("Intake on");
         this.rightMotor.setPower(ON_MOTOR_POWER * intakeDirection);
         this.leftMotor.setPower(ON_MOTOR_POWER * intakeDirection);
-        telemetry.addData("Intake Power: ", this.rightMotor.getPower());
-        telemetry.addData("Intake Power: ", this.leftMotor.getPower());
+/*        telemetry.addData("Intake Power: ", this.rightMotor.getPower());
+        telemetry.addData("Intake Power: ", this.leftMotor.getPower());*/
 
     }
 
     public void disableIntakeMotor() {
-        telemetry.addLine("Intake off");
+        // telemetry.addLine("Intake off");
         this.rightMotor.setPower(0);
         this.leftMotor.setPower(0);
     }

@@ -44,6 +44,8 @@ public class Lift implements Subsystem {
     private double currentFrameOutput = 0;
 
     LIFT_POSITIONS currentLiftTargetPosition = LIFT_POSITIONS.DEFAULT;
+    LIFT_POSITIONS lastLiftTargetPosition = LIFT_POSITIONS.DEFAULT;
+
     LIFT_STATES currentLiftState = LIFT_STATES.DEFAULT;
 
     GeneralPIDController liftPID = new GeneralPIDController(kP, kI, kD, kF);
@@ -81,21 +83,21 @@ public class Lift implements Subsystem {
         telemetry.addData("Left Lift Pos: ", this.leftLiftMotor.getCurrentPosition());
         telemetry.addData("Right Lift Pos: ", this.rightLiftMotor.getCurrentPosition());
 
-/*
+
         liftPID.updateCoefficients(kP, kI, kD, kF);
+
+        double currentPosition = this.liftMotors.getAveragePosition();
 
         int targetPosition = this.getEncoderPositionFromLevel(this.currentLiftTargetPosition);
 
-        if (this.currentFrameOutput == 0) {
+        if (this.currentFrameOutput == 0 && targetPosition > currentPosition) {
             currentFrameOutput = liftPID.getOutputFromError(targetPosition, this.liftMotors.getAveragePosition());
-        } else {
-            this.currentFrameOutput += kF;
         }
-*/
+
 
         this.liftMotors.setPower(currentFrameOutput);
         /*
-        switch (this.currentLiftState) {
+        switch (this.currentLiftSta te) {
             case DEFAULT:
             case EXTENDING:
             case EXTENDED:
@@ -122,6 +124,10 @@ public class Lift implements Subsystem {
         } else {
             this.currentFrameOutput = 0;
         }
+    }
+
+    public void setCurrentLiftTargetPosition(LIFT_POSITIONS targetListPosition) {
+        this.currentLiftTargetPosition = targetListPosition;
     }
 
     public int getEncoderPositionFromLevel(LIFT_POSITIONS currentLiftPosition) {

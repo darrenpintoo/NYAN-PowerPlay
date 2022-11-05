@@ -183,9 +183,12 @@ public class Drivetrain implements Subsystem {
         this.fieldCentricDriveFromGamepad(
                 leftJoystickY,
                 leftJoystickX,
-                -Math.min(Math.max(output, -1), 1)
+                -Math.min(Math.max(output, -1), 1) * 0.75
         );
 
+        this.telemetry.addData("Target angle: ", targetAngle);
+        this.telemetry.addData("Current Angle: ", currentAngle);
+        this.telemetry.addData("Error: ", error);
         this.telemetry.addData("PID output: ", output);
     }
 

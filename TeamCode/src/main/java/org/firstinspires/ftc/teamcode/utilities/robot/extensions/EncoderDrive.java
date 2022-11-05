@@ -57,7 +57,7 @@ public class EncoderDrive {
 
         boolean targetReached = false;
 
-        while (!targetReached) {
+        while (!targetReached && !this.currentOpmode.isStopRequested()) {
 
             double currentFramePosition = Drivetrain.getAverageFromArray(this.dt.getCWMotorTicks());
 
@@ -65,7 +65,7 @@ public class EncoderDrive {
 
             double currentFramePower;
 
-            if (error < TICK_THRESHOLD) {
+            if (Math.abs(error) < TICK_THRESHOLD) {
                 telemetry.addLine("Reached");
                 currentFramePower = 0;
                 targetReached = true;
@@ -89,11 +89,6 @@ public class EncoderDrive {
 
             }
 
-            try {
-                Thread.sleep(5000);
-            }catch (InterruptedException e) {
-
-            }
             this.robot.update();
 
 
@@ -113,9 +108,31 @@ public class EncoderDrive {
 
         double atTargetStartTime = -1;
 
-        while (!atTarget) {
+        while (!atTarget && !this.currentOpmode.isStopRequested()) {
+
+
             turnError = this.dt.headingPID.getOutputFromError(angle, currentIMUPosition);
 
+
+            if (Math.abs(turnError) > Math.PI) {
+                if (angle < 0) {
+                    // currentAngle -= Math.PI;
+                    double alpha = Math.PI - currentIMUPosition;
+                    double beta = -Math.PI - angle;
+
+                    double difference = alpha + beta;
+
+                    turnError = -((-Math.PI - angle) + (Math.PI - currentIMUPosition));
+                } else if (angle > 0) {
+                    // currentAngle += Math.PI;
+                    double alpha = Math.PI - angle;
+                    double beta = -Math.PI - currentIMUPosition;
+
+                    double difference = alpha + beta;
+
+                    turnError = -((Math.PI - angle) + (-Math.PI - currentIMUPosition));
+                }
+            }
 
             this.dt.robotCentricDriveFromGamepad(
                     0,
@@ -134,6 +151,11 @@ public class EncoderDrive {
             } else {
                 atTargetStartTime = -1;
             }
+
+
+            telemetry.addData("Turn Angle: ", turnError);
+            telemetry.addData("current angle: ", currentIMUPosition);
+            telemetry.update();
 
             this.robot.update();
         }

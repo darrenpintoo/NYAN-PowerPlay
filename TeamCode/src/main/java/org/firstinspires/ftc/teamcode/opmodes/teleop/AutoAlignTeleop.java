@@ -154,9 +154,9 @@ public class AutoAlignTeleop extends LinearOpMode {
 
             // Handle Manual Extension State
 
-            robot.clawExtension.driveLiftFromGamepad(
+/*            robot.clawExtension.driveLiftFromGamepad(
                     -currentFrameGamepad2.right_stick_y
-            );
+            );*/
 
 
             /*
