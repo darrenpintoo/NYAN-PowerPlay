@@ -102,7 +102,7 @@ public class MainMecanumDrive extends LinearOpMode {
                 robot.drivetrain.fieldCentricDriveFromGamepad(
                         currentFrameGamepad1.left_stick_y,
                         currentFrameGamepad1.left_stick_x,
-                        currentFrameGamepad1.right_stick_x
+                        currentFrameGamepad1.right_stick_x * 0.5
                 );
             }
 
