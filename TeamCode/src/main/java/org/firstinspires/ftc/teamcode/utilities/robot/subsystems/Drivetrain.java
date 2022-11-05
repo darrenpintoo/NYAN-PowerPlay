@@ -166,7 +166,7 @@ public class Drivetrain implements Subsystem {
 
                 double difference = alpha + beta;
                 
-                error = (Math.PI - targetAngle) + (-Math.PI - currentAngle);
+                error = -((Math.PI - targetAngle) + (-Math.PI - currentAngle));
             }
         }
 

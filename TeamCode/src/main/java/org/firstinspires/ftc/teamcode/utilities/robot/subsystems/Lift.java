@@ -66,6 +66,8 @@ public class Lift implements Subsystem {
         liftMotors.setRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         liftMotors.setRunMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
+        liftMotors.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+
         this.telemetry = telemetry;
     }
 

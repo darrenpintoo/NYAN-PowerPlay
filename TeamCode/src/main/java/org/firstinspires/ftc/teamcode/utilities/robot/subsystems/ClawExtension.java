@@ -11,11 +11,15 @@ public class ClawExtension implements Subsystem {
 
     private CRServo extensionServo;
 
-    private double currentFrameOutput;
+    private double currentFrameOutput = 0;
+
+    Telemetry t;
 
     @Override
     public void onInit(HardwareMap hardwareMap, Telemetry telemetry) {
-        this.extensionServo = hardwareMap.get(CRServo.class, "ClawExtensionServo");
+        this.extensionServo = hardwareMap.get(CRServo.class, "clawExtensionServo");
+
+        this.t = telemetry;
     }
 
     @Override
@@ -26,6 +30,9 @@ public class ClawExtension implements Subsystem {
     @Override
     public void onCyclePassed() {
         this.extensionServo.setPower(this.currentFrameOutput);
+
+        t.addData("Extension Power: ", this.extensionServo.getPower());
+
     }
 
     public void driveLiftFromGamepad(double joystick) {

@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmodes.teleop;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.exception.RobotCoreException;
@@ -20,9 +22,11 @@ public class MainMecanumDrive extends LinearOpMode {
     // Create new Instance of the robot
     RobotEx robot = RobotEx.getInstance();
 
+
     @Override
     public void runOpMode() {
 
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         // Initialize the robot
         robot.init(hardwareMap, telemetry);
 
@@ -86,7 +90,7 @@ public class MainMecanumDrive extends LinearOpMode {
             }
 
             // Handle Drivetrain
-            if (gamepad1.right_bumper) {
+            if (gamepad1.left_bumper) {
                 robot.drivetrain.fieldCentricRotationPIDFromGamepad(
                         currentFrameGamepad1.left_stick_y,
                         currentFrameGamepad1.left_stick_x,
@@ -113,7 +117,7 @@ public class MainMecanumDrive extends LinearOpMode {
             // Handle Manual Extension State
 
             robot.clawExtension.driveLiftFromGamepad(
-                    -gamepad2.right_stick_y
+                    gamepad2.right_stick_y
             );
 
 
