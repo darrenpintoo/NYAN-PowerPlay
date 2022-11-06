@@ -81,11 +81,11 @@ public class ExampleParkAuto extends LinearOpMode {
 
         switch (parkPosition) {
             case LEFT:
-                robotDrivetrain.turnToIMUAngle(-Math.toRadians(90));
+                robotDrivetrain.turnToIMUAngle(Math.toRadians(90));
                 robotDrivetrain.driveForwardFromInchesBB(25);
                 break;
             case RIGHT:
-                robotDrivetrain.turnToIMUAngle(Math.toRadians(90));
+                robotDrivetrain.turnToIMUAngle(-Math.toRadians(90));
                 robotDrivetrain.driveForwardFromInchesBB(25);
                 break;
             case CENTER:

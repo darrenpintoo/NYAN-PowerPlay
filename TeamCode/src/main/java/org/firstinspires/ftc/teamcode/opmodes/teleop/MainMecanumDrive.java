@@ -12,6 +12,7 @@ import org.firstinspires.ftc.teamcode.utilities.robot.RobotEx;
 import org.firstinspires.ftc.teamcode.utilities.robot.statehandling.Debounce;
 import org.firstinspires.ftc.teamcode.utilities.robot.statehandling.DebounceObject;
 import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.Claw;
+import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.Lift;
 
 /**
@@ -40,7 +41,7 @@ public class MainMecanumDrive extends LinearOpMode {
 
         // Initialize variables for loop
         Gamepad currentFrameGamepad1 = new Gamepad();
-        Gamepad currentFrameGamepad2 = new Gamepad();
+        Gamepad currentFrameGamepad2 = new  Gamepad();
 
         Gamepad previousFrameGamepad1 = new Gamepad();
         Gamepad previousFrameGamepad2 = new Gamepad();
@@ -50,6 +51,8 @@ public class MainMecanumDrive extends LinearOpMode {
         // Declare state variables
         boolean intakeOn = false;
         boolean intakeDirection = false;
+
+        boolean robotCentric = true ;
 
         robot.update();
 
@@ -67,7 +70,7 @@ public class MainMecanumDrive extends LinearOpMode {
             }
 
             // Handle Intake State
-            if (currentFrameGamepad1.a != previousFrameGamepad1.a && currentFrameGamepad1.a) {
+/*            if (currentFrameGamepad1.a != previousFrameGamepad1.a && currentFrameGamepad1.a) {
                 intakeOn = !intakeOn;
                 intakeDirection = false;
             }
@@ -75,7 +78,18 @@ public class MainMecanumDrive extends LinearOpMode {
             if (currentFrameGamepad1.b != previousFrameGamepad1.b && currentFrameGamepad1.b) {
                 intakeOn = !intakeOn;
                 intakeDirection = true;
+            }*/
+
+            if (currentFrameGamepad1.right_trigger > 0.2 && previousFrameGamepad1.right_trigger < 0.2) {
+                intakeOn = !intakeOn;
+                intakeDirection = false;
             }
+
+            if (currentFrameGamepad1.left_trigger > 0.2 && previousFrameGamepad1.left_trigger < 0.2) {
+                intakeOn = !intakeOn;
+                intakeDirection = true;
+            }
+
 
             if (intakeOn) {
                 robot.intake.enableIntakeMotor(intakeDirection);
@@ -90,6 +104,10 @@ public class MainMecanumDrive extends LinearOpMode {
                 robot.claw.setClawState(Claw.ClawStates.OPENED);
             }
 
+            if (currentFrameGamepad1.y && previousFrameGamepad1.y != currentFrameGamepad1.y) {
+                robotCentric = !robotCentric;
+            }
+
             // Handle Drivetrain
             if (gamepad1.left_bumper) {
                 robot.drivetrain.fieldCentricRotationPIDFromGamepad(
@@ -99,14 +117,31 @@ public class MainMecanumDrive extends LinearOpMode {
                         currentFrameGamepad1.right_stick_x
                 );
             } else {
-                robot.drivetrain.fieldCentricDriveFromGamepad(
-                        currentFrameGamepad1.left_stick_y,
-                        currentFrameGamepad1.left_stick_x,
-                        currentFrameGamepad1.right_stick_x * 0.5
-                );
+                if (robotCentric) {
+                    robot.drivetrain.robotCentricDriveFromGamepad(
+                            currentFrameGamepad1.left_stick_y * 0.65,
+                            currentFrameGamepad1.left_stick_x * 0.65,
+                            currentFrameGamepad1.right_stick_x * 0.5
+                    );
+                }
+                else {
+                    robot.drivetrain.fieldCentricDriveFromGamepad(
+                            currentFrameGamepad1.left_stick_y * 0.65,
+                            currentFrameGamepad1.left_stick_x * 0.65,
+                            currentFrameGamepad1.right_stick_x * 0.5
+                    );
+                }
             }
 
             // Handle Manual Lift State
+
+            if (currentFrameGamepad2.x) {
+                robot.intake.ON_MOTOR_POWER = 0.75;
+            }
+
+            if (currentFrameGamepad2.y) {
+                robot.intake.ON_MOTOR_POWER = 1;
+            }
 
             robot.lift.driveLiftFromGamepad(
                     currentFrameGamepad2.left_trigger,
@@ -152,14 +187,14 @@ public class MainMecanumDrive extends LinearOpMode {
             double frameTime = robot.update();
 
 
-            telemetry.addData("IMU orientation: ", robot.internalIMU.getCurrentFrameOrientation());
-            telemetry.addData("CCW IMU orientation: ", robot.internalIMU.getCurrentFrameHeadingCCW());
+            // telemetry.addData("IMU orientation: ", robot.internalIMU.getCurrentFrameOrientation());
+            // telemetry.addData("CCW IMU orientation: ", robot.internalIMU.getCurrentFrameHeadingCCW());
 
-            telemetry.addData("CW IMU orientation: ", robot.internalIMU.getCurrentFrameHeadingCW());
+            // telemetry.addData("CW IMU orientation: ", robot.internalIMU.getCurrentFrameHeadingCW());
             telemetry.addData("Robot Tilt : ", robot.internalIMU.getCurrentFrameTilt());
             // telemetry.addData("Robot Tilt Acceleration y: ", robot.internalIMU.getCurrentFrameVelocity().yRotationRate);
 
-            telemetry.addData("Joystick Orientation: ", Math.atan2(-currentFrameGamepad1.right_stick_x, -currentFrameGamepad1.right_stick_y));
+            // telemetry.addData("Joystick Orientation: ", Math.atan2(-currentFrameGamepad1.right_stick_x, -currentFrameGamepad1.right_stick_y));
 /*            telemetry.addData(
                     "Updated Joystick Orientation: ",
                     Math.atan2(currentFrameGamepad1.right_stick_y, currentFrameGamepad1.right_stick_x) - Math.PI / 2

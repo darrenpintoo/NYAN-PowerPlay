@@ -118,12 +118,13 @@ public class Lift implements Subsystem {
 
     public void driveLiftFromGamepad(double leftTrigger, double rightTrigger) {
         if (leftTrigger > GAMEPAD_THRESHOLD) {
-             this.currentFrameOutput = -leftTrigger;
+            this.currentFrameOutput = -leftTrigger;
         } else if (rightTrigger > GAMEPAD_THRESHOLD) {
             this.currentFrameOutput = rightTrigger;
         } else {
             this.currentFrameOutput = 0;
         }
+
     }
 
     public void setCurrentLiftTargetPosition(LIFT_POSITIONS targetListPosition) {
