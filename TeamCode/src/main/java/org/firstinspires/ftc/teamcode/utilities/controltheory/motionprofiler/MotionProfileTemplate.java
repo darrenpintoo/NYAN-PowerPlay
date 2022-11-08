@@ -2,7 +2,8 @@ package org.firstinspires.ftc.teamcode.utilities.controltheory.motionprofiler;
 
 public interface MotionProfileTemplate {
 
-    void buildTrajectoryFromConstraints(double vMax, double aMax);
+    void build();
+
     double getPositionFromTime(double time);
 
     double getVelocityFromTime(double time);
