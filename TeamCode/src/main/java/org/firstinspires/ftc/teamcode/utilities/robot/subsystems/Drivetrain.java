@@ -62,6 +62,11 @@ public class Drivetrain implements Subsystem {
         this.leftBackMotor.setDirection(DcMotorEx.Direction.REVERSE);
         this.rightBackMotor.setDirection(DcMotorEx.Direction.FORWARD);
 
+/*        this.rightFrontMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        this.leftFrontMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        this.leftBackMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        this.rightBackMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);*/
+
         this.drivetrainMotors = new DcMotorEx[] {
             this.rightFrontMotor,
             this.leftFrontMotor,
