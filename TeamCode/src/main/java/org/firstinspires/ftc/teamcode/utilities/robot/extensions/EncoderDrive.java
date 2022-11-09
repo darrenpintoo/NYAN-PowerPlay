@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.checkerframework.checker.index.qual.LTEqLengthOf;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.utilities.robot.DriveConstants;
 import org.firstinspires.ftc.teamcode.utilities.robot.RobotEx;
 import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.Drivetrain;
 import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.InternalIMU;
@@ -12,7 +13,7 @@ import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.InternalIMU;
 import java.util.Base64;
 
 public class EncoderDrive {
-
+/*
     public static final double WHEEL_TICKS = 537.7;
     public static final double WHEEL_SIZE = 3.78/2;
 
@@ -27,7 +28,7 @@ public class EncoderDrive {
     private final double TICK_THRESHOLD = 50;
     private final double ANGLE_AT_TIME = 3;
 
-    private final double TURN_THRESHOLD = Math.toRadians(10);
+    private final double TURN_THRESHOLD = Math.toRadians(10);*/
 
     RobotEx robot = RobotEx.getInstance();
 
@@ -48,7 +49,7 @@ public class EncoderDrive {
     }
 
     public void driveForwardFromInchesBB(double inches) {
-        double ticksToMove = EncoderDrive.getEncoderTicksFromInches(inches);
+        double ticksToMove = DriveConstants.getEncoderTicksFromInches(inches);
 
         int[] startEncoderPosition = this.dt.getCWMotorTicks();
         double startPosition = Drivetrain.getAverageFromArray(startEncoderPosition);
@@ -65,14 +66,14 @@ public class EncoderDrive {
 
             double currentFramePower;
 
-            if (Math.abs(error) < TICK_THRESHOLD) {
+            if (Math.abs(error) < DriveConstants.TICK_THRESHOLD) {
                 telemetry.addLine("Reached");
                 currentFramePower = 0;
                 targetReached = true;
             } else if (error > 0) {
-                currentFramePower = this.BANG_BANG_POWER;
+                currentFramePower = DriveConstants.BANG_BANG_POWER;
             } else {
-                currentFramePower = -this.BANG_BANG_POWER;
+                currentFramePower = -DriveConstants.BANG_BANG_POWER;
             }
 
             this.dt.robotCentricDriveFromGamepad(
@@ -142,8 +143,8 @@ public class EncoderDrive {
 
             currentIMUPosition = this.imu.getCurrentFrameHeadingCCW();
 
-            if (Math.abs(turnError) < TURN_THRESHOLD) {
-                if ((turnTimer.milliseconds() - atTargetStartTime) / 1000 > ANGLE_AT_TIME) {
+            if (Math.abs(turnError) < DriveConstants.TURN_THRESHOLD) {
+                if ((turnTimer.milliseconds() - atTargetStartTime) / 1000 > DriveConstants.ANGLE_AT_TIME) {
                     atTarget = true;
                 } else if (atTargetStartTime == -1) {
                     atTargetStartTime = turnTimer.milliseconds();
@@ -153,9 +154,11 @@ public class EncoderDrive {
             }
 
 
-            telemetry.addData("Turn Angle: ", turnError);
-            telemetry.addData("current angle: ", currentIMUPosition);
-            telemetry.update();
+            if (telemetry != null) {
+                telemetry.addData("Turn Angle: ", turnError);
+                telemetry.addData("current angle: ", currentIMUPosition);
+                telemetry.update();
+            }
 
             this.robot.update();
         }
