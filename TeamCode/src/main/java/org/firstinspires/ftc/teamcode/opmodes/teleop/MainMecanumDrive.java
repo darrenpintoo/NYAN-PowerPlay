@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.exception.RobotCoreException;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.teamcode.utilities.controltheory.feedback.GeneralPIDController;
+import org.firstinspires.ftc.teamcode.utilities.robot.PersistentData;
 import org.firstinspires.ftc.teamcode.utilities.robot.RobotEx;
 import org.firstinspires.ftc.teamcode.utilities.robot.statehandling.Debounce;
 import org.firstinspires.ftc.teamcode.utilities.robot.statehandling.DebounceObject;
@@ -31,6 +32,11 @@ public class MainMecanumDrive extends LinearOpMode {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         // Initialize the robot
         robot.init(hardwareMap, telemetry);
+
+        while (opModeInInit()) {
+            telemetry.addData("Auto heading: ", PersistentData.heading);
+            telemetry.update();
+        }
 
         waitForStart();
 
@@ -135,13 +141,13 @@ public class MainMecanumDrive extends LinearOpMode {
 
             // Handle Manual Lift State
 
-            if (currentFrameGamepad2.x) {
+/*            if (currentFrameGamepad2.x) {
                 robot.intake.ON_MOTOR_POWER = 0.75;
             }
 
             if (currentFrameGamepad2.y) {
                 robot.intake.ON_MOTOR_POWER = 1;
-            }
+            }*/
 
             robot.lift.driveLiftFromGamepad(
                     currentFrameGamepad2.left_trigger,
@@ -159,7 +165,7 @@ public class MainMecanumDrive extends LinearOpMode {
             }
 
             if (currentFrameGamepad1.x) {
-                robot.drivetrain.disbaleAntiTip();
+                robot.drivetrain.disableAntiTip();
             }
 
 

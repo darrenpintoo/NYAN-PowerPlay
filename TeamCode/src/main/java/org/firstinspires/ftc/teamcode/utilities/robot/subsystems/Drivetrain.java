@@ -83,7 +83,7 @@ public class Drivetrain implements Subsystem {
         this.enableAntiTip = true;
     }
 
-    public void disbaleAntiTip() {
+    public void disableAntiTip() {
         this.enableAntiTip = false;
     }
 
