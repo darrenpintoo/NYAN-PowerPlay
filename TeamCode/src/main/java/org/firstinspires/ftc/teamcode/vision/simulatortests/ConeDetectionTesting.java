@@ -230,7 +230,7 @@ public class ConeDetectionTesting extends OpenCvPipeline {
             Scalar stringColor = new Scalar(255, 0, 0);
 
             Imgproc.putText(contourMat, distanceToConeString, string1Position, 1, 1, stringColor);
-            Imgproc.putText(contourMat, yDegreeErrorString, string2Position, 1, 1, stringColor);
+            Imgproc.putText(contourMat, yDegreeErrorString, string2Position, 1, 1, stringColor );
             Imgproc.putText(contourMat, xDegreeErrorString, string3Position, 1, 1, stringColor);
 
 
