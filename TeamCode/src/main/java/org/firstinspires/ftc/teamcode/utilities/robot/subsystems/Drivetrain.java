@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.utilities.AngleHelper;
 import org.firstinspires.ftc.teamcode.utilities.controltheory.feedback.GeneralPIDController;
 
 /**
@@ -155,7 +156,7 @@ public class Drivetrain implements Subsystem {
         double currentAngle = this.internalIMU.getCurrentFrameHeadingCW();
         double error = targetAngle - currentAngle;
 
-        if (Math.abs(error) > Math.PI) {
+/*        if (Math.abs(error) > Math.PI) {
             if (targetAngle < 0) {
                 // currentAngle -= Math.PI;
                 double alpha = Math.PI - currentAngle;
@@ -172,6 +173,16 @@ public class Drivetrain implements Subsystem {
                 double difference = alpha + beta;
                 
                 error = -((Math.PI - targetAngle) + (-Math.PI - currentAngle));
+            }
+        }*/
+
+        if (Math.abs(error) > Math.PI) {
+            if (targetAngle < 0) {
+                targetAngle = AngleHelper.norm(targetAngle);
+                error = targetAngle - currentAngle;
+            } else if (targetAngle > 0) {
+                currentAngle = AngleHelper.norm(currentAngle);
+                error = targetAngle - currentAngle;
             }
         }
 

@@ -12,6 +12,10 @@ public class DriveConstants {
         return (inches / DriveConstants.INCHES_PER_REVOLUTION) * DriveConstants.WHEEL_TICKS;
     }
 
+    public static double getInchesFromEncoderTicks(double ticks) {
+        return (ticks / DriveConstants.WHEEL_TICKS) * DriveConstants.INCHES_PER_REVOLUTION;
+    }
+
     public static final double BANG_BANG_POWER = -0.25;
     public static final double TICK_THRESHOLD = 50;
     public static final double ANGLE_AT_TIME = 3;

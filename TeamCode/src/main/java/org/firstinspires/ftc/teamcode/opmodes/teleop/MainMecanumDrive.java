@@ -58,7 +58,7 @@ public class MainMecanumDrive extends LinearOpMode {
         boolean intakeOn = false;
         boolean intakeDirection = false;
 
-        boolean robotCentric = true ;
+        boolean robotCentric = true;
 
         robot.update();
 

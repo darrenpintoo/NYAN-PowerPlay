@@ -53,19 +53,39 @@ public class MotionProfilingDrive {
 
         this.profileTimer.reset();
 
-        double currentFrameTime = 0;
+        double currentFrameTime = 0.001;
+        double previousFrameTime = 0;
 
-        while (duration > currentFrameTime) {
+        double previousFramePositionTicks = startAveragePosition;
+
+        while (duration > currentFrameTime && !this.currentOpmode.isStopRequested()) {
+
+            double dt = currentFrameTime - previousFrameTime;
 
             double targetCurrentFramePosition = profile.getPositionFromTime(currentFrameTime);
             double targetCurrentFrameVelocity = profile.getVelocityFromTime(currentFrameTime);
             double targetCurrentFrameAcceleration = profile.getAccelerationFromTime(currentFrameTime);
 
+            double currentFramePosition = Drivetrain.getAverageFromArray(this.dt.getCWMotorTicks());
+            double currentFrameVelocity = (currentFramePosition - previousFramePositionTicks) / dt;
+
+            if (telemetry != null) {
+                telemetry.addData("Target Position: ", targetCurrentFramePosition);
+                telemetry.addData("Current Position: ", DriveConstants.getInchesFromEncoderTicks(currentFramePosition));
+                telemetry.addData("Position Error: ", targetCurrentFramePosition - DriveConstants.getInchesFromEncoderTicks(currentFramePosition));
+                telemetry.addData("Target Velocity: ", targetCurrentFrameVelocity);
+                telemetry.addData("Current Velocity: ", DriveConstants.getInchesFromEncoderTicks(currentFrameVelocity));
+                telemetry.addData("Velocity Error: ", targetCurrentFrameVelocity - DriveConstants.getInchesFromEncoderTicks(currentFrameVelocity));
+                telemetry.addData("Target Acceleration: ", targetCurrentFrameAcceleration);
+
+                telemetry.update();
+            }
+
             double feedforward = targetCurrentFrameVelocity * kV + targetCurrentFrameAcceleration * kA;
 
             double feedback = this.followerPID.getOutputFromError(
                     DriveConstants.getEncoderTicksFromInches(targetCurrentFramePosition),
-                    Drivetrain.getAverageFromArray(this.dt.getCWMotorTicks()) - startAveragePosition
+                    currentFramePosition - startAveragePosition
                     );
 
             this.dt.robotCentricDriveFromGamepad(
@@ -74,7 +94,12 @@ public class MotionProfilingDrive {
                     0
             );
 
+            previousFramePositionTicks = currentFramePosition;
+            previousFrameTime = currentFrameTime;
+
             currentFrameTime = this.profileTimer.seconds();
+
+            robot.update();
 
         }
     }

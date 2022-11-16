@@ -68,6 +68,16 @@ public class ConeDetectionTesting extends OpenCvPipeline {
         this.t = t;
     }
 
+    public static double truncate(double value, int decimalpoint) {
+
+        // Using the pow() method
+        value = value * Math.pow(10, decimalpoint);
+        value = Math.floor(value);
+        value = value / Math.pow(10, decimalpoint);
+
+        return value;
+    }
+
     @Override
     public void onViewportTapped()
     {
@@ -193,6 +203,41 @@ public class ConeDetectionTesting extends OpenCvPipeline {
                 t.addData("Distance: ", distanceToCamera);
             }
 
+
+
+            String distanceToConeString =
+                    "Distance To Cone: " +
+                            String.valueOf(
+                                    ConeDetectionTesting.truncate(rayDistance, 4)
+                            ) + " in.";
+            String yDegreeErrorString =
+                    "Horizontal Angle To Cone: " +
+                        String.valueOf(
+                                ConeDetectionTesting.truncate(
+                                        curvedDegreesErrorX, 4)
+                        ) + " Degrees";
+
+            String xDegreeErrorString =
+                    "Vertical Angle To Cone: " +
+                            String.valueOf(
+                                    ConeDetectionTesting.truncate(curvedDegreesErrorX, 4)
+                            ) + " Degrees";
+
+            Point string1Position = new Point(10, 20);
+            Point string2Position = new Point(10, 40);
+            Point string3Position = new Point(10, 60);
+
+            Scalar stringColor = new Scalar(255, 0, 0);
+
+            Imgproc.putText(contourMat, distanceToConeString, string1Position, 1, 1, stringColor);
+            Imgproc.putText(contourMat, yDegreeErrorString, string2Position, 1, 1, stringColor);
+            Imgproc.putText(contourMat, xDegreeErrorString, string3Position, 1, 1, stringColor);
+
+
+
+
+            // add text to contour Mat
+            // Add the rayDistance, curvedXError, curvedYError
         }
 
 

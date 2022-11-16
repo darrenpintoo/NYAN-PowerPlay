@@ -57,7 +57,7 @@ public class Intake implements Subsystem {
 
         //telemetry.addLine("Intake on");
         this.rightMotor.setPower(power);
-        this.leftMotor.setPower(power);
+        // this.leftMotor.setPower(power);
 /*        telemetry.addData("Intake Power: ", this.rightMotor.getPower());
         telemetry.addData("Intake Power: ", this.leftMotor.getPower());*/
 

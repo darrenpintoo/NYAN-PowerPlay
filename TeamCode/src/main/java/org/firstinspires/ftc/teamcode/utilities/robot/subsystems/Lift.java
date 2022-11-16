@@ -60,8 +60,8 @@ public class Lift implements Subsystem {
 
 
         // todo: figure out the directions
-        rightLiftMotor.setDirection(DcMotorEx.Direction.REVERSE);
-        leftLiftMotor.setDirection(DcMotorEx.Direction.FORWARD);
+        rightLiftMotor.setDirection(DcMotorEx.Direction.FORWARD);
+        leftLiftMotor.setDirection(DcMotorEx.Direction.REVERSE);
 
         liftMotors = new MotorGroup<>(leftLiftMotor, rightLiftMotor);
 
