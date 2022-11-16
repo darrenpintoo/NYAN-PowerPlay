@@ -84,7 +84,7 @@ public class MotionProfilePark extends LinearOpMode {
             case LEFT:
                 // robotDrivetrain.turnToIMUAngle(Math.toRadians(90));
                 robotDrivetrain.driveForward(25);
-                break;
+                break; 
             case RIGHT:
                 // robotDrivetrain.turnToIMUAngle(-Math.toRadians(90));
                 robotDrivetrain.driveForward(25);
