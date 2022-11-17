@@ -16,7 +16,7 @@ import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.InternalIMU;
 public class MotionProfilingDrive {
     GeneralPIDController followerPID = new GeneralPIDController(0, 0, 0, 0);
 
-    public static double kV = 1 / DriveConstants.MAX_VELOCITY;
+    public static double kV = 0.018;//1 / DriveConstants.MAX_VELOCITY;
     public static double kA = 0.003;
 
     RobotEx robot = RobotEx.getInstance();
@@ -89,7 +89,7 @@ public class MotionProfilingDrive {
                     );
 
             this.dt.robotCentricDriveFromGamepad(
-                    feedforward + feedback,
+                    -(feedforward + feedback),
                     0,
                     0
             );

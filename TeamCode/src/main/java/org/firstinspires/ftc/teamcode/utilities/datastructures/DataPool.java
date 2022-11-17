@@ -20,7 +20,7 @@ public class DataPool<T extends Number> {
 
     ArrayList<DataPoolNode<T>> pool;
 
-    DataPool() {
+    public DataPool() {
         this.pool = new ArrayList<>();
     }
 

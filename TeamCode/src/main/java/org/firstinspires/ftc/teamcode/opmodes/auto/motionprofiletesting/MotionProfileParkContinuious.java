@@ -4,16 +4,14 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.utilities.robot.extensions.EncoderDrive;
 import org.firstinspires.ftc.teamcode.utilities.robot.RobotEx;
+import org.firstinspires.ftc.teamcode.utilities.robot.extensions.EncoderDrive;
 import org.firstinspires.ftc.teamcode.utilities.robot.extensions.MotionProfilingDrive;
 import org.firstinspires.ftc.teamcode.vision.simulatortests.ApriltagDetectionPipeline;
 import org.firstinspires.ftc.teamcode.vision.simulatortests.ParkingPosition;
-import org.firstinspires.ftc.teamcode.vision.simulatortests.SleeveDetectionPipeline;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
@@ -21,8 +19,8 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 /**
  * Example teleop code for a basic mecanum drive
  */
-@Autonomous(name = "Motion Profile Park")
-public class MotionProfilePark extends LinearOpMode {
+@Autonomous(name = "Motion Profile Park Continuious")
+public class MotionProfileParkContinuious extends LinearOpMode {
 
     // Create new Instance of the robot
     RobotEx robot = RobotEx.getInstance();
@@ -82,24 +80,11 @@ public class MotionProfilePark extends LinearOpMode {
         // robotDrivetrain.turnToIMUAngle(Math.toRadians(180));
 
 
-        robotDrivetrain.driveForward(-27);
 
-        sleep(5000);
-        switch (parkPosition) {
-            case LEFT:
-                robotDrivetrainE.turnToIMUAngle(Math.toRadians(90));
-                robotDrivetrain.driveForward(-25);
-                break; 
-            case RIGHT:
-                robotDrivetrainE.turnToIMUAngle(-Math.toRadians(90));
-                robotDrivetrain.driveForward(-25);
-                break;
-            case CENTER:
-                break;
+        while (!isStopRequested()) {
+            robotDrivetrain.driveForward(40);
+            robotDrivetrain.driveForward(-40);
         }
-
-        // robotDrivetrain.turnToIMUAngle(0);
-        robotDrivetrain.driveForward(-10);
 //        robotDrivetrain.turnToIMUAngle(Math.toRadians(180));
         // robot.drivetrain.enableAntiTip();
 

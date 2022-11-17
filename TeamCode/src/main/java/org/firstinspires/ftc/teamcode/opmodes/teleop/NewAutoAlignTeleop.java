@@ -7,7 +7,9 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.exception.RobotCoreException;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.utilities.controltheory.feedback.GeneralPIDController;
+import org.firstinspires.ftc.teamcode.utilities.datastructures.DataPool;
 import org.firstinspires.ftc.teamcode.utilities.robot.PersistentData;
 import org.firstinspires.ftc.teamcode.utilities.robot.RobotEx;
 import org.firstinspires.ftc.teamcode.utilities.robot.statehandling.Debounce;
@@ -15,24 +17,47 @@ import org.firstinspires.ftc.teamcode.utilities.robot.statehandling.DebounceObje
 import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.Claw;
 import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.Lift;
+import org.firstinspires.ftc.teamcode.vision.simulatortests.ConeDetectionTesting;
+import org.openftc.easyopencv.OpenCvCamera;
+import org.openftc.easyopencv.OpenCvCameraFactory;
+import org.openftc.easyopencv.OpenCvCameraRotation;
 
 /**
  * Example teleop code for a basic mecanum drive
  */
-@TeleOp(name = "Main Mecanum Drive")
-public class MainMecanumDrive extends LinearOpMode {
+@TeleOp(name = "Updated Auto Align")
+public class NewAutoAlignTeleop extends LinearOpMode {
 
     // Create new Instance of the robot
     RobotEx robot = RobotEx.getInstance();
 
+    ConeDetectionTesting coneDetection;
+    OpenCvCamera camera;
+    String webcamName = "Webcam 1";
 
     @Override
     public void runOpMode() {
 
-        // telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
-        telemetry.setMsTransmissionInterval(500);
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         // Initialize the robot
         robot.init(hardwareMap, telemetry);
+
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, webcamName), cameraMonitorViewId);
+        coneDetection = new ConeDetectionTesting();
+        camera.setPipeline(coneDetection);
+
+        camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
+        {
+            @Override
+            public void onOpened()
+            {
+                camera.startStreaming(640,480, OpenCvCameraRotation.UPRIGHT);
+            }
+
+            @Override
+            public void onError(int errorCode) {}
+        });
 
         while (opModeInInit()) {
             telemetry.addData("Auto heading: ", PersistentData.heading);
@@ -61,10 +86,15 @@ public class MainMecanumDrive extends LinearOpMode {
 
         boolean robotCentric = true;
 
+        double degreesError = 0;
+
+        DataPool<Double> headingPool = new DataPool<>();
+
         robot.update();
 
         while(opModeIsActive()) {
 
+            headingPool.addData(robot.internalIMU.getCurrentFrameHeadingCCW());
             // Retain information about the previous frame's gamepad
             try {
                 previousFrameGamepad1.copy(currentFrameGamepad1);
@@ -123,22 +153,37 @@ public class MainMecanumDrive extends LinearOpMode {
                         currentFrameGamepad1.right_stick_y,
                         currentFrameGamepad1.right_stick_x
                 );
+            } else if (currentFrameGamepad1.left_bumper) {
+
+                if (currentFrameGamepad1.left_bumper != previousFrameGamepad1.left_bumper) {
+                    degreesError = coneDetection.getDegreesError();
+                }
+
+                robot.drivetrain.fieldCentricRotationPIDFromGamepad(
+                        currentFrameGamepad1.left_stick_y,
+                        currentFrameGamepad1.left_stick_x,
+                        Math.sin(degreesError),
+                        Math.cos(degreesError)
+                );
+
             } else {
                 if (robotCentric) {
                     robot.drivetrain.robotCentricDriveFromGamepad(
-                            currentFrameGamepad1.left_stick_y * 0.5,
-                            currentFrameGamepad1.left_stick_x * 0.5,
-                            currentFrameGamepad1.right_stick_x * 0.5
+                            currentFrameGamepad1.left_stick_y,
+                            currentFrameGamepad1.left_stick_x,
+                            currentFrameGamepad1.right_stick_x
                     );
                 }
                 else {
                     robot.drivetrain.fieldCentricDriveFromGamepad(
-                            currentFrameGamepad1.left_stick_y * 0.5,
-                            currentFrameGamepad1.left_stick_x * 0.5,
-                            currentFrameGamepad1.right_stick_x * 0.5
+                            currentFrameGamepad1.left_stick_y,
+                            currentFrameGamepad1.left_stick_x,
+                            currentFrameGamepad1.right_stick_x
                     );
                 }
             }
+
+
 
             // Handle Manual Lift State
 

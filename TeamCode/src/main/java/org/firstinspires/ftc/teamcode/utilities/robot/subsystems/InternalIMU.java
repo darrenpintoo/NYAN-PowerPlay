@@ -13,6 +13,7 @@ import org.firstinspires.ftc.teamcode.utilities.robot.RobotEx;
  */
 public class InternalIMU implements Subsystem {
 
+    private final boolean DISABLE_VELOCITY_TRACKER = true;
     private static InternalIMU imuInstance = null;
     private BNO055IMU internalIMU;
 
@@ -73,7 +74,7 @@ public class InternalIMU implements Subsystem {
         double previousFrameHeading = this.getPreviousFrameHeadingCCW();
 
         this.currentFrameOrientation = internalIMU.getAngularOrientation();
-        this.currentFrameVelocity = internalIMU.getAngularVelocity();
+        this.currentFrameVelocity = this.DISABLE_VELOCITY_TRACKER ? null : internalIMU.getAngularVelocity();
 
         double currentFrameHeading = this.getCurrentFrameHeadingCCW();
 

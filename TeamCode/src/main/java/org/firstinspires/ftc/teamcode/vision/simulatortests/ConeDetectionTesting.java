@@ -96,7 +96,7 @@ public class ConeDetectionTesting extends OpenCvPipeline {
     @Override
     public Mat processFrame(Mat input) {
 
-        Mat kernel = Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(3, 3));
+        Mat kernel = Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(10, 10));
 
         // Mat kernel1 = Imgproc.getStructuringElement(Imgproc.MORPH_ERODE, new Size(5, 5));
         // Mat kernel2 = Imgproc.getStructuringElement(Imgproc.MORPH_DILATE, new Size(5, 5));
@@ -181,7 +181,9 @@ public class ConeDetectionTesting extends OpenCvPipeline {
             double rayDistance = Math.hypot(depthX, depthY); // true distance
 
             // <ignore>
-            double hypotenuseY = rayDistance / Math.cos(Math.toRadians(curvedDegreesErrorY)) - rayDistance; // have angle and adj, need hyp
+
+            double cosDistance  = Math.cos(Math.toRadians(curvedDegreesErrorY));
+            double hypotenuseY = cosDistance == 0 ? 0 : rayDistance / cosDistance - rayDistance; // have angle and adj, need hyp
             double hypotenuseX = Math.abs(rayDistance * Math.tan(Math.toRadians(curvedDegreesErrorX))); // have angle and adj, need opp
 
             double distanceToCamera = Math.cbrt(Math.pow(hypotenuseX, 3)  + Math.pow(hypotenuseY, 3) + Math.pow(rayDistance, 3)); // inaccurate

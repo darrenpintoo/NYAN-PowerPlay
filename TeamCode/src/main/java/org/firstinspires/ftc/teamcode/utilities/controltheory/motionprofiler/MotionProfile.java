@@ -22,7 +22,7 @@ public class MotionProfile {
         // Initializes trajectoryPhase
         Phase[] trajectoryPhases;
 
-        double dx = Math.abs(this.x1 - this.x0);
+        double dx = this.x1 - this.x0;
 
         if (this.vMax / this.aMax < dx / this.vMax) {
 
@@ -30,17 +30,17 @@ public class MotionProfile {
             double dt2 = dx / this.vMax - this.vMax / this.aMax;
 
             trajectoryPhases = new Phase[] {
-                    new Phase(Math.copySign(this.aMax, this.x1), dt1),
+                    new Phase(Math.copySign(this.aMax, x1), dt1),
                     new Phase(0, dt2),
-                    new Phase(-Math.copySign(this.aMax, this.x1), dt1)
+                    new Phase(-Math.copySign(this.aMax, x1), dt1)
             };
         } else {
 
             double dt1 = Math.sqrt(dx / this.aMax);
 
             trajectoryPhases = new Phase[] {
-                    new Phase(this.aMax, dt1),
-                    new Phase(-this.aMax, dt1)
+                    new Phase(Math.copySign(this.aMax, x1), dt1),
+                    new Phase(-Math.copySign(this.aMax, x1), dt1)
             };
         }
 

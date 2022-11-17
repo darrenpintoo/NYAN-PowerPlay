@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode.utilities.robot;
 
+import com.acmerobotics.dashboard.config.Config;
+
+@Config
 public class DriveConstants {
 
 
@@ -22,6 +25,6 @@ public class DriveConstants {
 
     public static final double TURN_THRESHOLD = Math.toRadians(10);
 
-    public static double MAX_VELOCITY = 10;
-    public static double MAX_ACCELERATION = 10;
+    public static double MAX_VELOCITY = 50;
+    public static double MAX_ACCELERATION = 20;
 }

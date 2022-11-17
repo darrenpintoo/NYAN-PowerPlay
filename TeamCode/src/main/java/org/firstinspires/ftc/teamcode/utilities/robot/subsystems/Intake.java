@@ -15,9 +15,9 @@ public class Intake implements Subsystem {
     private DcMotorEx rightMotor;
     private DcMotorEx leftMotor;
 
-    public double ON_MOTOR_POWER = 0.75;
+    public double ON_MOTOR_POWER = 0.75;//0.75;
 
-    public double REVERSE_MOTOR_POWER = -0.30;
+    public double REVERSE_MOTOR_POWER = -1;//-0.30;
 
     private Telemetry telemetry;
 
@@ -57,7 +57,7 @@ public class Intake implements Subsystem {
 
         //telemetry.addLine("Intake on");
         this.rightMotor.setPower(power);
-        // this.leftMotor.setPower(power);
+        this.leftMotor.setPower(power);
 /*        telemetry.addData("Intake Power: ", this.rightMotor.getPower());
         telemetry.addData("Intake Power: ", this.leftMotor.getPower());*/
 

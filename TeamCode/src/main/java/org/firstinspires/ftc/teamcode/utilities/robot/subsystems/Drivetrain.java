@@ -115,10 +115,10 @@ public class Drivetrain implements Subsystem {
         this.leftFrontPower = 0;
         this.rightFrontPower = 0;
 
-        this.telemetry.addData("LF Pos: ", this.leftFrontMotor.getCurrentPosition());
+/*        this.telemetry.addData("LF Pos: ", this.leftFrontMotor.getCurrentPosition());
         this.telemetry.addData("LB Pos: ", this.leftBackMotor.getCurrentPosition());
         this.telemetry.addData("RB Pos: ", this.rightBackMotor.getCurrentPosition());
-        this.telemetry.addData("RF Pos: ", this.rightFrontMotor.getCurrentPosition());
+        this.telemetry.addData("RF Pos: ", this.rightFrontMotor.getCurrentPosition());*/
 
 /*        this.telemetry.addData("LF Vel: ", this.leftFrontMotor.getVelocity());
         this.telemetry.addData("LB Vel: ", this.leftBackMotor.getVelocity());
