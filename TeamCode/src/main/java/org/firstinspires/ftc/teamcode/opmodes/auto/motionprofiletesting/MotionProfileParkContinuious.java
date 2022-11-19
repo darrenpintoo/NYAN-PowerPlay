@@ -35,7 +35,7 @@ public class MotionProfileParkContinuious extends LinearOpMode {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         robot.init(hardwareMap, telemetry);
 
-        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+/*        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, webcamName), cameraMonitorViewId);
         sleeveDetection = new ApriltagDetectionPipeline();
         camera.setPipeline(sleeveDetection);
@@ -55,7 +55,7 @@ public class MotionProfileParkContinuious extends LinearOpMode {
         while (!isStarted()) {
             telemetry.addData("ROTATION: ", sleeveDetection.getParkingPosition());
             telemetry.update();
-        }
+        }*/
 
         // scan sleeve
 
@@ -75,15 +75,16 @@ public class MotionProfileParkContinuious extends LinearOpMode {
         robot.drivetrain.setRunMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         robot.drivetrain.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        ParkingPosition parkPosition = sleeveDetection.getParkingPosition();
 
         // robotDrivetrain.turnToIMUAngle(Math.toRadians(180));
 
 
 
-        while (!isStopRequested()) {
+        while (opModeIsActive()) {
             robotDrivetrain.driveForward(40);
-            robotDrivetrain.driveForward(-40);
+            robotDrivetrainE.turnToIMUAngle(Math.toRadians(180));
+            robotDrivetrain.driveForward(40);
+            robotDrivetrainE.turnToIMUAngle(0);
         }
 //        robotDrivetrain.turnToIMUAngle(Math.toRadians(180));
         // robot.drivetrain.enableAntiTip();

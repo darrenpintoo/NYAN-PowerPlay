@@ -32,7 +32,7 @@ public class DataPool<T extends Number> {
 
     }
 
-    public double getDataAtTimestamp(long timestamp) {
+    public double getDataAndRemoveAtTimestamp(long timestamp) {
 
         int poolSize = this.pool.size();
 
@@ -43,6 +43,8 @@ public class DataPool<T extends Number> {
 
             if (i == poolSize - 1) {
                 return (double) currentIndexNode.data;
+            } else if (i == 0 && timestamp < currentIndexNode.nodeTimestamp) {
+                return currentData;
             }
 
             DataPoolNode<T> nextIndexNode = this.pool.get(i);
@@ -52,6 +54,10 @@ public class DataPool<T extends Number> {
                 double dt = nextIndexNode.nodeTimestamp - currentIndexNode.nodeTimestamp;
                 double d1 = timestamp - currentIndexNode.nodeTimestamp;
                 double r = d1 / dt;
+
+                for (int j = i; j >= 0; j--) {
+                    this.pool.remove(j);
+                }
 
                 return MathHelper.lerp(currentData, nextData, r);
             }

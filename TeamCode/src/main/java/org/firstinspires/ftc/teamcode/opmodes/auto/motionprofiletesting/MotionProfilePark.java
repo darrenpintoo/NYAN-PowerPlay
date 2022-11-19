@@ -37,7 +37,7 @@ public class MotionProfilePark extends LinearOpMode {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         robot.init(hardwareMap, telemetry);
 
-        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+/*        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, webcamName), cameraMonitorViewId);
         sleeveDetection = new ApriltagDetectionPipeline();
         camera.setPipeline(sleeveDetection);
@@ -52,12 +52,12 @@ public class MotionProfilePark extends LinearOpMode {
 
             @Override
             public void onError(int errorCode) {}
-        });
+        });*/
 
-        while (!isStarted()) {
+/*        while (!isStarted()) {
             telemetry.addData("ROTATION: ", sleeveDetection.getParkingPosition());
             telemetry.update();
-        }
+        }*/
 
         // scan sleeve
 
@@ -77,29 +77,31 @@ public class MotionProfilePark extends LinearOpMode {
         robot.drivetrain.setRunMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         robot.drivetrain.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        ParkingPosition parkPosition = sleeveDetection.getParkingPosition();
+       // ParkingPosition parkPosition = sleeveDetection.getParkingPosition();
 
         // robotDrivetrain.turnToIMUAngle(Math.toRadians(180));
 
+        ParkingPosition parkPosition = ParkingPosition.CENTER;
 
-        robotDrivetrain.driveForward(-27);
+        robotDrivetrain.driveForward(27);
 
-        sleep(5000);
+        // sleep(5000);
+
         switch (parkPosition) {
             case LEFT:
-                robotDrivetrainE.turnToIMUAngle(Math.toRadians(90));
-                robotDrivetrain.driveForward(-25);
+                robotDrivetrainE.turnToIMUAngle(-Math.toRadians(90));
+                robotDrivetrain.driveForward(25);
                 break; 
             case RIGHT:
-                robotDrivetrainE.turnToIMUAngle(-Math.toRadians(90));
-                robotDrivetrain.driveForward(-25);
+                robotDrivetrainE.turnToIMUAngle(Math.toRadians(90));
+                robotDrivetrain.driveForward(25);
                 break;
             case CENTER:
                 break;
         }
 
-        // robotDrivetrain.turnToIMUAngle(0);
-        robotDrivetrain.driveForward(-10);
+        robotDrivetrainE.turnToIMUAngle(Math.toRadians(180));
+        robotDrivetrain.driveForward(10);
 //        robotDrivetrain.turnToIMUAngle(Math.toRadians(180));
         // robot.drivetrain.enableAntiTip();
 

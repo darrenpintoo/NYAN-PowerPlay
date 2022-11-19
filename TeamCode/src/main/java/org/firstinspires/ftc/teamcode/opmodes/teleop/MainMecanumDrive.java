@@ -61,6 +61,7 @@ public class MainMecanumDrive extends LinearOpMode {
 
         boolean robotCentric = true;
 
+        boolean fieldCentricAutomatedTurning = true;
         robot.update();
 
         while(opModeIsActive()) {
@@ -115,8 +116,12 @@ public class MainMecanumDrive extends LinearOpMode {
                 robotCentric = !robotCentric;
             }
 
+            if (currentFrameGamepad1.x && previousFrameGamepad1.x != currentFrameGamepad1.x) {
+                fieldCentricAutomatedTurning = !fieldCentricAutomatedTurning;
+            }
+
             // Handle Drivetrain
-            if (gamepad1.left_bumper) {
+            if (fieldCentricAutomatedTurning) {
                 robot.drivetrain.fieldCentricRotationPIDFromGamepad(
                         currentFrameGamepad1.left_stick_y,
                         currentFrameGamepad1.left_stick_x,

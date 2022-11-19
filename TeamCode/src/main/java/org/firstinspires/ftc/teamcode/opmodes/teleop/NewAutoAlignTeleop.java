@@ -156,7 +156,9 @@ public class NewAutoAlignTeleop extends LinearOpMode {
             } else if (currentFrameGamepad1.left_bumper) {
 
                 if (currentFrameGamepad1.left_bumper != previousFrameGamepad1.left_bumper) {
-                    degreesError = coneDetection.getDegreesError();
+/*                    degreesError = headingPool.getDataAndRemoveAtTimestamp(
+                            System.currentTimeMillis() -
+                    );*/
                 }
 
                 robot.drivetrain.fieldCentricRotationPIDFromGamepad(

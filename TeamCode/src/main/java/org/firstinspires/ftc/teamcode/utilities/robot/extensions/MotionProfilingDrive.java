@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.InternalIMU;
 
 @Config
 public class MotionProfilingDrive {
-    GeneralPIDController followerPID = new GeneralPIDController(0, 0, 0, 0);
+    GeneralPIDController followerPID = new GeneralPIDController(0.1, 0, 0, 0);
 
     public static double kV = 0.018;//1 / DriveConstants.MAX_VELOCITY;
     public static double kA = 0.003;
@@ -84,8 +84,8 @@ public class MotionProfilingDrive {
             double feedforward = targetCurrentFrameVelocity * kV + targetCurrentFrameAcceleration * kA;
 
             double feedback = this.followerPID.getOutputFromError(
-                    DriveConstants.getEncoderTicksFromInches(targetCurrentFramePosition),
-                    currentFramePosition - startAveragePosition
+                    targetCurrentFramePosition,
+                    DriveConstants.getInchesFromEncoderTicks(currentFramePosition - startAveragePosition)
                     );
 
             this.dt.robotCentricDriveFromGamepad(

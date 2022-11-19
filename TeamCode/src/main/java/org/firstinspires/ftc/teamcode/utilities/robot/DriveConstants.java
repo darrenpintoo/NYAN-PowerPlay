@@ -21,10 +21,10 @@ public class DriveConstants {
 
     public static final double BANG_BANG_POWER = -0.25;
     public static final double TICK_THRESHOLD = 50;
-    public static final double ANGLE_AT_TIME = 3;
+    public static final double ANGLE_AT_TIME = 1;
 
     public static final double TURN_THRESHOLD = Math.toRadians(10);
 
     public static double MAX_VELOCITY = 50;
-    public static double MAX_ACCELERATION = 20;
+    public static double MAX_ACCELERATION = 30;
 }

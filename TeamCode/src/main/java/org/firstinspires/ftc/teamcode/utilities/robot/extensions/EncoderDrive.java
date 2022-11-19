@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.checkerframework.checker.index.qual.LTEqLengthOf;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.utilities.AngleHelper;
 import org.firstinspires.ftc.teamcode.utilities.robot.DriveConstants;
 import org.firstinspires.ftc.teamcode.utilities.robot.RobotEx;
 import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.Drivetrain;
@@ -101,7 +102,7 @@ public class EncoderDrive {
 
 
         double currentIMUPosition = this.imu.getCurrentFrameHeadingCCW();
-        double turnError = Double.MAX_VALUE;
+        double turnError = angle - currentIMUPosition;
 
         ElapsedTime turnTimer = new ElapsedTime();
 
@@ -112,10 +113,8 @@ public class EncoderDrive {
         while (!atTarget && !this.currentOpmode.isStopRequested()) {
 
 
-            turnError = this.dt.headingPID.getOutputFromError(angle, currentIMUPosition);
-
-
-            if (Math.abs(turnError) > Math.PI) {
+            turnError = angle  - currentIMUPosition;
+/*            if (Math.abs(turnError) > Math.PI) {
                 if (angle < 0) {
                     // currentAngle -= Math.PI;
                     double alpha = Math.PI - currentIMUPosition;
@@ -133,12 +132,27 @@ public class EncoderDrive {
 
                     turnError = -((Math.PI - angle) + (-Math.PI - currentIMUPosition));
                 }
+            }*/
+
+            if (Math.abs(turnError) > Math.PI) {
+                if (angle < 0) {
+                    angle = AngleHelper.norm(angle);
+                    turnError = angle - currentIMUPosition;
+                } else if (angle > 0) {
+                    currentIMUPosition = AngleHelper.norm(currentIMUPosition);
+                    turnError = angle - currentIMUPosition;
+                }
             }
+
+            double output = this.dt.headingPID.getOutputFromError(
+                    turnError
+            );
+
 
             this.dt.robotCentricDriveFromGamepad(
                     0,
                     0,
-                    Math.min(Math.max(turnError, -1), 1) * 0.75
+                    Math.min(Math.max(output, -1), 1)
             );
 
             currentIMUPosition = this.imu.getCurrentFrameHeadingCCW();
@@ -155,6 +169,7 @@ public class EncoderDrive {
 
 
             if (telemetry != null) {
+                telemetry.addData("Target Angle: ", angle);
                 telemetry.addData("Turn Angle: ", turnError);
                 telemetry.addData("current angle: ", currentIMUPosition);
                 telemetry.update();

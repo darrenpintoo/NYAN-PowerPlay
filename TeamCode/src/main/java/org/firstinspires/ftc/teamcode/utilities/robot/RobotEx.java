@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.utilities.robot;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.LynxModuleMeta;
+import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.checkerframework.checker.units.qual.C;
@@ -29,6 +30,8 @@ public class RobotEx {
     public Lift lift = new Lift();
     public Claw claw = new Claw();
     //public ClawExtension clawExtension = new ClawExtension();
+
+    public VoltageSensor voltageSensor;
 
     private final ElapsedTime frameTimer = new ElapsedTime();
 
@@ -58,6 +61,7 @@ public class RobotEx {
     public void init(HardwareMap hardwareMap, Telemetry telemetry) {
 
         this.allHubs = hardwareMap.getAll(LynxModule.class);
+        this.voltageSensor = hardwareMap.voltageSensor.iterator().next();
 
         for (LynxModule hub: allHubs) {
             hub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
@@ -90,6 +94,10 @@ public class RobotEx {
         frameTimer.reset();
 
         return frameTime;
+    }
+
+    public double getVoltage() {
+        return this.voltageSensor.getVoltage();
     }
 
 
