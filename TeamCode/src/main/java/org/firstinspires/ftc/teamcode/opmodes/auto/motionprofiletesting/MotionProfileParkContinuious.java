@@ -6,15 +6,11 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.utilities.robot.RobotEx;
-import org.firstinspires.ftc.teamcode.utilities.robot.extensions.EncoderDrive;
-import org.firstinspires.ftc.teamcode.utilities.robot.extensions.MotionProfilingDrive;
+import org.firstinspires.ftc.teamcode.utilities.movement.EncoderDrive;
+import org.firstinspires.ftc.teamcode.utilities.movement.MotionProfilingDrive;
 import org.firstinspires.ftc.teamcode.vision.simulatortests.ApriltagDetectionPipeline;
-import org.firstinspires.ftc.teamcode.vision.simulatortests.ParkingPosition;
 import org.openftc.easyopencv.OpenCvCamera;
-import org.openftc.easyopencv.OpenCvCameraFactory;
-import org.openftc.easyopencv.OpenCvCameraRotation;
 
 /**
  * Example teleop code for a basic mecanum drive
