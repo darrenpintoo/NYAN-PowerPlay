@@ -1,5 +1,4 @@
 package org.firstinspires.ftc.teamcode.utilities.controltheory.motionprofiler;
-
 public class MotionProfile {
 
     private Phase[] trajectoryPhases;
@@ -12,8 +11,8 @@ public class MotionProfile {
     public MotionProfile(double x0, double x1, double vMax, double aMax) {
         this.x0 = x0;
         this.x1 = x1;
-        this.vMax = vMax;
-        this.aMax = aMax;
+        this.vMax = Math.abs(vMax);
+        this.aMax = Math.abs(aMax);
 
         this.build();
     }
@@ -24,10 +23,12 @@ public class MotionProfile {
 
         double dx = this.x1 - this.x0;
 
-        if (this.vMax / this.aMax < dx / this.vMax) {
+        double absdx = Math.abs(dx);
+
+        if (this.vMax / this.aMax < absdx / this.vMax) {
 
             double dt1 = this.vMax / this.aMax;
-            double dt2 = dx / this.vMax - this.vMax / this.aMax;
+            double dt2 = absdx / this.vMax - this.vMax / this.aMax;
 
             trajectoryPhases = new Phase[] {
                     new Phase(Math.copySign(this.aMax, x1), dt1),
@@ -36,7 +37,7 @@ public class MotionProfile {
             };
         } else {
 
-            double dt1 = Math.sqrt(dx / this.aMax);
+            double dt1 = Math.sqrt(absdx / this.aMax);
 
             trajectoryPhases = new Phase[] {
                     new Phase(Math.copySign(this.aMax, x1), dt1),
