@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.utilities.AngleHelper;
 import org.firstinspires.ftc.teamcode.utilities.controltheory.feedback.GeneralPIDController;
+import org.firstinspires.ftc.teamcode.utilities.robot.RobotEx;
 
 /**
  * Robot Drivetrain
@@ -22,6 +23,7 @@ public class Drivetrain implements Subsystem {
     }
     private final DcMotorEx.ZeroPowerBehavior START_ZERO_POWER_BEHAVIOR = DcMotor.ZeroPowerBehavior.FLOAT;
 
+    private RobotEx robotInstance;
     private InternalIMU internalIMU;
 
     private DcMotorEx rightFrontMotor;
@@ -51,6 +53,7 @@ public class Drivetrain implements Subsystem {
     public void onInit(HardwareMap hardwareMap, Telemetry telemetry) {
 
         this.internalIMU = InternalIMU.getInstance();
+        this.robotInstance = RobotEx.getInstance();
 
         this.rightFrontMotor = (DcMotorEx) hardwareMap.get(DcMotor.class, "rightFrontMotor");
         this.leftFrontMotor = (DcMotorEx) hardwareMap.get(DcMotor.class, "leftFrontMotor");
@@ -130,6 +133,12 @@ public class Drivetrain implements Subsystem {
         // todo: write code for robot centric drive
 
         leftJoystickY = -leftJoystickY;
+
+        double multiple = this.robotInstance.getPowerMultiple();
+
+        leftJoystickY = leftJoystickY * multiple;
+        leftJoystickX = leftJoystickX * multiple;
+        rightJoystickX = rightJoystickX * multiple;
 
         double denominator = Math.max(Math.abs(leftJoystickY) + Math.abs(leftJoystickX) + Math.abs(rightJoystickX), 1);
         this.leftFrontPower += (leftJoystickY + leftJoystickX + rightJoystickX) / denominator;

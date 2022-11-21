@@ -77,19 +77,53 @@ public class MotionProfileCycleLeft extends LinearOpMode {
         // robotDrivetrain.turnToIMUAngle(Math.toRadians(180));
 
         ParkingPosition parkPosition = ParkingPosition.CENTER;
-
-        robotDrivetrainE.driveForwardFromInchesBB(-5);
-        robotDrivetrainE.turnToIMUAngle(Math.toRadians(180));
+        
+        robotDrivetrain.driveForward(-50);
+        robotDrivetrainE.turnToIMUAngle(Math.toRadians(90));
         robotDrivetrain.driveForward(27);
-        robotDrivetrainE.turnToIMUAngle(-Math.toRadians(90));
-        robotDrivetrainE.driveForwardFromInchesBB(10);
         //get cone
-        robotDrivetrainE.driveForwardFromInchesBB(-10);
+        robotDrivetrain.driveForward(-27);
         robotDrivetrainE.turnToIMUAngle(Math.toRadians(135));
+        robotDrivetrain.driveForward(-5);
+        // place cone
+        robotDrivetrain.driveForward(5);
+        robotDrivetrainE.turnToIMUAngle(Math.toRadians(90));
+        robotDrivetrain.driveForward(27);
+        //get cone
+        robotDrivetrain.driveForward(-27);
+        robotDrivetrainE.turnToIMUAngle(Math.toRadians(135));
+        robotDrivetrain.driveForward(-5);
+        // place cone
+        robotDrivetrain.driveForward(5);
+        robotDrivetrainE.turnToIMUAngle(Math.toRadians(90));
+        robotDrivetrain.driveForward(27);
+        //get cone
+        robotDrivetrain.driveForward(-27);
+        robotDrivetrainE.turnToIMUAngle(Math.toRadians(135));
+        robotDrivetrain.driveForward(-5);
+        // place cone
+        robotDrivetrain.driveForward(5);
+        robotDrivetrainE.turnToIMUAngle(Math.toRadians(90));
+        robotDrivetrain.driveForward(27);
+        //get cone
+        robotDrivetrain.driveForward(-27);
+        robotDrivetrainE.turnToIMUAngle(Math.toRadians(135));
+        robotDrivetrain.driveForward(-5);
+        // place cone
+        robotDrivetrain.driveForward(5);
+        robotDrivetrainE.turnToIMUAngle(Math.toRadians(90));
+        robotDrivetrain.driveForward(27);
+        //get cone
+        robotDrivetrain.driveForward(-27);
+        robotDrivetrainE.turnToIMUAngle(Math.toRadians(135));
+        robotDrivetrain.driveForward(-5);
+        // place cone
+        robotDrivetrain.driveForward(5);
+        robotDrivetrainE.turnToIMUAngle(Math.toRadians(90));
 
         // sleep(5000);
 
-        switch (parkPosition) {
+/*        switch (parkPosition) {
             case LEFT:
                 robotDrivetrainE.turnToIMUAngle(-Math.toRadians(90));
                 robotDrivetrain.driveForward(25);
@@ -103,7 +137,7 @@ public class MotionProfileCycleLeft extends LinearOpMode {
         }
 
         robotDrivetrainE.turnToIMUAngle(Math.toRadians(180));
-        robotDrivetrain.driveForward(10);
+        robotDrivetrain.driveForward(10);*/
 //        robotDrivetrain.turnToIMUAngle(Math.toRadians(180));
         // robot.drivetrain.enableAntiTip();
 

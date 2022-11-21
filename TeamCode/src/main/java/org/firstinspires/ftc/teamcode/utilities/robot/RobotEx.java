@@ -100,5 +100,9 @@ public class RobotEx {
         return this.voltageSensor.getVoltage();
     }
 
+    public double getPowerMultiple() {
+        return 12 / this.getVoltage();
+    }
+
 
 }

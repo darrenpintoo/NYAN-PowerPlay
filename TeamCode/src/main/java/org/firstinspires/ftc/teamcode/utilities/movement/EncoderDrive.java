@@ -152,7 +152,7 @@ public class EncoderDrive {
             this.dt.robotCentricDriveFromGamepad(
                     0,
                     0,
-                    Math.min(Math.max(output, -1), 1)
+                    Math.min(Math.max(output, -1), 1) * 0.75
             );
 
             currentIMUPosition = this.imu.getCurrentFrameHeadingCCW();
