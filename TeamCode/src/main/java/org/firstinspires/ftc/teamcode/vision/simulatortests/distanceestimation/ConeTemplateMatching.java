@@ -1,13 +1,10 @@
-package org.firstinspires.ftc.teamcode.vision.simulatortests;
+package org.firstinspires.ftc.teamcode.vision.simulatortests.distanceestimation;
 
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.opencv.calib3d.Calib3d;
-import org.opencv.core.Algorithm;
-import org.opencv.core.Core;
+import org.firstinspires.ftc.teamcode.vision.simulatortests.CameraConstants;
 import org.opencv.core.Mat;
-import org.opencv.core.MatOfDouble;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.Point;
 import org.opencv.core.Rect;

@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.utilities.localizer;
 
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.utilities.physics.Pose;
+import org.firstinspires.ftc.teamcode.utilities.math.linearalgebra.Pose;
 
 public abstract class BaseLocalizer {
 

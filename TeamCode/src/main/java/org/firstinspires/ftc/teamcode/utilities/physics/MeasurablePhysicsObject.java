@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.utilities.physics;
 
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.utilities.physics.states.PhysicsStateVariables;
+
 public class MeasurablePhysicsObject {
 
     ElapsedTime timer;

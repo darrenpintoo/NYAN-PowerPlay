@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.utilities;
+package org.firstinspires.ftc.teamcode.utilities.math;
 
 public class AngleHelper {
 

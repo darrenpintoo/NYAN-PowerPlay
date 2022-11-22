@@ -6,13 +6,9 @@ import com.qualcomm.robotcore.exception.RobotCoreException;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.utilities.controltheory.feedback.GeneralPIDController;
 import org.firstinspires.ftc.teamcode.utilities.robot.RobotEx;
-import org.firstinspires.ftc.teamcode.utilities.robot.statehandling.Debounce;
-import org.firstinspires.ftc.teamcode.utilities.robot.statehandling.DebounceObject;
 import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.Claw;
-import org.firstinspires.ftc.teamcode.vision.simulatortests.ApriltagDetectionPipeline;
-import org.firstinspires.ftc.teamcode.vision.simulatortests.ConeDetectionTesting;
+import org.firstinspires.ftc.teamcode.vision.simulatortests.distanceestimation.ConeDetectionTesting;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;

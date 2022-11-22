@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.utilities.datastructures;
 
-import org.firstinspires.ftc.teamcode.utilities.MathHelper;
+import org.firstinspires.ftc.teamcode.utilities.math.MathHelper;
 
 import java.util.ArrayList;
 

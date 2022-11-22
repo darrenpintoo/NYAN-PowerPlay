@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.vision.simulatortests;
+package org.firstinspires.ftc.teamcode.vision.simulatortests.distanceestimation;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.utilities.physics;
+package org.firstinspires.ftc.teamcode.utilities.math.linearalgebra;
 
 public class Pose {
     private double x;

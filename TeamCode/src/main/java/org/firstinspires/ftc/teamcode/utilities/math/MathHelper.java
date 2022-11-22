@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.utilities;
+package org.firstinspires.ftc.teamcode.utilities.math;
 
 import org.firstinspires.ftc.teamcode.vision.simulatortests.CameraConstants;
 
