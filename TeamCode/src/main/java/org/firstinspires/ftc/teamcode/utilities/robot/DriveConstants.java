@@ -27,4 +27,7 @@ public class DriveConstants {
 
     public static double MAX_VELOCITY = 50;
     public static double MAX_ACCELERATION = 10;
+
+    public static double trackWidth = 10;
+
 }

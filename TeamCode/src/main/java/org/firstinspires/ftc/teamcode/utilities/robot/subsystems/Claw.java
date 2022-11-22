@@ -2,17 +2,12 @@ package org.firstinspires.ftc.teamcode.utilities.robot.subsystems;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.ColorRangeSensor;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.utilities.controltheory.feedback.GeneralPIDController;
-import org.firstinspires.ftc.teamcode.utilities.robot.extensions.MotorGroup;
-import org.firstinspires.ftc.teamcode.utilities.robot.statehandling.Debounce;
-import org.firstinspires.ftc.teamcode.utilities.robot.statehandling.DebounceObject;
+import org.firstinspires.ftc.teamcode.utilities.statehandling.Debounce;
+import org.firstinspires.ftc.teamcode.utilities.statehandling.DebounceObject;
 
 @Config
 public class Claw implements Subsystem {

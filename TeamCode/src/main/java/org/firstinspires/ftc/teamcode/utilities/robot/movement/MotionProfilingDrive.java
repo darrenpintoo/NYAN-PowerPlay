@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.utilities.movement;
+package org.firstinspires.ftc.teamcode.utilities.robot.movement;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;

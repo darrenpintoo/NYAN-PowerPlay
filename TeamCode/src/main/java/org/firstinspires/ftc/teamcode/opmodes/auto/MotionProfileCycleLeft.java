@@ -6,9 +6,9 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-import org.firstinspires.ftc.teamcode.utilities.movement.EncoderDrive;
+import org.firstinspires.ftc.teamcode.utilities.robot.movement.EncoderDrive;
 import org.firstinspires.ftc.teamcode.utilities.robot.RobotEx;
-import org.firstinspires.ftc.teamcode.utilities.movement.MotionProfilingDrive;
+import org.firstinspires.ftc.teamcode.utilities.robot.movement.MotionProfilingDrive;
 import org.firstinspires.ftc.teamcode.vision.simulatortests.ApriltagDetectionPipeline;
 import org.firstinspires.ftc.teamcode.vision.simulatortests.ParkingPosition;
 import org.openftc.easyopencv.OpenCvCamera;
