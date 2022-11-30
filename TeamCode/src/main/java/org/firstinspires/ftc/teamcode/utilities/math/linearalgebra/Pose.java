@@ -5,6 +5,10 @@ public class Pose {
     private double y;
     private double heading;
 
+    public Pose() {
+        this(0, 0, 0);
+    }
+
     public Pose(double x, double y, double heading) {
         this.x = x;
         this.y = y;

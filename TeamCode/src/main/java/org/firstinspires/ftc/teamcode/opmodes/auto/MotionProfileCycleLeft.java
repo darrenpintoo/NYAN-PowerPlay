@@ -141,6 +141,7 @@ public class MotionProfileCycleLeft extends LinearOpMode {
 //        robotDrivetrain.turnToIMUAngle(Math.toRadians(180));
         // robot.drivetrain.enableAntiTip();
 
+        robot.persistData();
 
     }
 }

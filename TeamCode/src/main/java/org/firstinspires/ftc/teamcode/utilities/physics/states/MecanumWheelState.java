@@ -7,6 +7,9 @@ public class MecanumWheelState {
     double leftBack;
     double rightBack;
 
+    public MecanumWheelState() {
+        this(0, 0, 0, 0);
+    }
     public MecanumWheelState(double rightFront, double leftFront, double leftBack, double rightBack) {
         this.rightFront = rightFront;
         this.leftFront = leftFront;

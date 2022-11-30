@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.utilities.math.AngleHelper;
 import org.firstinspires.ftc.teamcode.utilities.controltheory.feedback.GeneralPIDController;
+import org.firstinspires.ftc.teamcode.utilities.physics.states.MecanumWheelState;
 import org.firstinspires.ftc.teamcode.utilities.robot.RobotEx;
 
 /**
@@ -242,6 +243,15 @@ public class Drivetrain implements Subsystem {
                 this.leftBackMotor.getCurrentPosition(),
                 this.rightBackMotor.getCurrentPosition()
         };
+    }
+
+    public MecanumWheelState getMotorTicks() {
+        return new MecanumWheelState(
+                this.rightFrontMotor.getCurrentPosition(),
+                this.leftFrontMotor.getCurrentPosition(),
+                this.leftBackMotor.getCurrentPosition(),
+                this.rightBackMotor.getCurrentPosition()
+        );
     }
 
     public static double getAverageFromArray(int[] array) {

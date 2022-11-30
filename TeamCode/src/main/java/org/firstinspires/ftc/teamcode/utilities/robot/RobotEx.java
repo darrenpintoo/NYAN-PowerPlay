@@ -96,6 +96,10 @@ public class RobotEx {
         return frameTime;
     }
 
+    public void persistData() {
+        PersistentData.heading = this.internalIMU.getCurrentFrameHeadingCCW();
+    }
+
     public double getVoltage() {
         return this.voltageSensor.getVoltage();
     }

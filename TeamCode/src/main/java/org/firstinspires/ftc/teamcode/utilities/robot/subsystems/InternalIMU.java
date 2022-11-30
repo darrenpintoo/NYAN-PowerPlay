@@ -78,7 +78,6 @@ public class InternalIMU implements Subsystem {
 
         double currentFrameHeading = this.getCurrentFrameHeadingCCW();
 
-
 /*        if (this.drivetrain.getTurnDirection() == Drivetrain.TurnDirection.LEFT) {
             if (currentFrameHeading < previousFrameHeading) {
                 this.absoluteOrientation += (180 - previousFrameHeading) + (-180 - currentFrameHeading);
