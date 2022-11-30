@@ -28,6 +28,7 @@ public class EncoderDrive {
 
     private final double TURN_THRESHOLD = Math.toRadians(10);*/
 
+    public static final double kStatic = 0.045;
     RobotEx robot = RobotEx.getInstance();
 
     InternalIMU imu = robot.internalIMU;
@@ -149,7 +150,7 @@ public class EncoderDrive {
             this.dt.robotCentricDriveFromGamepad(
                     0,
                     0,
-                    Math.min(Math.max(output, -1), 1) * 0.75
+                    Math.min(Math.max(output, -1), 1) * 0.75 + Math.signum(output) * kStatic
             );
 
             currentIMUPosition = this.imu.getCurrentFrameHeadingCCW();

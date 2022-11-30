@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmodes.teleop;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.exception.RobotCoreException;
@@ -14,12 +15,14 @@ import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.Lift;
  * Example teleop code for a basic mecanum drive
  */
 @TeleOp(name = "Main Mecanum Drive")
+@Config
 public class MainMecanumDrive extends LinearOpMode {
 
     // Create new Instance of the robot
     RobotEx robot = RobotEx.getInstance();
 
 
+    public static double F = 0;
     @Override
     public void runOpMode() {
 
@@ -82,6 +85,11 @@ public class MainMecanumDrive extends LinearOpMode {
                 intakeDirection = true;
             }*/
 
+/*           robot.drivetrain.robotCentricDriveFromGamepad(
+                    0,
+                    0,
+                    F
+            );*/
             if (currentFrameGamepad1.right_trigger > 0.2 && previousFrameGamepad1.right_trigger < 0.2) {
                 intakeOn = !intakeOn;
                 intakeDirection = false;
@@ -163,10 +171,10 @@ public class MainMecanumDrive extends LinearOpMode {
             } else if (currentFrameGamepad2.dpad_down){
                 robot.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.GROUND_JUNCTION);
             }
-
+/*
             if (currentFrameGamepad1.x) {
                 robot.drivetrain.disableAntiTip();
-            }
+            }*/
 
 
             // Handle Manual Extension State

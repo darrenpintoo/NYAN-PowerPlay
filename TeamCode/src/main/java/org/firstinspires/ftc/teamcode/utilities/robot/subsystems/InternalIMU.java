@@ -125,7 +125,7 @@ public class InternalIMU implements Subsystem {
     }
 
     public boolean isRobotTilted() {
-        return Math.abs(this.getCurrentFrameTilt() - this.startTilt) > 0.1;
+        return Math.abs(this.getCurrentFrameTilt() - this.startTilt) > 0.05;
     }
 
     public double getAbsoluteOrientation() {

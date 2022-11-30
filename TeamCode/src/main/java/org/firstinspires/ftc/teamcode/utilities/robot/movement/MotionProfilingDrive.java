@@ -19,6 +19,8 @@ public class MotionProfilingDrive {
     public static double kV = 0.018;//1 / DriveConstants.MAX_VELOCITY;
     public static double kA = 0.003;
 
+    public static double kStatic = 0.05;
+
     RobotEx robot = RobotEx.getInstance();
 
     InternalIMU imu = robot.internalIMU;
@@ -88,8 +90,12 @@ public class MotionProfilingDrive {
                     DriveConstants.getInchesFromEncoderTicks(currentFramePosition - startAveragePosition)
                     );
 
+            double output = feedforward + feedback;
+
+            output += Math.signum(output) * kStatic;
+
             this.dt.robotCentricDriveFromGamepad(
-                    -(feedforward + feedback),
+                    -(output),
                     0,
                     0
             );

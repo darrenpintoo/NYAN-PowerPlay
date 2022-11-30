@@ -65,12 +65,13 @@ public class MotionProfileCycleLeft extends LinearOpMode {
 
         if (isStopRequested()) return;
 
+        robot.drivetrain.enableAntiTip();
         MotionProfilingDrive robotDrivetrain = new MotionProfilingDrive(this, telemetry);
         EncoderDrive robotDrivetrainE = new EncoderDrive(this, telemetry);
 
         robot.drivetrain.setRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.drivetrain.setRunMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        robot.drivetrain.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        robot.drivetrain.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
         // ParkingPosition parkPosition = sleeveDetection.getParkingPosition();
 
