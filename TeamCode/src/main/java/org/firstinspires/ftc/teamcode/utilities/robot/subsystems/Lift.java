@@ -61,7 +61,7 @@ public class Lift implements Subsystem {
 
         // todo: figure out the directions
         rightLiftMotor.setDirection(DcMotorEx.Direction.FORWARD);
-        leftLiftMotor.setDirection(DcMotorEx.Direction.REVERSE);
+        leftLiftMotor.setDirection(DcMotorEx.Direction.FORWARD);
 
         liftMotors = new MotorGroup<>(leftLiftMotor, rightLiftMotor);
 
@@ -90,7 +90,7 @@ public class Lift implements Subsystem {
 
         int targetPosition = this.getEncoderPositionFromLevel(this.currentLiftTargetPosition);
 
-        if (this.currentFrameOutput == 0 && targetPosition > currentPosition) {
+        if (this.currentFrameOutput == 0) {
             currentFrameOutput = liftPID.getOutputFromError(targetPosition, this.liftMotors.getAveragePosition());
         }
 

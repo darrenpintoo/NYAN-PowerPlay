@@ -98,6 +98,7 @@ public class EncoderDrive {
 
     public void turnToIMUAngle(double angle) {
 
+        angle = AngleHelper.normDelta(angle);
 
         double currentIMUPosition = this.imu.getCurrentFrameHeadingCCW();
         double turnError = angle - currentIMUPosition;
@@ -110,27 +111,7 @@ public class EncoderDrive {
 
         while (!atTarget && !this.currentOpmode.isStopRequested()) {
 
-
             turnError = angle  - currentIMUPosition;
-/*            if (Math.abs(turnError) > Math.PI) {
-                if (angle < 0) {
-                    // currentAngle -= Math.PI;
-                    double alpha = Math.PI - currentIMUPosition;
-                    double beta = -Math.PI - angle;
-
-                    double difference = alpha + beta;
-
-                    turnError = -((-Math.PI - angle) + (Math.PI - currentIMUPosition));
-                } else if (angle > 0) {
-                    // currentAngle += Math.PI;
-                    double alpha = Math.PI - angle;
-                    double beta = -Math.PI - currentIMUPosition;
-
-                    double difference = alpha + beta;
-
-                    turnError = -((Math.PI - angle) + (-Math.PI - currentIMUPosition));
-                }
-            }*/
 
             if (Math.abs(turnError) > Math.PI) {
                 if (angle < 0) {

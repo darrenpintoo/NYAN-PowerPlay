@@ -9,6 +9,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import org.firstinspires.ftc.teamcode.utilities.robot.movement.EncoderDrive;
 import org.firstinspires.ftc.teamcode.utilities.robot.RobotEx;
 import org.firstinspires.ftc.teamcode.utilities.robot.movement.MotionProfilingDrive;
+import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.Claw;
+import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.Lift;
 import org.firstinspires.ftc.teamcode.vision.simulatortests.ApriltagDetectionPipeline;
 import org.firstinspires.ftc.teamcode.vision.simulatortests.ParkingPosition;
 import org.openftc.easyopencv.OpenCvCamera;
@@ -58,6 +60,7 @@ public class MotionProfileCycleLeft extends LinearOpMode {
 
         // Initialize the robot
 
+        robot.claw.setClawState(Claw.ClawStates.CLOSED);
         waitForStart();
 
         // Notify subsystems before loop
@@ -78,49 +81,32 @@ public class MotionProfileCycleLeft extends LinearOpMode {
         // robotDrivetrain.turnToIMUAngle(Math.toRadians(180));
 
         ParkingPosition parkPosition = ParkingPosition.CENTER;
-        
-        robotDrivetrain.driveForward(-50);
+
+        robot.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.LOW_JUNCTION);
+        robotDrivetrain.driveForward(-20);
+        robotDrivetrainE.turnToIMUAngle(-Math.toRadians(90));
+        robotDrivetrainE.driveForwardFromInchesBB(5);
+        robot.claw.setClawState(Claw.ClawStates.OPENED);
+
+        // place cone
+        robotDrivetrainE.driveForwardFromInchesBB(-5);
+        robot.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.DEFAULT);
+
+        robotDrivetrainE.turnToIMUAngle(0);
+        robotDrivetrain.driveForward(-30);
         robotDrivetrainE.turnToIMUAngle(Math.toRadians(90));
         robotDrivetrain.driveForward(27);
+        robot.claw.setClawState(Claw.ClawStates.CLOSED);
         //get cone
         robotDrivetrain.driveForward(-27);
-        robotDrivetrainE.turnToIMUAngle(Math.toRadians(135));
-        robotDrivetrain.driveForward(-5);
-        // place cone
+        robot.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.LOW_JUNCTION);
+        robotDrivetrainE.turnToIMUAngle(Math.toRadians(45));
         robotDrivetrain.driveForward(5);
-        robotDrivetrainE.turnToIMUAngle(Math.toRadians(90));
-        robotDrivetrain.driveForward(27);
-        //get cone
-        robotDrivetrain.driveForward(-27);
-        robotDrivetrainE.turnToIMUAngle(Math.toRadians(135));
-        robotDrivetrain.driveForward(-5);
+        robot.claw.setClawState(Claw.ClawStates.CLOSED);
+
         // place cone
-        robotDrivetrain.driveForward(5);
-        robotDrivetrainE.turnToIMUAngle(Math.toRadians(90));
-        robotDrivetrain.driveForward(27);
-        //get cone
-        robotDrivetrain.driveForward(-27);
-        robotDrivetrainE.turnToIMUAngle(Math.toRadians(135));
         robotDrivetrain.driveForward(-5);
-        // place cone
-        robotDrivetrain.driveForward(5);
-        robotDrivetrainE.turnToIMUAngle(Math.toRadians(90));
-        robotDrivetrain.driveForward(27);
-        //get cone
-        robotDrivetrain.driveForward(-27);
-        robotDrivetrainE.turnToIMUAngle(Math.toRadians(135));
-        robotDrivetrain.driveForward(-5);
-        // place cone
-        robotDrivetrain.driveForward(5);
-        robotDrivetrainE.turnToIMUAngle(Math.toRadians(90));
-        robotDrivetrain.driveForward(27);
-        //get cone
-        robotDrivetrain.driveForward(-27);
-        robotDrivetrainE.turnToIMUAngle(Math.toRadians(135));
-        robotDrivetrain.driveForward(-5);
-        // place cone
-        robotDrivetrain.driveForward(5);
-        robotDrivetrainE.turnToIMUAngle(Math.toRadians(90));
+        robot.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.DEFAULT);
 
         // sleep(5000);
 

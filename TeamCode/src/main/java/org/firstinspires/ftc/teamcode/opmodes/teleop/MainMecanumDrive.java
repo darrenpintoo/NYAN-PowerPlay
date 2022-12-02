@@ -22,14 +22,12 @@ public class MainMecanumDrive extends LinearOpMode {
     // Create new Instance of the robot
     RobotEx robot = RobotEx.getInstance();
 
-
     public static double F = 0;
     @Override
     public void runOpMode() {
 
         // telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         telemetry.setMsTransmissionInterval(500);
-        PhotonCore.enable();
 
         // Initialize the robot
         robot.init(hardwareMap, telemetry);
@@ -53,7 +51,7 @@ public class MainMecanumDrive extends LinearOpMode {
         Gamepad previousFrameGamepad1 = new Gamepad();
         Gamepad previousFrameGamepad2 = new Gamepad();
 
-        robot.drivetrain.enableAntiTip();
+        // robot.drivetrain.enableAntiTip();
 
         // Declare state variables
         boolean intakeOn = false;

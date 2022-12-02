@@ -4,12 +4,14 @@ import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.robot.Robot;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.utilities.math.AngleHelper;
 import org.firstinspires.ftc.teamcode.utilities.controltheory.feedback.GeneralPIDController;
 import org.firstinspires.ftc.teamcode.utilities.physics.states.MecanumWheelState;
 import org.firstinspires.ftc.teamcode.utilities.robot.RobotEx;
+import org.firstinspires.ftc.teamcode.utilities.robot.extensions.RobotOrientation;
 
 /**
  * Robot Drivetrain
@@ -40,8 +42,11 @@ public class Drivetrain implements Subsystem {
 
     private boolean enableAntiTip = false;
 
-    public GeneralPIDController headingPID = new GeneralPIDController(1, 0, 0, 0);
+    public GeneralPIDController headingPID = new GeneralPIDController(1, 0, 100, 0);
     public GeneralPIDController translationalPID = new GeneralPIDController(1, 0, 0, 0);
+
+    public GeneralPIDController tiltPID = new GeneralPIDController(1, 0, 0, 0);
+    public GeneralPIDController yawPID = new GeneralPIDController(1, 0, 0, 0);
 
     private Telemetry telemetry;
 
@@ -101,11 +106,26 @@ public class Drivetrain implements Subsystem {
 
         this.headingPID.updateCoefficients(Drivetrain.kP, Drivetrain.kI, Drivetrain.kD, 0);
 
-        if (enableAntiTip && this.internalIMU.isRobotTilted()) {
-            leftBackPower = 0;
-            leftFrontPower = 0;
-            rightBackPower = 0;
-            rightFrontPower = 0;
+        RobotOrientation currentOrientation = this.internalIMU.getCurrentFrameRobotOrientation();
+        RobotOrientation startOrientation = this.internalIMU.getStartFrameRobotOrientation();
+
+        double tiltError = currentOrientation.getTilt() - startOrientation.getTilt();
+        double yawError = currentOrientation.getYaw() - startOrientation.getYaw();
+
+
+        if (this.enableAntiTip && tiltError > InternalIMU.TILT_THRESHOLD || this.enableAntiTip && yawError > InternalIMU.YAW_THRESHOLD) {
+            double tiltOutput = this.tiltPID.getOutputFromError(startOrientation.getTilt(), currentOrientation.getTilt());
+            double yawOutput = this.yawPID.getOutputFromError(startOrientation.getYaw(), currentOrientation.getYaw());
+
+            leftBackPower -= yawOutput;
+            leftFrontPower += yawOutput;
+            rightBackPower += yawOutput;
+            rightFrontPower -= yawOutput;
+
+            leftBackPower += tiltOutput;
+            leftFrontPower += tiltOutput;
+            rightBackPower += tiltOutput;
+            rightFrontPower += tiltOutput;
         }
 
         this.rightBackMotor.setPower(rightBackPower);
@@ -164,26 +184,6 @@ public class Drivetrain implements Subsystem {
         double targetAngle = Math.atan2(-rightJoystickX, -rightJoystickY);
         double currentAngle = this.internalIMU.getCurrentFrameHeadingCW();
         double error = targetAngle - currentAngle;
-
-/*        if (Math.abs(error) > Math.PI) {
-            if (targetAngle < 0) {
-                // currentAngle -= Math.PI;
-                double alpha = Math.PI - currentAngle;
-                double beta = -Math.PI - targetAngle;
-
-                double difference = alpha + beta;
-
-                error = -((-Math.PI - targetAngle) + (Math.PI - currentAngle));
-            } else if (targetAngle > 0) {
-                // currentAngle += Math.PI;
-                double alpha = Math.PI - targetAngle;
-                double beta = -Math.PI - currentAngle;
-
-                double difference = alpha + beta;
-                
-                error = -((Math.PI - targetAngle) + (-Math.PI - currentAngle));
-            }
-        }*/
 
         if (Math.abs(error) > Math.PI) {
             if (targetAngle < 0) {

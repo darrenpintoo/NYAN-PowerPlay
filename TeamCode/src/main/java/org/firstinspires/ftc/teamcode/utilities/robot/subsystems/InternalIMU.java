@@ -2,29 +2,38 @@ package org.firstinspires.ftc.teamcode.utilities.robot.subsystems;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.robot.Robot;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngularVelocity;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.utilities.robot.RobotEx;
+import org.firstinspires.ftc.teamcode.utilities.robot.extensions.RobotOrientation;
 
 /**
  * Robot IMU
  */
 public class InternalIMU implements Subsystem {
 
+    public static double TILT_THRESHOLD = Math.toRadians(20);
+    public static double YAW_THRESHOLD = Math.toRadians(20);
+
     private final boolean DISABLE_VELOCITY_TRACKER = true;
     private static InternalIMU imuInstance = null;
     private BNO055IMU internalIMU;
 
-    private Orientation currentFrameOrientation = new Orientation() ;
+    private Orientation currentFrameOrientation = new Orientation();
+    private RobotOrientation currentFrameRobotOrientation = new RobotOrientation();
+
     private AngularVelocity currentFrameVelocity;
 
     private Orientation lastFrameOrientation = new Orientation();
+    private RobotOrientation lastFrameRobotOrientation = new RobotOrientation();
 
-    private double absoluteOrientation;
+    public RobotOrientation startFrameRobotOrientation = new RobotOrientation();
 
     private double startTilt = 0;
+
     // private Drivetrain drivetrain;
 
     private Telemetry telemetry;
@@ -33,9 +42,6 @@ public class InternalIMU implements Subsystem {
         if (InternalIMU.imuInstance != null) {
             throw new IllegalStateException("Robot already instantiated");
         }
-
-        // drivetrain = RobotEx.getInstance().drivetrain;
-        absoluteOrientation = 0;
     }
 
     public static InternalIMU getInstance() {
@@ -62,48 +68,37 @@ public class InternalIMU implements Subsystem {
     public void onOpmodeStarted() {
         this.onCyclePassed();
         this.startTilt = this.getCurrentFrameTilt();
+        this.startFrameRobotOrientation = this.getCurrentFrameRobotOrientation();
     }
 
     @Override
     public void onCyclePassed() {
 
-        double changeInHeading = 0;
-
         this.lastFrameOrientation = this.currentFrameOrientation;
-
-        double previousFrameHeading = this.getPreviousFrameHeadingCCW();
+        this.lastFrameRobotOrientation = new RobotOrientation(this.lastFrameOrientation);
 
         this.currentFrameOrientation = internalIMU.getAngularOrientation();
+        this.currentFrameRobotOrientation = new RobotOrientation(this.currentFrameOrientation);
+
         this.currentFrameVelocity = this.DISABLE_VELOCITY_TRACKER ? null : internalIMU.getAngularVelocity();
-
-        double currentFrameHeading = this.getCurrentFrameHeadingCCW();
-
-/*        if (this.drivetrain.getTurnDirection() == Drivetrain.TurnDirection.LEFT) {
-            if (currentFrameHeading < previousFrameHeading) {
-                this.absoluteOrientation += (180 - previousFrameHeading) + (-180 - currentFrameHeading);
-            } else {
-                this.absoluteOrientation += currentFrameHeading - previousFrameHeading;
-            }
-        } else if (this.drivetrain.getTurnDirection() == Drivetrain.TurnDirection.RIGHT) {
-            if (currentFrameHeading > previousFrameHeading) {
-                 this.absoluteOrientation += (-180 - previousFrameHeading) + (180 - currentFrameHeading);
-            } else {
-                this.absoluteOrientation += currentFrameHeading - previousFrameHeading;
-            }
-        }*/
     }
 
+    @Deprecated
     public Orientation getCurrentFrameOrientation() {
         return this.currentFrameOrientation;
     }
+
+    @Deprecated
     public double getPreviousFrameHeadingCCW() {
         return -this.getPreviousFrameHeadingCW();
     }
 
+    @Deprecated
     public double getPreviousFrameHeadingCW() {
         return this.lastFrameOrientation.firstAngle;
     }
 
+    @Deprecated
     public double getCurrentFrameHeadingCW() {
         return this.currentFrameOrientation.firstAngle;
     }
@@ -116,19 +111,28 @@ public class InternalIMU implements Subsystem {
         return this.getCurrentFrameVelocity().yRotationRate;
     }
 
+    @Deprecated
     public double getCurrentFrameTilt() {
         return this.currentFrameOrientation.secondAngle;
     }
 
+    @Deprecated
     public double getCurrentFrameHeadingCCW() {
         return -this.getCurrentFrameHeadingCW();
     }
 
-    public boolean isRobotTilted() {
-        return Math.abs(this.getCurrentFrameTilt() - this.startTilt) > 0.05;
+    public RobotOrientation getCurrentFrameRobotOrientation() {
+        return this.currentFrameRobotOrientation;
     }
 
-    public double getAbsoluteOrientation() {
-        return this.absoluteOrientation;
+    public RobotOrientation getLastFrameRobotOrientation() {
+        return this.lastFrameRobotOrientation;
+    }
+
+    public RobotOrientation getStartFrameRobotOrientation() {
+        return this.startFrameRobotOrientation;
+    }
+    public boolean isRobotTilted() {
+        return Math.abs(this.getCurrentFrameTilt() - this.startTilt) > 0.05;
     }
 }
