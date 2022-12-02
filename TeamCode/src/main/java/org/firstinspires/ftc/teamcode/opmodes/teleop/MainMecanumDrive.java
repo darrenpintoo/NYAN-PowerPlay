@@ -32,11 +32,6 @@ public class MainMecanumDrive extends LinearOpMode {
         // Initialize the robot
         robot.init(hardwareMap, telemetry);
 
-        while (opModeInInit()) {
-            telemetry.addData("Auto heading: ", PersistentData.heading);
-            telemetry.update();
-        }
-
         waitForStart();
 
         // Notify subsystems before loop
@@ -59,7 +54,7 @@ public class MainMecanumDrive extends LinearOpMode {
 
         boolean robotCentric = true;
 
-        boolean fieldCentricAutomatedTurning = true;
+        boolean fieldCentricAutomatedTurning = false;
         robot.update();
 
         while(opModeIsActive()) {

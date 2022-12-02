@@ -35,7 +35,7 @@ public class Claw implements Subsystem {
 
     //need to tune still
     public static double openPosition = 0.3;
-    public static double closePosition = 0.6;
+    public static double closePosition = 0.7;
 
     private ClawStates currentClawState = ClawStates.OPENED;
 

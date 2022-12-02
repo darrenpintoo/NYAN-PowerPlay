@@ -21,7 +21,7 @@ public class DriveConstants {
 
     public static double BANG_BANG_POWER = -0.25;
     public static double TICK_THRESHOLD = 50;
-    public static double ANGLE_AT_TIME = 0.5;
+    public static double ANGLE_AT_TIME = 3;
 
     public static double TURN_THRESHOLD = Math.toRadians(1);
 
