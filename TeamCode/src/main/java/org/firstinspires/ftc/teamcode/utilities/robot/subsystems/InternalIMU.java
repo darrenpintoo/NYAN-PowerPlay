@@ -8,6 +8,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngularVelocity;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.utilities.robot.RobotEx;
+import org.firstinspires.ftc.teamcode.utilities.robot.extensions.RobotAngularVelocity;
 import org.firstinspires.ftc.teamcode.utilities.robot.extensions.RobotOrientation;
 
 /**
@@ -18,23 +19,25 @@ public class InternalIMU implements Subsystem {
     public static double TILT_THRESHOLD = Math.toRadians(20);
     public static double YAW_THRESHOLD = Math.toRadians(20);
 
-    private final boolean DISABLE_VELOCITY_TRACKER = true;
+    private boolean trackAngularVelocity = false;
     private static InternalIMU imuInstance = null;
     private BNO055IMU internalIMU;
 
     private Orientation currentFrameOrientation = new Orientation();
     private RobotOrientation currentFrameRobotOrientation = new RobotOrientation();
 
-    private AngularVelocity currentFrameVelocity;
+    private AngularVelocity currentFrameVelocity = new AngularVelocity();
+    private RobotAngularVelocity currentFrameRobotVelocity = new RobotAngularVelocity();
 
     private Orientation lastFrameOrientation = new Orientation();
     private RobotOrientation lastFrameRobotOrientation = new RobotOrientation();
 
+    private AngularVelocity lastFrameVelocity = new AngularVelocity();
+    private RobotAngularVelocity lastFrameRobotVelocity = new RobotAngularVelocity();
+
     public RobotOrientation startFrameRobotOrientation = new RobotOrientation();
 
     private double startTilt = 0;
-
-    // private Drivetrain drivetrain;
 
     private Telemetry telemetry;
 
@@ -80,12 +83,23 @@ public class InternalIMU implements Subsystem {
         this.currentFrameOrientation = internalIMU.getAngularOrientation();
         this.currentFrameRobotOrientation = new RobotOrientation(this.currentFrameOrientation);
 
-        this.currentFrameVelocity = this.DISABLE_VELOCITY_TRACKER ? null : internalIMU.getAngularVelocity();
+        if (trackAngularVelocity) {
+            this.lastFrameVelocity = this.currentFrameVelocity;
+            this.lastFrameRobotVelocity = new RobotAngularVelocity(this.lastFrameVelocity);
+
+            this.currentFrameVelocity = internalIMU.getAngularVelocity();
+            this.currentFrameRobotVelocity = new RobotAngularVelocity(this.currentFrameVelocity);
+
+        }
     }
 
     @Deprecated
     public Orientation getCurrentFrameOrientation() {
         return this.currentFrameOrientation;
+    }
+
+    @Deprecated AngularVelocity getLastFrameVelocity() {
+        return this.lastFrameVelocity;
     }
 
     @Deprecated
@@ -129,7 +143,24 @@ public class InternalIMU implements Subsystem {
     public RobotOrientation getStartFrameRobotOrientation() {
         return this.startFrameRobotOrientation;
     }
+
+    public RobotAngularVelocity getCurrentFrameRobotVelocity() {
+        return this.currentFrameRobotVelocity;
+    }
+
+    public RobotAngularVelocity getLastFrameRobotVelocity() {
+        return this.currentFrameRobotVelocity;
+    }
+
     public boolean isRobotTilted() {
         return Math.abs(this.getCurrentFrameTilt() - this.startTilt) > 0.05;
+    }
+
+    public void trackAngularVelocity() {
+        this.trackAngularVelocity = true;
+    }
+
+    public void stopAngularVelocityTracking() {
+        this.trackAngularVelocity = false;
     }
 }

@@ -24,6 +24,7 @@ public class DriveConstants {
     public static double ANGLE_AT_TIME = 3;
 
     public static double TURN_THRESHOLD = Math.toRadians(1);
+    public static double ANGULAR_VELOCITY_THRESHOLD = Math.toRadians(10);
 
     public static double MAX_VELOCITY = 50;
     public static double MAX_ACCELERATION = 25;

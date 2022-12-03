@@ -101,15 +101,17 @@ public class EncoderDrive {
 
     public void turnToIMUAngle(double angle) {
 
+        this.imu.trackAngularVelocity();
+
         angle = AngleHelper.normDelta(angle);
 
         double currentIMUPosition = this.imu.getCurrentFrameHeadingCCW();
-        double turnError = angle - currentIMUPosition;
+        double currentIMUVelocity;
+        double turnError;
 
         ElapsedTime turnTimer = new ElapsedTime();
 
         boolean atTarget = false;
-
         double atTargetStartTime = -1;
 
         while (!atTarget && !this.currentOpmode.isStopRequested()) {
@@ -137,13 +139,14 @@ public class EncoderDrive {
                     Math.min(Math.max(output, -1), 1) * 0.75 + Math.signum(output) * kStatic
             );
 
-            currentIMUPosition = this.imu.getCurrentFrameHeadingCCW();
+            currentIMUPosition = this.imu.getCurrentFrameRobotOrientation().getCCWHeading();
+            currentIMUVelocity = this.imu.getCurrentFrameRobotVelocity().getTurnVelocity();
 
-            if (Math.abs(turnError) < DriveConstants.TURN_THRESHOLD) {
-                if ((turnTimer.milliseconds() - atTargetStartTime) / 1000 > DriveConstants.ANGLE_AT_TIME) {
-                    atTarget = true;
-                } else if (atTargetStartTime == -1) {
+            if (Math.abs(turnError) < DriveConstants.TURN_THRESHOLD && Math.abs(currentIMUVelocity) < DriveConstants.ANGULAR_VELOCITY_THRESHOLD) {
+                if (atTargetStartTime == -1) {
                     atTargetStartTime = turnTimer.milliseconds();
+                } else if ((turnTimer.milliseconds() - atTargetStartTime) / 1000 > DriveConstants.ANGLE_AT_TIME) {
+                    atTarget = true;
                 }
             } else {
                 atTargetStartTime = -1;
@@ -159,6 +162,8 @@ public class EncoderDrive {
 
             this.robot.update();
         }
+
+        this.imu.stopAngularVelocityTracking();
 
         MotorGroup<DcMotorEx> robotDrivetrain = robot.drivetrain.getDrivetrainMotorGroup();
 
