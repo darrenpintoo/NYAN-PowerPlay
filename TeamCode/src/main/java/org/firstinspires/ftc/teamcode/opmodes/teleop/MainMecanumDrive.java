@@ -172,47 +172,23 @@ public class MainMecanumDrive extends LinearOpMode {
                 robot.drivetrain.disableAntiTip();
             }*/
 
-
-            // Handle Manual Extension State
-
-/*            robot.clawExtension.driveLiftFromGamepad(
-                    gamepad2.right_stick_y
-            );*/
-
-
-            /*
-            if (gamepad1.right_trigger > 0.1) {
-                robot.lift.leftLiftMotor.setPower(gamepad1.right_trigger);
-                robot.lift.rightLiftMotor.setPower(gamepad1.right_trigger);
-            } else if (gamepad1.left_trigger > 0.1) {
-                robot.lift.leftLiftMotor.setPower(-gamepad1.left_trigger);
-                robot.lift.rightLiftMotor.setPower(-gamepad1.left_trigger);
-            } else {
-                robot.lift.leftLiftMotor.setPower(0);
-                robot.lift.rightLiftMotor.setPower(0);
-            }
-
-             */
+            robot.drivetrain.setWeightedDrivePower(1 - gamepad1.left_trigger);
 
             double frameTime = robot.update();
 
-
-            // telemetry.addData("IMU orientation: ", robot.internalIMU.getCurrentFrameOrientation());
-            // telemetry.addData("CCW IMU orientation: ", robot.internalIMU.getCurrentFrameHeadingCCW());
-
-            // telemetry.addData("CW IMU orientation: ", robot.internalIMU.getCurrentFrameHeadingCW());
             telemetry.addData("Robot Tilt : ", robot.internalIMU.getCurrentFrameTilt());
-            // telemetry.addData("Robot Tilt Acceleration y: ", robot.internalIMU.getCurrentFrameVelocity().yRotationRate);
-
-            // telemetry.addData("Joystick Orientation: ", Math.atan2(-currentFrameGamepad1.right_stick_x, -currentFrameGamepad1.right_stick_y));
-/*            telemetry.addData(
-                    "Updated Joystick Orientation: ",
-                    Math.atan2(currentFrameGamepad1.right_stick_y, currentFrameGamepad1.right_stick_x) - Math.PI / 2
-            );*/
-            // ^ https://www.desmos.com/calculator/jp45vcfcbt
-
             telemetry.addData("Frame Time: ", frameTime);
             telemetry.addData("Refresh Rate: ", (frameTime != 0) ? (1000 / frameTime) : "inf");
+            // telemetry.addData("IMU orientation: ", robot.internalIMU.getCurrentFrameOrientation());
+            // telemetry.addData("CCW IMU orientation: ", robot.internalIMU.getCurrentFrameHeadingCCW());
+            // telemetry.addData("CW IMU orientation: ", robot.internalIMU.getCurrentFrameHeadingCW());
+            // telemetry.addData("Robot Tilt Acceleration y: ", robot.internalIMU.getCurrentFrameVelocity().yRotationRate);
+            // telemetry.addData("Joystick Orientation: ", Math.atan2(-currentFrameGamepad1.right_stick_x, -currentFrameGamepad1.right_stick_y));
+            // telemetry.addData(
+            //        "Updated Joystick Orientation: ",
+            //        Math.atan2(currentFrameGamepad1.right_stick_y, currentFrameGamepad1.right_stick_x) - Math.PI / 2
+            // );
+            // ^ https://www.desmos.com/calculator/jp45vcfcbt
 
             telemetry.update();
 

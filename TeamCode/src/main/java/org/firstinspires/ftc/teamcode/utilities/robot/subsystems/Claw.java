@@ -65,13 +65,12 @@ public class Claw implements Subsystem {
         this.currentFrameBlue = this.getBlueColorFromI2C();
         this.currentFrameRed = this.getRedColorFromI2C();
 
-        this.telemetry.addData("Red: ", this.getRedColor());
-        this.telemetry.addData("Blue: ", this.getBlueColor());
+        this.telemetry.addData("Claw -> Red: ", this.getRedColor());
+        this.telemetry.addData("Claw -> Blue: ", this.getBlueColor());
 
 
-        this.telemetry.addData("current servo Position: ", this.clawGrabberServo.getPosition());
-        // Set actual servo obj position here '.setPosition()'
-        telemetry.addData("Cone in grabber", this.checkConeInClaw());
+        this.telemetry.addData("Claw Servo Pos: ", this.clawGrabberServo.getPosition());
+        this.telemetry.addData("Cone in grabber: ", this.checkConeInClaw());
 
         if (this.checkConeInClaw() != this.coneInClawLast && this.checkConeInClaw()) {
             this.setClawState(ClawStates.CLOSED);

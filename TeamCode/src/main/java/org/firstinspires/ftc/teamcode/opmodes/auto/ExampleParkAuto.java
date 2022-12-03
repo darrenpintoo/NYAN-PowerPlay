@@ -95,8 +95,6 @@ public class ExampleParkAuto extends LinearOpMode {
         robotDrivetrain.driveForwardFromInchesBB(-10);
         robotDrivetrain.turnToIMUAngle(Math.toRadians(180));
 
-        PersistentData.heading = robot.internalIMU.getCurrentFrameHeadingCCW();
-
         // robot.drivetrain.enableAntiTip();
 
 

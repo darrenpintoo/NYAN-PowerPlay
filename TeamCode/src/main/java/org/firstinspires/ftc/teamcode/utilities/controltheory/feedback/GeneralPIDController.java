@@ -13,10 +13,10 @@ public class GeneralPIDController {
     private double kD = 0;
     private double kF = 0;
 
-    long lastUpdateTime = -1L;
     double lastUpdateError = -1D;
-
     double integralCounter = 0;
+
+    long lastUpdateTime = -1L;
 
     Telemetry telemetry;
 
@@ -38,21 +38,23 @@ public class GeneralPIDController {
 
         double proportion = currentUpdateError * this.kP;
         double derivative = deltaTime == 0 ? 0 : (changeInError / deltaTime) * this.kD;
-        integralCounter += currentUpdateError * deltaTime * this.kI;
+        integralCounter += currentUpdateError * deltaTime;
 
         this.lastUpdateTime = System.currentTimeMillis();
         this.lastUpdateError = currentUpdateError;
 
         if (this.telemetry != null) {
+            telemetry.addLine("-------PID Controller-------");
             telemetry.addData("Error: ", currentUpdateError);
             telemetry.addData("Proportion: ", proportion);
             telemetry.addData("Integral: ", integralCounter);
             telemetry.addData("Derivative: ", derivative);
+            telemetry.addLine("---------------------------");
         }
 
         return new double [] {
                 proportion,
-                this.integralCounter,
+                this.integralCounter * this.kI,
                 derivative,
                 this.kF
         };

@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.checkerframework.checker.units.qual.C;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.utilities.math.linearalgebra.Pose;
 import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.Claw;
 import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.ClawExtension;
 import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.Drivetrain;
@@ -26,10 +27,9 @@ public class RobotEx {
     public InternalIMU internalIMU = InternalIMU.getInstance();
 
     public Drivetrain drivetrain = new Drivetrain();
-    public Intake intake = new Intake();
+    // public Intake intake = new Intake();
     public Lift lift = new Lift();
     public Claw claw = new Claw();
-    //public ClawExtension clawExtension = new ClawExtension();
 
     public VoltageSensor voltageSensor;
 
@@ -37,7 +37,7 @@ public class RobotEx {
 
     private final Subsystem[] robotSubsystems = new Subsystem[] {
             internalIMU,
-            intake,
+            // intake,
             drivetrain,
             lift,
             claw//,
@@ -96,8 +96,17 @@ public class RobotEx {
         return frameTime;
     }
 
+    public void pause(double seconds) {
+        ElapsedTime elapsedTime = new ElapsedTime();
+        elapsedTime.reset();
+
+        while (elapsedTime.seconds() < seconds) {
+            this.update();
+        }
+    }
+
     public void persistData() {
-        PersistentData.heading = this.internalIMU.getCurrentFrameHeadingCCW();
+        PersistentData.startPose = new Pose(0, 0, this.internalIMU.getCurrentFrameHeadingCCW());
     }
 
     public double getVoltage() {

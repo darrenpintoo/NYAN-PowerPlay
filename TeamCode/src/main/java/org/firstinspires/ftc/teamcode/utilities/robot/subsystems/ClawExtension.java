@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
+@Deprecated
 public class ClawExtension implements Subsystem {
 
     final double JOYSTICK_THRESHOLD = 0.1;
@@ -30,9 +31,6 @@ public class ClawExtension implements Subsystem {
     @Override
     public void onCyclePassed() {
         this.extensionServo.setPower(this.currentFrameOutput);
-
-        t.addData("Extension Power: ", this.extensionServo.getPower());
-
     }
 
     public void driveLiftFromGamepad(double joystick) {

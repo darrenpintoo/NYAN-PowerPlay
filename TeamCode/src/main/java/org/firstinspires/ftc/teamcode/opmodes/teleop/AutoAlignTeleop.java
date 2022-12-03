@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmodes.teleop;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.exception.RobotCoreException;
@@ -17,6 +18,7 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
  * Example teleop code for a basic mecanum drive
  */
 @TeleOp(name = "Test Auto Align")
+@Disabled
 public class AutoAlignTeleop extends LinearOpMode {
 
     // Create new Instance of the robot
@@ -28,7 +30,7 @@ public class AutoAlignTeleop extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-
+/*
         // Initialize the robot
         robot.init(hardwareMap, telemetry);
 
@@ -150,12 +152,12 @@ public class AutoAlignTeleop extends LinearOpMode {
 
             // Handle Manual Extension State
   
-/*            robot.clawExtension.driveLiftFromGamepad(
+*//*            robot.clawExtension.driveLiftFromGamepad(
                     -currentFrameGamepad2.right_stick_y
-            );*/
+            );*//*
 
 
-            /*
+            *//*
             if (gamepad1.right_trigger > 0.1) {
                 robot.lift.leftLiftMotor.setPower(gamepad1.right_trigger);
                 robot.lift.rightLiftMotor.setPower(gamepad1.right_trigger);
@@ -167,7 +169,7 @@ public class AutoAlignTeleop extends LinearOpMode {
                 robot.lift.rightLiftMotor.setPower(0);
             }
 
-             */
+             *//*
 
             double frameTime = robot.update();
 
@@ -180,10 +182,10 @@ public class AutoAlignTeleop extends LinearOpMode {
             // telemetry.addData("Robot Tilt Acceleration y: ", robot.internalIMU.getCurrentFrameVelocity().yRotationRate);
 
             telemetry.addData("Joystick Orientation: ", Math.atan2(-currentFrameGamepad1.right_stick_x, -currentFrameGamepad1.right_stick_y));
-/*            telemetry.addData(
+*//*            telemetry.addData(
                     "Updated Joystick Orientation: ",
                     Math.atan2(currentFrameGamepad1.right_stick_y, currentFrameGamepad1.right_stick_x) - Math.PI / 2
-            );*/
+            );*//*
             // ^ https://www.desmos.com/calculator/jp45vcfcbt
 
             telemetry.addData("Frame Time: ", frameTime);
@@ -191,6 +193,6 @@ public class AutoAlignTeleop extends LinearOpMode {
 
             telemetry.update();
 
-        }
+        }*/
     }
 }

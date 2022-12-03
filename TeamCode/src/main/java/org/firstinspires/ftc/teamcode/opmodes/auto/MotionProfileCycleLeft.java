@@ -86,24 +86,25 @@ public class MotionProfileCycleLeft extends LinearOpMode {
         robotDrivetrain.driveForward(-20);
         robotDrivetrainE.turnToIMUAngle(-Math.toRadians(90));
         robotDrivetrainE.driveForwardFromInchesBB(5);
+        robot.pause(1);
         robot.claw.setClawState(Claw.ClawStates.OPENED);
-
+        robot.pause(1);
         // place cone
         robotDrivetrainE.driveForwardFromInchesBB(-5);
         robot.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.DEFAULT);
-
         robotDrivetrainE.turnToIMUAngle(0);
         robotDrivetrain.driveForward(-30);
         robotDrivetrainE.turnToIMUAngle(Math.toRadians(90));
         robotDrivetrain.driveForward(27);
         robot.claw.setClawState(Claw.ClawStates.CLOSED);
+        robot.pause(1);
         //get cone
         robotDrivetrain.driveForward(-27);
         robot.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.LOW_JUNCTION);
         robotDrivetrainE.turnToIMUAngle(Math.toRadians(45));
         robotDrivetrain.driveForward(5);
-        robot.claw.setClawState(Claw.ClawStates.CLOSED);
-
+        robot.claw.setClawState(Claw.ClawStates.OPENED);
+        robot.pause(1);
         // place cone
         robotDrivetrain.driveForward(-5);
         robot.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.DEFAULT);

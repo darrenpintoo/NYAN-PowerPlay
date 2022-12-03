@@ -10,6 +10,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 /**
  * Robot Drivetrain
  */
+@Deprecated
 public class Intake implements Subsystem {
 
     private DcMotorEx rightMotor;

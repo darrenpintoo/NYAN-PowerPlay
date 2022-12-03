@@ -11,6 +11,7 @@ import org.firstinspires.ftc.teamcode.utilities.math.AngleHelper;
 import org.firstinspires.ftc.teamcode.utilities.controltheory.feedback.GeneralPIDController;
 import org.firstinspires.ftc.teamcode.utilities.physics.states.MecanumWheelState;
 import org.firstinspires.ftc.teamcode.utilities.robot.RobotEx;
+import org.firstinspires.ftc.teamcode.utilities.robot.extensions.MotorGroup;
 import org.firstinspires.ftc.teamcode.utilities.robot.extensions.RobotOrientation;
 
 /**
@@ -28,17 +29,14 @@ public class Drivetrain implements Subsystem {
     private RobotEx robotInstance;
     private InternalIMU internalIMU;
 
+    MotorGroup<DcMotorEx> drivetrainMotorGroup;
+    private DcMotorEx[] drivetrainMotors;
+
     private DcMotorEx rightFrontMotor;
     private DcMotorEx leftFrontMotor;
     private DcMotorEx leftBackMotor;
     private DcMotorEx rightBackMotor;
 
-    private double rightFrontPower = 0;
-    private double leftFrontPower = 0;
-    private double leftBackPower = 0;
-    private double rightBackPower = 0;
-
-    private DcMotorEx[] drivetrainMotors;
 
     private boolean enableAntiTip = false;
 
@@ -50,10 +48,17 @@ public class Drivetrain implements Subsystem {
 
     private Telemetry telemetry;
 
+    private double rightFrontPower = 0;
+    private double leftFrontPower = 0;
+    private double leftBackPower = 0;
+    private double rightBackPower = 0;
+
+    private double weight = 0;
 
     public static double kP = 1;
     public static double kI = 0;
     public static double kD = 100;
+
     @Override
     public void onInit(HardwareMap hardwareMap, Telemetry telemetry) {
 
@@ -83,9 +88,15 @@ public class Drivetrain implements Subsystem {
             this.rightBackMotor
         };
 
+        this.drivetrainMotorGroup = new MotorGroup<>(
+                this.rightFrontMotor,
+                this.leftFrontMotor,
+                this.leftBackMotor,
+                this.rightBackMotor
+        );
+
         this.telemetry = telemetry;
-        this.headingPID.setTelemetry(telemetry);
-        // this.headingPID.updateCoefficients(1, 0, 0, 0);
+        // this.headingPID.setTelemetry(telemetry);
     }
 
     public void enableAntiTip() {
@@ -98,7 +109,6 @@ public class Drivetrain implements Subsystem {
 
     @Override
     public void onOpmodeStarted() {
-
     }
 
     @Override
@@ -128,10 +138,10 @@ public class Drivetrain implements Subsystem {
             rightFrontPower += tiltOutput;
         }
 
-        this.rightBackMotor.setPower(rightBackPower);
-        this.rightFrontMotor.setPower(rightFrontPower);
-        this.leftBackMotor.setPower(leftBackPower);
-        this.leftFrontMotor.setPower(leftFrontPower);
+        this.rightBackMotor.setPower(rightBackPower * this.weight);
+        this.rightFrontMotor.setPower(rightFrontPower * this.weight);
+        this.leftBackMotor.setPower(leftBackPower * this.weight);
+        this.leftFrontMotor.setPower(leftFrontPower * this.weight);
 
         this.rightBackPower = 0;
         this.leftBackPower = 0;
@@ -211,10 +221,6 @@ public class Drivetrain implements Subsystem {
                 -Math.min(Math.max(output, -1), 1) * 0.75
         );
 
-        this.telemetry.addData("Target angle: ", targetAngle);
-        this.telemetry.addData("Current Angle: ", currentAngle);
-        this.telemetry.addData("Error: ", error);
-        this.telemetry.addData("PID output: ", output);
     }
 
     public void setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior newZeroPowerBehavior) {
@@ -227,6 +233,18 @@ public class Drivetrain implements Subsystem {
         for (DcMotorEx drivetrainMotor : this.drivetrainMotors) {
             drivetrainMotor.setMode(newRunMode);
         }
+    }
+
+    public DcMotorEx[] getDrivetrainMotors() {
+        return this.drivetrainMotors;
+    }
+
+    public MotorGroup<DcMotorEx> getDrivetrainMotorGroup() {
+        return this.drivetrainMotorGroup;
+    }
+
+    public DcMotor.ZeroPowerBehavior getZeroPowerBehavior() {
+        return this.leftBackMotor.getZeroPowerBehavior();
     }
 
     public TurnDirection getTurnDirection() {
@@ -252,6 +270,10 @@ public class Drivetrain implements Subsystem {
                 this.leftBackMotor.getCurrentPosition(),
                 this.rightBackMotor.getCurrentPosition()
         );
+    }
+
+    public void setWeightedDrivePower(double weight) {
+        this.weight = weight;
     }
 
     public static double getAverageFromArray(int[] array) {

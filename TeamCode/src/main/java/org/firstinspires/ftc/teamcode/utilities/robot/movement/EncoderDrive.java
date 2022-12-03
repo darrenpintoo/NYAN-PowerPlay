@@ -1,12 +1,15 @@
 package org.firstinspires.ftc.teamcode.utilities.robot.movement;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.utilities.math.AngleHelper;
 import org.firstinspires.ftc.teamcode.utilities.robot.DriveConstants;
 import org.firstinspires.ftc.teamcode.utilities.robot.RobotEx;
+import org.firstinspires.ftc.teamcode.utilities.robot.extensions.MotorGroup;
 import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.Drivetrain;
 import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.InternalIMU;
 
@@ -157,7 +160,16 @@ public class EncoderDrive {
             this.robot.update();
         }
 
+        MotorGroup<DcMotorEx> robotDrivetrain = robot.drivetrain.getDrivetrainMotorGroup();
 
+        DcMotor.ZeroPowerBehavior currentZeroPowerBehavior = robot.drivetrain.getZeroPowerBehavior();
+
+        if (currentZeroPowerBehavior != DcMotor.ZeroPowerBehavior.BRAKE) {
+            robotDrivetrain.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            robotDrivetrain.setPower(0);
+            robot.pause(0.1);
+            robotDrivetrain.setZeroPowerBehavior(currentZeroPowerBehavior);
+        }
 
 
 

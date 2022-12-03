@@ -98,7 +98,6 @@ public class InternalIMU implements Subsystem {
         return this.lastFrameOrientation.firstAngle;
     }
 
-    @Deprecated
     public double getCurrentFrameHeadingCW() {
         return this.currentFrameOrientation.firstAngle;
     }
@@ -111,12 +110,10 @@ public class InternalIMU implements Subsystem {
         return this.getCurrentFrameVelocity().yRotationRate;
     }
 
-    @Deprecated
     public double getCurrentFrameTilt() {
         return this.currentFrameOrientation.secondAngle;
     }
 
-    @Deprecated
     public double getCurrentFrameHeadingCCW() {
         return -this.getCurrentFrameHeadingCW();
     }
