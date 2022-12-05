@@ -6,6 +6,9 @@ public class MecanumMovementState {
     double strafeVelocity;
     double turnVelocity;
 
+    public MecanumMovementState() {
+        this(0, 0, 0);
+    }
     public MecanumMovementState(double forwardVelocity, double strafeVelocity, double turnVelocity) {
         this.forwardVelocity = forwardVelocity;
         this.strafeVelocity = strafeVelocity;

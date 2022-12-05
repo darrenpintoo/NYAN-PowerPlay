@@ -15,7 +15,10 @@ public abstract class BaseLocalizer {
     Pose currentDisplacement;
 
     MecanumWheelState currentTicks = new MecanumWheelState();
+    MecanumMovementState currentVelocity = new MecanumMovementState();
+
     MecanumWheelState previousTicks = new MecanumWheelState();
+    MecanumMovementState previousVelocity = new MecanumMovementState();
 
     BaseLocalizer(Drivetrain drivetrain) {
         this.drivetrain = drivetrain;

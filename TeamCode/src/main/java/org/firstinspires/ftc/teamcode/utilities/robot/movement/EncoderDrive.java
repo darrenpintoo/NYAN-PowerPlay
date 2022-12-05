@@ -69,7 +69,6 @@ public class EncoderDrive {
             double currentFramePower;
 
             if (Math.abs(error) < DriveConstants.TICK_THRESHOLD) {
-                telemetry.addLine("Reached");
                 currentFramePower = 0;
                 targetReached = true;
             } else if (error > 0) {
