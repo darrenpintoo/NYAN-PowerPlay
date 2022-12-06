@@ -97,11 +97,11 @@ public class MainMecanumDrive extends LinearOpMode {
             }
 
 
-            if (intakeOn) {
+/*            if (intakeOn) {
                 robot.intake.enableIntakeMotor(intakeDirection);
             } else {
                 robot.intake.disableIntakeMotor();
-            }
+            }*/
 
             // Handle Claw State
             if (currentFrameGamepad2.b) {

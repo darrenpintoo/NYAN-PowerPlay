@@ -8,6 +8,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.checkerframework.checker.units.qual.C;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.utilities.localizer.BaseLocalizer;
+import org.firstinspires.ftc.teamcode.utilities.localizer.IMUEncoderLocalizer;
 import org.firstinspires.ftc.teamcode.utilities.math.linearalgebra.Pose;
 import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.Claw;
 import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.ClawExtension;
@@ -44,6 +46,10 @@ public class RobotEx {
            //  clawExtension
     };
 
+    Telemetry telemetry;
+
+    public BaseLocalizer localizer;
+
     private RobotEx() {
         if (RobotEx.robotInstance != null) {
             throw new IllegalStateException("Robot already instantiated");
@@ -62,7 +68,8 @@ public class RobotEx {
 
         this.allHubs = hardwareMap.getAll(LynxModule.class);
         this.voltageSensor = hardwareMap.voltageSensor.iterator().next();
-
+        this.localizer = new IMUEncoderLocalizer(drivetrain, internalIMU, telemetry);
+        this.localizer.setPoseEstimation(new Pose(0, 0, Math.PI / 2));
         for (LynxModule hub: allHubs) {
             hub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
         }
@@ -72,6 +79,8 @@ public class RobotEx {
         }
 
         telemetry.update();
+
+        this.telemetry = telemetry;
     }
 
     public void postInit() {
@@ -90,6 +99,11 @@ public class RobotEx {
             subsystem.onCyclePassed();
         }
 
+        this.localizer.updatePose();
+        Pose currentPose = this.localizer.getDisplacement();
+        telemetry.addData("X: ", currentPose.getX());
+        telemetry.addData("Y: ", currentPose.getY());
+        telemetry.addData("Heading: ", currentPose.getHeading());
         double frameTime = frameTimer.milliseconds();
         frameTimer.reset();
 

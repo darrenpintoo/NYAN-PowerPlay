@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.Drivetrain;
 import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.InternalIMU;
 
 @Config
-public class MotionProfilingDrive {
+public class MotionProfileLocalizerDrive {
     GeneralPIDController followerPID = new GeneralPIDController(0.1, 0, 0, 0);
 
     public static double kV = 0.018;//1 / DriveConstants.MAX_VELOCITY;
@@ -32,16 +32,16 @@ public class MotionProfilingDrive {
 
     ElapsedTime profileTimer = new ElapsedTime();
 
-    public MotionProfilingDrive(LinearOpMode currentOpmode) {
+    public MotionProfileLocalizerDrive(LinearOpMode currentOpmode) {
         this.currentOpmode = currentOpmode;
     }
 
-    public MotionProfilingDrive(LinearOpMode currentOpmode, Telemetry telemetry) {
+    public MotionProfileLocalizerDrive(LinearOpMode currentOpmode, Telemetry telemetry) {
         this.currentOpmode = currentOpmode;
         this.telemetry = telemetry;
     }
 
-    public void driveForward(double forwardInches) {
+    public void driveForwardConstantHeading(double forwardInches) {
 
         MotionProfile profile = new MotionProfile(
                 0,
@@ -68,7 +68,7 @@ public class MotionProfilingDrive {
             double targetCurrentFrameVelocity = profile.getVelocityFromTime(currentFrameTime);
             double targetCurrentFrameAcceleration = profile.getAccelerationFromTime(currentFrameTime);
 
-            double currentFramePosition = Drivetrain.getAverageFromArray(this.dt.getCWMotorTicks()) - startAveragePosition;
+            double currentFramePosition = 0;
             double currentFrameVelocity = (currentFramePosition - previousFramePositionTicks) / dt;
 
             if (telemetry != null) {

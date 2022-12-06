@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.robot.Robot;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.utilities.math.AngleHelper;
 import org.firstinspires.ftc.teamcode.utilities.controltheory.feedback.GeneralPIDController;
+import org.firstinspires.ftc.teamcode.utilities.physics.states.MecanumMovementState;
 import org.firstinspires.ftc.teamcode.utilities.physics.states.MecanumWheelState;
 import org.firstinspires.ftc.teamcode.utilities.robot.RobotEx;
 import org.firstinspires.ftc.teamcode.utilities.robot.extensions.MotorGroup;
@@ -40,7 +41,7 @@ public class Drivetrain implements Subsystem {
 
     private boolean enableAntiTip = false;
 
-    public GeneralPIDController headingPID = new GeneralPIDController(1, 0, 100, 0);
+    public GeneralPIDController headingPID = new GeneralPIDController(0.5, 0, 10, 0);
     public GeneralPIDController translationalPID = new GeneralPIDController(1, 0, 0, 0);
 
     public GeneralPIDController tiltPID = new GeneralPIDController(1, 0, 0, 0);
@@ -53,11 +54,11 @@ public class Drivetrain implements Subsystem {
     private double leftBackPower = 0;
     private double rightBackPower = 0;
 
-    private double weight = 0;
+    private double weight = 1;
 
-    public static double kP = 1;
+    public static double kP = 0.75;
     public static double kI = 0;
-    public static double kD = 100;
+    public static double kD = 10;
 
     @Override
     public void onInit(HardwareMap hardwareMap, Telemetry telemetry) {
@@ -269,6 +270,15 @@ public class Drivetrain implements Subsystem {
                 this.leftFrontMotor.getCurrentPosition(),
                 this.leftBackMotor.getCurrentPosition(),
                 this.rightBackMotor.getCurrentPosition()
+        );
+    }
+
+    public MecanumWheelState getMotorVelocity() {
+        return new MecanumWheelState(
+                this.rightFrontMotor.getVelocity(),
+                this.leftFrontMotor.getVelocity(),
+                this.leftBackMotor.getVelocity(),
+                this.rightBackMotor.getVelocity()
         );
     }
 

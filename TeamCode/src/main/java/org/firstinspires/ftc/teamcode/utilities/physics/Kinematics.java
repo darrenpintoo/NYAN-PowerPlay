@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.utilities.physics.states.MecanumWheelState
 
 public class Kinematics {
 
-    public MecanumMovementState forwardMecanum(MecanumWheelState curPos) {
+    public static MecanumMovementState forwardMecanum(MecanumWheelState curPos) {
 
         double lbVel = curPos.getLeftBack();
         double lfVel = curPos.getLeftFront();
@@ -21,7 +21,7 @@ public class Kinematics {
         );
     }
 
-    public MecanumWheelState inverseMecanum(MecanumMovementState curVel) {
+    public static MecanumWheelState inverseMecanum(MecanumMovementState curVel) {
         double fVel = curVel.getForwardVelocity();
         double sVel = curVel.getStrafeVelocity();
         double tVel = curVel.getTurnVelocity();
