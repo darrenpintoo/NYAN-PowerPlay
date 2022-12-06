@@ -7,6 +7,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.utilities.controltheory.feedback.GeneralPIDController;
 import org.firstinspires.ftc.teamcode.utilities.controltheory.motionprofiler.MotionProfile;
+import org.firstinspires.ftc.teamcode.utilities.math.AngleHelper;
+import org.firstinspires.ftc.teamcode.utilities.math.linearalgebra.Pose;
 import org.firstinspires.ftc.teamcode.utilities.robot.DriveConstants;
 import org.firstinspires.ftc.teamcode.utilities.robot.RobotEx;
 import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.Drivetrain;
@@ -41,16 +43,21 @@ public class MotionProfileLocalizerDrive {
         this.telemetry = telemetry;
     }
 
-    public void driveForwardConstantHeading(double forwardInches) {
+    public void driveToXHeading(double xPoint, double heading) {
 
-        MotionProfile profile = new MotionProfile(
-                0,
-                forwardInches,
+        Pose displacementPose = robot.localizer.getDisplacement();
+
+        double xError = xPoint - displacementPose.getX();
+        MotionProfile profileX = new MotionProfile(
+                displacementPose.getX(),
+                xPoint,
                 DriveConstants.MAX_VELOCITY,
                 DriveConstants.MAX_ACCELERATION
         );
 
-        double duration = profile.getDuration();
+
+
+        double duration = profileX.getDuration();
         double startAveragePosition = Drivetrain.getAverageFromArray(this.dt.getCWMotorTicks());
 
         this.profileTimer.reset();
@@ -64,11 +71,13 @@ public class MotionProfileLocalizerDrive {
 
             double dt = currentFrameTime - previousFrameTime;
 
-            double targetCurrentFramePosition = profile.getPositionFromTime(currentFrameTime);
-            double targetCurrentFrameVelocity = profile.getVelocityFromTime(currentFrameTime);
-            double targetCurrentFrameAcceleration = profile.getAccelerationFromTime(currentFrameTime);
+            double currentIMUPosition = robot.localizer.getDisplacement().getHeading();
 
-            double currentFramePosition = 0;
+            double targetCurrentFramePosition = profileX.getPositionFromTime(currentFrameTime);
+            double targetCurrentFrameVelocity = profileX.getVelocityFromTime(currentFrameTime);
+            double targetCurrentFrameAcceleration = profileX.getAccelerationFromTime(currentFrameTime);
+
+            double currentFramePosition = robot.localizer.getDisplacement().getX();
             double currentFrameVelocity = (currentFramePosition - previousFramePositionTicks) / dt;
 
             if (telemetry != null) {
@@ -94,10 +103,90 @@ public class MotionProfileLocalizerDrive {
 
             output += Math.signum(output) * kStatic;
 
-            this.dt.robotCentricDriveFromGamepad(
-                    -(output),
+            this.dt.fieldCentricRotationPIDFromGamepad(
                     0,
-                    0
+                    -Math.min(Math.max(output, -0.3), 0.3),
+                    Math.sin(heading),
+                    Math.cos(heading)
+            );
+
+            previousFramePositionTicks = currentFramePosition;
+            previousFrameTime = currentFrameTime;
+
+            currentFrameTime = this.profileTimer.seconds();
+
+            robot.update();
+
+        }
+
+        // robot.pause(3);
+    }
+
+    public void driveToYHeading(double yPoint, double heading) {
+
+        Pose displacementPose = robot.localizer.getDisplacement();
+
+        double xError = yPoint - displacementPose.getY();
+        MotionProfile profileX = new MotionProfile(
+                displacementPose.getY(),
+                yPoint,
+                DriveConstants.MAX_VELOCITY,
+                DriveConstants.MAX_ACCELERATION
+        );
+
+
+
+        double duration = profileX.getDuration();
+        double startAveragePosition = Drivetrain.getAverageFromArray(this.dt.getCWMotorTicks());
+
+        this.profileTimer.reset();
+
+        double currentFrameTime = 0.001;
+        double previousFrameTime = 0;
+
+        double previousFramePositionTicks = startAveragePosition;
+
+        while (duration > currentFrameTime && !this.currentOpmode.isStopRequested()) {
+
+            double dt = currentFrameTime - previousFrameTime;
+
+            double currentIMUPosition = robot.localizer.getDisplacement().getHeading();
+
+            double targetCurrentFramePosition = profileX.getPositionFromTime(currentFrameTime);
+            double targetCurrentFrameVelocity = profileX.getVelocityFromTime(currentFrameTime);
+            double targetCurrentFrameAcceleration = profileX.getAccelerationFromTime(currentFrameTime);
+
+            double currentFramePosition = robot.localizer.getDisplacement().getY();
+            double currentFrameVelocity = (currentFramePosition - previousFramePositionTicks) / dt;
+
+            if (telemetry != null) {
+                telemetry.addData("Target Position: ", targetCurrentFramePosition);
+                telemetry.addData("Current Position: ", DriveConstants.getInchesFromEncoderTicks(currentFramePosition));
+                telemetry.addData("Position Error: ", targetCurrentFramePosition - DriveConstants.getInchesFromEncoderTicks(currentFramePosition));
+                telemetry.addData("Target Velocity: ", targetCurrentFrameVelocity);
+                telemetry.addData("Current Velocity: ", DriveConstants.getInchesFromEncoderTicks(currentFrameVelocity));
+                telemetry.addData("Velocity Error: ", targetCurrentFrameVelocity - DriveConstants.getInchesFromEncoderTicks(currentFrameVelocity));
+                telemetry.addData("Target Acceleration: ", targetCurrentFrameAcceleration);
+
+                telemetry.update();
+            }
+
+            double feedforward = targetCurrentFrameVelocity * kV + targetCurrentFrameAcceleration * kA;
+
+            double feedback = this.followerPID.getOutputFromError(
+                    targetCurrentFramePosition,
+                    DriveConstants.getInchesFromEncoderTicks(currentFramePosition)
+            );
+
+            double output = feedforward + feedback;
+
+            output += Math.signum(output) * kStatic;
+
+            this.dt.fieldCentricRotationPIDFromGamepad(
+                    (Math.min(Math.max(output, -0.3), 0.3)),
+                    0,
+                    Math.sin(heading),
+                    Math.cos(heading)
             );
 
             previousFramePositionTicks = currentFramePosition;

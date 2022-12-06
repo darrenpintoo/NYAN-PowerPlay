@@ -171,7 +171,7 @@ public class EncoderDrive {
         if (currentZeroPowerBehavior != DcMotor.ZeroPowerBehavior.BRAKE) {
             robotDrivetrain.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             robotDrivetrain.setPower(0);
-            robot.pause(0.1);
+            robot.pause(0.5);
             robotDrivetrain.setZeroPowerBehavior(currentZeroPowerBehavior);
         }
 

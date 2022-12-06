@@ -14,6 +14,7 @@ import org.firstinspires.ftc.teamcode.utilities.physics.states.MecanumWheelState
 import org.firstinspires.ftc.teamcode.utilities.robot.RobotEx;
 import org.firstinspires.ftc.teamcode.utilities.robot.extensions.MotorGroup;
 import org.firstinspires.ftc.teamcode.utilities.robot.extensions.RobotOrientation;
+import org.firstinspires.ftc.teamcode.utilities.robot.movement.EncoderDrive;
 
 /**
  * Robot Drivetrain
@@ -219,7 +220,7 @@ public class Drivetrain implements Subsystem {
         this.fieldCentricDriveFromGamepad(
                 leftJoystickY,
                 leftJoystickX,
-                -Math.min(Math.max(output, -1), 1) * 0.75
+                -Math.min(Math.max(output, -0.3), 0.3) + Math.signum(output) * EncoderDrive.kStatic
         );
 
     }

@@ -31,10 +31,14 @@ public class Lift implements Subsystem {
 
     private final double GAMEPAD_THRESHOLD = 0.1;
 
-    public static double kP = 0;
+    public static double kP = 0.002;
     public static double kI = 0;
     public static double kD = 0;
     public static double kF = 0;
+
+    public static int LOW_HEIGHT = 200;
+    public static int MIDDLE_HEIGHT = 300;
+    public static int HIGH_HEIGHT = 400;
 
     public DcMotorEx leftLiftMotor;
     public DcMotorEx rightLiftMotor;
@@ -63,7 +67,7 @@ public class Lift implements Subsystem {
         rightLiftMotor.setDirection(DcMotorEx.Direction.FORWARD);
         leftLiftMotor.setDirection(DcMotorEx.Direction.FORWARD);
 
-        liftMotors = new MotorGroup<>(leftLiftMotor, rightLiftMotor);
+        liftMotors = new MotorGroup<>(rightLiftMotor, leftLiftMotor);
 
         liftMotors.setRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         liftMotors.setRunMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -138,11 +142,11 @@ public class Lift implements Subsystem {
             case GROUND_JUNCTION:
                 return 100;
             case LOW_JUNCTION:
-                return 200;
+                return LOW_HEIGHT;
             case MIDDLE_JUNCTION:
-                return 300;
+                return MIDDLE_HEIGHT;
             case HIGH_JUNCTION:
-                return 400;
+                return HIGH_HEIGHT;
 
         }
 

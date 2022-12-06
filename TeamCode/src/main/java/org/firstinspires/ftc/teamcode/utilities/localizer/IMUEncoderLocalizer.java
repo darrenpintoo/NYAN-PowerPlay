@@ -32,7 +32,7 @@ public class IMUEncoderLocalizer extends BaseLocalizer {
                 DriveConstants.getInchesFromEncoderTicks(currentMovement.getForwardVelocity()),
                 DriveConstants.getInchesFromEncoderTicks(currentMovement.getStrafeVelocity()),
                 0
-        ).times(this.timer.seconds()).rotated(this.startAngle).rotated(this.currentAngle);//.rotated(AngleHelper.norm(this.currentAngle)).times(this.timer.seconds());
+        ).times(this.timer.seconds()).rotated(this.startAngle).rotated(this.startAngle-this.currentAngle);//.rotated(AngleHelper.norm(this.currentAngle)).times(this.timer.seconds());
 
         telemetry.addData("X Dis: ", displacementPose.getX());
         telemetry.addData("Y Dis: ", displacementPose.getY());
