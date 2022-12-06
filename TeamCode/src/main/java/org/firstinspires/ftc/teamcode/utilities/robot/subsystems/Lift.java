@@ -34,7 +34,7 @@ public class Lift implements Subsystem {
     public static double kP = 0.002;
     public static double kI = 0;
     public static double kD = 0;
-    public static double kF = 0;
+    public static double kF = 0.05;
 
     public static int LOW_HEIGHT = 200;
     public static int MIDDLE_HEIGHT = 300;
