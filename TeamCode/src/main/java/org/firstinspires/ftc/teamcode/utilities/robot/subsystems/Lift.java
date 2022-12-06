@@ -36,9 +36,10 @@ public class Lift implements Subsystem {
     public static double kD = 0;
     public static double kF = 0.05;
 
-    public static int LOW_HEIGHT = 200;
-    public static int MIDDLE_HEIGHT = 300;
-    public static int HIGH_HEIGHT = 400;
+    public static int GROUND_HEIGHT = 500;
+    public static int LOW_HEIGHT = 1850;
+    public static int MIDDLE_HEIGHT = 3150;
+    public static int HIGH_HEIGHT = 4150;
 
     public DcMotorEx leftLiftMotor;
     public DcMotorEx rightLiftMotor;
@@ -140,7 +141,7 @@ public class Lift implements Subsystem {
             case DEFAULT:
                 return 0;
             case GROUND_JUNCTION:
-                return 100;
+                return GROUND_HEIGHT;
             case LOW_JUNCTION:
                 return LOW_HEIGHT;
             case MIDDLE_JUNCTION:
@@ -151,5 +152,9 @@ public class Lift implements Subsystem {
         }
 
         return 0;
+    }
+
+    public LIFT_POSITIONS getCurrentLiftTarget() {
+        return this.currentLiftTargetPosition;
     }
 }

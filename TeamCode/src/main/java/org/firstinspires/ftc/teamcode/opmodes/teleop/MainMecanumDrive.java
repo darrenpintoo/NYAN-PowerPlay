@@ -133,8 +133,7 @@ public class MainMecanumDrive extends LinearOpMode {
                             currentFrameGamepad1.left_stick_x * 0.5,
                             currentFrameGamepad1.right_stick_x * 0.5
                     );
-                }
-                else {
+                } else {
                     robot.drivetrain.fieldCentricDriveFromGamepad(
                             currentFrameGamepad1.left_stick_y * 0.5,
                             currentFrameGamepad1.left_stick_x * 0.5,
@@ -164,9 +163,13 @@ public class MainMecanumDrive extends LinearOpMode {
                 robot.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.MIDDLE_JUNCTION);
             } else if (currentFrameGamepad2.dpad_right) {
                 robot.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.LOW_JUNCTION);
-            } else if (currentFrameGamepad2.dpad_down){
+            } else if (currentFrameGamepad2.dpad_down) {
                 robot.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.GROUND_JUNCTION);
+            } else if (currentFrameGamepad2.x) {
+                robot.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.DEFAULT);
             }
+
+
 /*
             if (currentFrameGamepad1.x) {
                 robot.drivetrain.disableAntiTip();
@@ -190,7 +193,10 @@ public class MainMecanumDrive extends LinearOpMode {
             // );
             // ^ https://www.desmos.com/calculator/jp45vcfcbt
 
+
+
             telemetry.update();
+
 
         }
     }

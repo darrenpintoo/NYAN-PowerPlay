@@ -4,8 +4,10 @@ import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.utilities.robot.RobotEx;
 import org.firstinspires.ftc.teamcode.utilities.statehandling.Debounce;
 import org.firstinspires.ftc.teamcode.utilities.statehandling.DebounceObject;
 
@@ -17,6 +19,9 @@ public class Claw implements Subsystem {
             new DebounceObject("OPEN_REQUESTED", 2000)
     );
 
+    Lift lift;
+
+    public static double TIME_THRESHOLD = 1;
     public static int RED_THRESHOLD = 100;
     public static int BLUE_THRESHOLD = 100;
 
@@ -43,6 +48,9 @@ public class Claw implements Subsystem {
     private int currentFrameRed;
 
     private boolean coneInClawLast = false;
+    private boolean requestedLift = false;
+
+    private ElapsedTime requestedTime = new ElapsedTime();
 
     @Override
     public void onInit(HardwareMap hardwareMap, Telemetry telemetry) {
@@ -55,7 +63,7 @@ public class Claw implements Subsystem {
 
     @Override
     public void onOpmodeStarted() {
-
+        this.lift = RobotEx.getInstance().lift;
     }
 
     @Override
@@ -74,8 +82,21 @@ public class Claw implements Subsystem {
 
         if (this.checkConeInClaw() != this.coneInClawLast && this.checkConeInClaw()) {
             this.setClawState(ClawStates.CLOSED);
+
+            this.requestedLift = true;
+            this.requestedTime.reset();
         }
 
+        if (!this.checkConeInClaw()) {
+            this.requestedLift = false;
+        }
+        if (this.requestedLift && this.requestedTime.seconds() > TIME_THRESHOLD) {
+            if (this.lift.getCurrentLiftTarget() == Lift.LIFT_POSITIONS.DEFAULT) {
+                this.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.GROUND_JUNCTION);
+            }
+
+            this.requestedLift = false;
+        }
         this.coneInClawLast = this.checkConeInClaw();
 
         /*
