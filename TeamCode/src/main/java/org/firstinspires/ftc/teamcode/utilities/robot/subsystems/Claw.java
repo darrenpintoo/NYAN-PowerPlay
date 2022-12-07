@@ -26,11 +26,11 @@ public class Claw implements Subsystem {
     public static int BLUE_THRESHOLD = 100;
 
     public enum ClawStates {
-        OPENED, CLOSED, OPEN_REQUESTED
+        OPENED, CLOSED, SLIGHTLY_OPENED
     }
 
     public enum ClawPositions {
-        OPEN, CLOSE
+        OPEN, CLOSE, SLIGHTLY_OPENED
     }
 
     public Servo clawGrabberServo;
@@ -41,6 +41,7 @@ public class Claw implements Subsystem {
     //need to tune still
     public static double openPosition = 0.3;
     public static double closePosition = 0.7;
+    public static double slightlyOpenPosition = 0.5;
 
     private ClawStates currentClawState = ClawStates.OPENED;
 
@@ -161,6 +162,8 @@ public class Claw implements Subsystem {
                 return openPosition;
             case CLOSE:
                 return closePosition;
+            case SLIGHTLY_OPENED:
+                return slightlyOpenPosition;
             default:
                 this.telemetry.addLine("Error with Claw");
         }
@@ -171,6 +174,8 @@ public class Claw implements Subsystem {
     public double getServoPosition(ClawStates clawState) {
         if (clawState == ClawStates.CLOSED) {
             return this.getServoPosition(ClawPositions.CLOSE);
+        } else if (clawState == ClawStates.SLIGHTLY_OPENED) {
+            return this.getServoPosition(ClawPositions.SLIGHTLY_OPENED);
         }
 
         return this.getServoPosition(ClawPositions.OPEN);

@@ -108,6 +108,8 @@ public class MainMecanumDrive extends LinearOpMode {
                 robot.claw.setClawState(Claw.ClawStates.CLOSED);
             } else if (currentFrameGamepad2.a) {
                 robot.claw.setClawState(Claw.ClawStates.OPENED);
+            } else if (currentFrameGamepad2.y) {
+                robot.claw.setClawState(Claw.ClawStates.SLIGHTLY_OPENED);
             }
 
             if (currentFrameGamepad1.y && previousFrameGamepad1.y != currentFrameGamepad1.y) {
@@ -143,15 +145,6 @@ public class MainMecanumDrive extends LinearOpMode {
             }
 
             // Handle Manual Lift State
-
-/*            if (currentFrameGamepad2.x) {
-                robot.intake.ON_MOTOR_POWER = 0.75;
-            }
-
-            if (currentFrameGamepad2.y) {
-                robot.intake.ON_MOTOR_POWER = 1;
-            }*/
-
             robot.lift.driveLiftFromGamepad(
                     currentFrameGamepad2.left_trigger,
                     currentFrameGamepad2.right_trigger
@@ -167,6 +160,12 @@ public class MainMecanumDrive extends LinearOpMode {
                 robot.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.GROUND_JUNCTION);
             } else if (currentFrameGamepad2.x) {
                 robot.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.DEFAULT);
+            }
+
+            if (currentFrameGamepad2.right_bumper && currentFrameGamepad2.right_bumper != currentFrameGamepad1.right_bumper) {
+                robot.lift.incrementOffset(1);
+            } else if (currentFrameGamepad2.left_bumper && previousFrameGamepad1.left_bumper != currentFrameGamepad1.left_bumper) {
+                robot.lift.incrementOffset(-1);
             }
 
 

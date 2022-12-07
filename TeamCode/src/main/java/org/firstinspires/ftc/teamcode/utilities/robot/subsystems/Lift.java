@@ -31,10 +31,12 @@ public class Lift implements Subsystem {
 
     private final double GAMEPAD_THRESHOLD = 0.1;
 
-    public static double kP = 0.002;
+    public static double kP = 0.003;
     public static double kI = 0;
     public static double kD = 0;
-    public static double kF = 0.05;
+    public static double kF = 0;
+
+    public static int OFFSET_INCREASE = 200;
 
     public static int GROUND_HEIGHT = 500;
     public static int LOW_HEIGHT = 1850;
@@ -47,6 +49,7 @@ public class Lift implements Subsystem {
     private MotorGroup<DcMotorEx> liftMotors;
 
     private double currentFrameOutput = 0;
+    private int offset = 0;
 
     LIFT_POSITIONS currentLiftTargetPosition = LIFT_POSITIONS.DEFAULT;
     LIFT_POSITIONS lastLiftTargetPosition = LIFT_POSITIONS.DEFAULT;
@@ -88,12 +91,15 @@ public class Lift implements Subsystem {
         telemetry.addData("Left Lift Pos: ", this.leftLiftMotor.getCurrentPosition());
         telemetry.addData("Right Lift Pos: ", this.rightLiftMotor.getCurrentPosition());
 
+        if (this.lastLiftTargetPosition != this.currentLiftTargetPosition) {
+            this.resetOffset();
+        }
 
         liftPID.updateCoefficients(kP, kI, kD, kF);
 
         double currentPosition = this.liftMotors.getAveragePosition();
 
-        int targetPosition = this.getEncoderPositionFromLevel(this.currentLiftTargetPosition);
+        int targetPosition = this.getEncoderPositionFromLevel(this.currentLiftTargetPosition) + offset * OFFSET_INCREASE;
 
         if (this.currentFrameOutput == 0) {
             currentFrameOutput = liftPID.getOutputFromError(targetPosition, this.liftMotors.getAveragePosition());
@@ -101,24 +107,11 @@ public class Lift implements Subsystem {
 
 
         this.liftMotors.setPower(currentFrameOutput);
-        /*
-        switch (this.currentLiftSta te) {
-            case DEFAULT:
-            case EXTENDING:
-            case EXTENDED:
-            case RETRACTING:
-        }
-
-         */
-/*        liftPID.updateCoefficients(kP, kI, kD, kF);
-
-        int targetPosition = this.getEncoderPositionFromLevel(currentLiftPosition);
-        double currentFrameOutput = liftPID.getOutputFromError(targetPosition, this.liftMotors.getAveragePosition());
-
-        this.liftMotors.setPower(currentFrameOutput);*/
 
         this.currentFrameOutput = 0;
+        this.lastLiftTargetPosition = this.currentLiftTargetPosition;
 
+        telemetry.addData("Target Position: ", targetPosition);
     }
 
     public void driveLiftFromGamepad(double leftTrigger, double rightTrigger) {
@@ -156,5 +149,17 @@ public class Lift implements Subsystem {
 
     public LIFT_POSITIONS getCurrentLiftTarget() {
         return this.currentLiftTargetPosition;
+    }
+
+    public void incrementOffset(int offsetIncrease) {
+        this.offset += offsetIncrease;
+    }
+
+    public void incrementOffset() {
+        this.incrementOffset(1);
+    }
+
+    public void resetOffset() {
+        this.offset = 0;
     }
 }
