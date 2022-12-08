@@ -19,15 +19,15 @@ public class DriveConstants {
         return (ticks / DriveConstants.WHEEL_TICKS) * DriveConstants.INCHES_PER_REVOLUTION;
     }
 
-    public static double BANG_BANG_POWER = -0.25;
+    public static double BANG_BANG_POWER = -0.5;
     public static double TICK_THRESHOLD = 50;
-    public static double ANGLE_AT_TIME = 3;
+    public static double ANGLE_AT_TIME = 0;
 
-    public static double TURN_THRESHOLD = Math.toRadians(1);
+    public static double TURN_THRESHOLD = Math.toRadians(2);
     public static double ANGULAR_VELOCITY_THRESHOLD = Math.toRadians(10);
 
-    public static double MAX_VELOCITY = 50;
-    public static double MAX_ACCELERATION = 25;
+    public static double MAX_VELOCITY = 60;
+    public static double MAX_ACCELERATION = 50;
 
     public static double trackWidth = 10;
 

@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.utilities.robot.RobotEx;
 import org.firstinspires.ftc.teamcode.utilities.statehandling.Debounce;
 import org.firstinspires.ftc.teamcode.utilities.statehandling.DebounceObject;
@@ -21,9 +22,9 @@ public class Claw implements Subsystem {
 
     Lift lift;
 
-    public static double TIME_THRESHOLD = 1;
-    public static int RED_THRESHOLD = 100;
-    public static int BLUE_THRESHOLD = 100;
+    public static double TIME_THRESHOLD = 0.5;
+    public static int RED_THRESHOLD = 60;
+    public static int BLUE_THRESHOLD = 60;
 
     public enum ClawStates {
         OPENED, CLOSED, SLIGHTLY_OPENED
@@ -39,7 +40,7 @@ public class Claw implements Subsystem {
     private Telemetry telemetry;
 
     //need to tune still
-    public static double openPosition = 0.3;
+    public static double openPosition = 0.40;
     public static double closePosition = 0.7;
     public static double slightlyOpenPosition = 0.5;
 
@@ -47,6 +48,8 @@ public class Claw implements Subsystem {
 
     private int currentFrameBlue;
     private int currentFrameRed;
+
+    private double currentDistance;
 
     private boolean coneInClawLast = false;
     private boolean requestedLift = false;
@@ -75,15 +78,16 @@ public class Claw implements Subsystem {
 
         this.currentFrameBlue = this.getBlueColorFromI2C();
         this.currentFrameRed = this.getRedColorFromI2C();
+        this.currentDistance = this.getDistanceFromI2C();
 
         this.telemetry.addData("Claw -> Red: ", this.getRedColor());
         this.telemetry.addData("Claw -> Blue: ", this.getBlueColor());
-
+        this.telemetry.addData("Claw -> Distance: ", this.currentDistance);
 
         this.telemetry.addData("Claw Servo Pos: ", this.clawGrabberServo.getPosition());
         this.telemetry.addData("Cone in grabber: ", this.checkConeInClaw());
 
-        if (this.checkConeInClaw() != this.coneInClawLast && this.checkConeInClaw()) {
+        if (this.checkConeInClaw() != this.coneInClawLast && this.checkConeInClaw() && this.currentClawState != ClawStates.CLOSED) {
             this.setClawState(ClawStates.CLOSED);
 
             this.requestedLift = true;
@@ -127,7 +131,7 @@ public class Claw implements Subsystem {
         }
 
          */
-        clawGrabberServo.setPosition(getServoPosition(this.currentClawState));
+        // clawGrabberServo.setPosition(getServoPosition(this.currentClawState));
 
 
     }
@@ -210,6 +214,13 @@ public class Claw implements Subsystem {
 
     public boolean checkBlueConeInClaw() {
         return this.getBlueColor() > Claw.BLUE_THRESHOLD;
+    }
+
+    public boolean checkDistanceFromClaw() {
+        return this.currentDistance < 4;
+    }
+    public double getDistanceFromI2C() {
+        return this.clawColorSensor.getDistance(DistanceUnit.INCH);
     }
 }
 

@@ -102,7 +102,7 @@ public class Lift implements Subsystem {
         }
 
 
-        this.liftMotors.setPower(currentFrameOutput);
+        // this.liftMotors.setPower(currentFrameOutput);
 
         this.currentFrameOutput = 0;
         this.lastLiftTargetPosition = this.currentLiftTargetPosition;

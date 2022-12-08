@@ -171,11 +171,58 @@ public class EncoderDrive {
         if (currentZeroPowerBehavior != DcMotor.ZeroPowerBehavior.BRAKE) {
             robotDrivetrain.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             robotDrivetrain.setPower(0);
-            robot.pause(0.5);
+            robot.pause(0.1);
             robotDrivetrain.setZeroPowerBehavior(currentZeroPowerBehavior);
         }
 
 
+
+    }
+
+    public void strafeRightFromBB(double inches) {
+        double ticksToMove = DriveConstants.getEncoderTicksFromInches(inches);
+
+        int startEncoder = (int) this.dt.getMotorTicks().getRightFront();
+
+        double targetPosition = startEncoder + ticksToMove;
+
+        boolean targetReached = false;
+
+        while (!targetReached && !this.currentOpmode.isStopRequested()) {
+
+            double currentFramePosition = Drivetrain.getAverageFromArray(this.dt.getCWMotorTicks());
+
+            double error = targetPosition - currentFramePosition;
+
+            double currentFramePower;
+
+            if (Math.abs(error) < DriveConstants.TICK_THRESHOLD) {
+                currentFramePower = 0;
+                targetReached = true;
+            } else if (error > 0) {
+                currentFramePower = DriveConstants.BANG_BANG_POWER;
+            } else {
+                currentFramePower = -DriveConstants.BANG_BANG_POWER;
+            }
+
+            this.dt.robotCentricDriveFromGamepad(
+                    0,
+                    currentFramePower,
+                    0
+            );
+
+            if (this.telemetry != null) {
+                telemetry.addData("Error: ", error);
+                telemetry.addData("pos: ", currentFramePosition);
+                telemetry.addData("Start: ", startEncoder);
+                telemetry.update();
+
+            }
+
+            this.robot.update();
+
+
+        }
 
     }
 
