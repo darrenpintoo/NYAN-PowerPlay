@@ -83,31 +83,44 @@ public class MotionProfileCycleLeft extends LinearOpMode {
         ParkingPosition parkPosition = ParkingPosition.CENTER;
 
         robot.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.LOW_JUNCTION);
-        robotDrivetrain.driveForward(-20);
+        robotDrivetrain.driveForward(-17);
         robotDrivetrainE.turnToIMUAngle(-Math.toRadians(90));
         robotDrivetrainE.driveForwardFromInchesBB(5);
-        robot.pause(1);
+        robot.pause(0.25);
         robot.claw.setClawState(Claw.ClawStates.OPENED);
-        robot.pause(1);
-        // place cone
+        robot.pause(0.5);
+        robot.claw.setClawState(Claw.ClawStates.SLIGHTLY_OPENED);
         robotDrivetrainE.driveForwardFromInchesBB(-5);
         robot.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.DEFAULT);
-        robotDrivetrainE.turnToIMUAngle(0);
-        robotDrivetrain.driveForward(-30);
+        robotDrivetrainE.turnToIMUAngle(Math.toRadians(180));
+        robotDrivetrain.driveForward(33);
         robotDrivetrainE.turnToIMUAngle(Math.toRadians(90));
-        robotDrivetrain.driveForward(27);
-        robot.claw.setClawState(Claw.ClawStates.CLOSED);
-        robot.pause(1);
-        //get cone
-        robotDrivetrain.driveForward(-27);
         robot.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.LOW_JUNCTION);
-        robotDrivetrainE.turnToIMUAngle(Math.toRadians(45));
+        robotDrivetrain.driveForward(27);
+        robot.lift.incrementOffset(-2);
+        robot.pause(0.5);
+        robot.claw.setClawState(Claw.ClawStates.CLOSED);
+        robot.pause(0.5);
+        robot.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.LOW_JUNCTION);
+        robotDrivetrain.driveForward(-45);
+        robotDrivetrainE.turnToIMUAngle(Math.toRadians(0));
+        robot.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.MIDDLE_JUNCTION);
         robotDrivetrain.driveForward(5);
+        robot.pause(0.25);
         robot.claw.setClawState(Claw.ClawStates.OPENED);
-        robot.pause(1);
-        // place cone
+        robot.pause(0.5);
+        robot.claw.setClawState(Claw.ClawStates.SLIGHTLY_OPENED);
         robotDrivetrain.driveForward(-5);
         robot.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.DEFAULT);
+        robotDrivetrainE.turnToIMUAngle(Math.toRadians(90));
+        robot.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.LOW_JUNCTION);
+        robotDrivetrain.driveForward(45);
+        robot.lift.incrementOffset(-2);
+        robot.pause(0.5);
+        robot.claw.setClawState(Claw.ClawStates.CLOSED);
+        robot.pause(0.5);
+        robot.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.LOW_JUNCTION);
+        robotDrivetrain.driveForward(-45);
 
         // sleep(5000);
 

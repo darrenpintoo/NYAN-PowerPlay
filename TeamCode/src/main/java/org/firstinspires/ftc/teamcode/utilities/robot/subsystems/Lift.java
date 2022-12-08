@@ -91,10 +91,6 @@ public class Lift implements Subsystem {
         telemetry.addData("Left Lift Pos: ", this.leftLiftMotor.getCurrentPosition());
         telemetry.addData("Right Lift Pos: ", this.rightLiftMotor.getCurrentPosition());
 
-        if (this.lastLiftTargetPosition != this.currentLiftTargetPosition) {
-            this.resetOffset();
-        }
-
         liftPID.updateCoefficients(kP, kI, kD, kF);
 
         double currentPosition = this.liftMotors.getAveragePosition();
@@ -126,6 +122,7 @@ public class Lift implements Subsystem {
     }
 
     public void setCurrentLiftTargetPosition(LIFT_POSITIONS targetListPosition) {
+        this.resetOffset();
         this.currentLiftTargetPosition = targetListPosition;
     }
 

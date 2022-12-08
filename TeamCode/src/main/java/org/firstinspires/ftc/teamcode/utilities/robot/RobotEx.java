@@ -68,8 +68,10 @@ public class RobotEx {
 
         this.allHubs = hardwareMap.getAll(LynxModule.class);
         this.voltageSensor = hardwareMap.voltageSensor.iterator().next();
+        
         this.localizer = new IMUEncoderLocalizer(drivetrain, internalIMU, telemetry);
         this.localizer.setPoseEstimation(new Pose(0, 0, Math.PI / 2));
+
         for (LynxModule hub: allHubs) {
             hub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
         }

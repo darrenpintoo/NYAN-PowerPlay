@@ -60,6 +60,8 @@ public class Claw implements Subsystem {
         this.clawColorSensor = hardwareMap.get(ColorRangeSensor.class, "ConeDetector");
 
         this.telemetry = telemetry;
+
+        this.onCyclePassed();
     }
 
     @Override
