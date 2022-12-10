@@ -72,7 +72,7 @@ public class MotionProfileCycleLeft extends LinearOpMode {
 
         if (isStopRequested()) return;
 
-        robot.drivetrain.enableAntiTip();
+        // robot.drivetrain.enableAntiTip();
         MotionProfilingDrive robotDrivetrain = new MotionProfilingDrive(this, telemetry);
         EncoderDrive robotDrivetrainE = new EncoderDrive(this, telemetry);
 
