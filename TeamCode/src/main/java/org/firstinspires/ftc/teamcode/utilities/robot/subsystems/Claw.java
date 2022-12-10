@@ -42,7 +42,9 @@ public class Claw implements Subsystem {
     //need to tune still
     public static double openPosition = 0.40;
     public static double closePosition = 0.7;
-    public static double slightlyOpenPosition = 0.5;
+    public static double slightlyOpenPosition = 0.55;
+
+    private boolean enableAutoClose = true;
 
     private ClawStates currentClawState = ClawStates.OPENED;
 
@@ -87,22 +89,24 @@ public class Claw implements Subsystem {
         this.telemetry.addData("Claw Servo Pos: ", this.clawGrabberServo.getPosition());
         this.telemetry.addData("Cone in grabber: ", this.checkConeInClaw());
 
-        if (this.checkConeInClaw() != this.coneInClawLast && this.checkConeInClaw() && this.currentClawState != ClawStates.CLOSED) {
-            this.setClawState(ClawStates.CLOSED);
+        if (this.enableAutoClose) {
+            if (this.checkConeInClaw() != this.coneInClawLast && this.checkConeInClaw() && this.currentClawState != ClawStates.CLOSED) {
+                this.setClawState(ClawStates.CLOSED);
 
-            this.requestedLift = true;
-            this.requestedTime.reset();
-        }
-
-        if (!this.checkConeInClaw()) {
-            this.requestedLift = false;
-        }
-        if (this.requestedLift && this.requestedTime.seconds() > TIME_THRESHOLD) {
-            if (this.lift.getCurrentLiftTarget() == Lift.LIFT_POSITIONS.DEFAULT) {
-                this.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.GROUND_JUNCTION);
+                this.requestedLift = true;
+                this.requestedTime.reset();
             }
 
-            this.requestedLift = false;
+            if (!this.checkConeInClaw()) {
+                this.requestedLift = false;
+            }
+            if (this.requestedLift && this.requestedTime.seconds() > TIME_THRESHOLD) {
+                if (this.lift.getCurrentLiftTarget() == Lift.LIFT_POSITIONS.DEFAULT) {
+                    this.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.GROUND_JUNCTION);
+                }
+
+                this.requestedLift = false;
+            }
         }
         this.coneInClawLast = this.checkConeInClaw();
 
@@ -131,7 +135,7 @@ public class Claw implements Subsystem {
         }
 
          */
-        // clawGrabberServo.setPosition(getServoPosition(this.currentClawState));
+        clawGrabberServo.setPosition(getServoPosition(this.currentClawState));
 
 
     }
@@ -221,6 +225,14 @@ public class Claw implements Subsystem {
     }
     public double getDistanceFromI2C() {
         return this.clawColorSensor.getDistance(DistanceUnit.INCH);
+    }
+
+    public void enableAutoClose() {
+        this.enableAutoClose = true;
+    }
+
+    public void disableAutoClose() {
+        this.enableAutoClose = false;
     }
 }
 

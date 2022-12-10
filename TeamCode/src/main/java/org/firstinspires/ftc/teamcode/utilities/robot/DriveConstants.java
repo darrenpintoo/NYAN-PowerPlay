@@ -27,7 +27,7 @@ public class DriveConstants {
     public static double ANGULAR_VELOCITY_THRESHOLD = Math.toRadians(10);
 
     public static double MAX_VELOCITY = 60;
-    public static double MAX_ACCELERATION = 50;
+    public static double MAX_ACCELERATION = 20;
 
     public static double trackWidth = 10;
 

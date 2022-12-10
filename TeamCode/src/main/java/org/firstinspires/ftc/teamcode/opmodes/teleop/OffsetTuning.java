@@ -15,14 +15,16 @@ import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.Lift;
 /**
  * Example teleop code for a basic mecanum drive
  */
-@TeleOp(name = "Main Mecanum Drive")
+@TeleOp(name = "Offset Tuning")
 @Config
-public class MainMecanumDrive extends LinearOpMode {
+public class OffsetTuning extends LinearOpMode {
 
     // Create new Instance of the robot
     RobotEx robot = RobotEx.getInstance();
 
+    public static int OFFSET = 0;
     public static double F = 0;
+
     @Override
     public void runOpMode() {
 
@@ -88,95 +90,8 @@ public class MainMecanumDrive extends LinearOpMode {
                     0,
                     F
             );*/
-            if (currentFrameGamepad1.right_trigger > 0.2 && previousFrameGamepad1.right_trigger < 0.2) {
-                intakeOn = !intakeOn;
-                intakeDirection = false;
-            }
 
-            if (currentFrameGamepad1.left_trigger > 0.2 && previousFrameGamepad1.left_trigger < 0.2) {
-                intakeOn = !intakeOn;
-                intakeDirection = true;
-            }
-
-
-/*            if (intakeOn) {
-                robot.intake.enableIntakeMotor(intakeDirection);
-            } else {
-                robot.intake.disableIntakeMotor();
-            }*/
-
-            // Handle Claw State
-            if (currentFrameGamepad2.b) {
-                robot.claw.setClawState(Claw.ClawStates.CLOSED);
-            } else if (currentFrameGamepad2.a) {
-                robot.claw.setClawState(Claw.ClawStates.OPENED);
-            } else if (currentFrameGamepad2.y) {
-                robot.claw.setClawState(Claw.ClawStates.SLIGHTLY_OPENED);
-            }
-
-            if (currentFrameGamepad1.y && previousFrameGamepad1.y != currentFrameGamepad1.y) {
-                robotCentric = !robotCentric;
-            }
-
-            if (currentFrameGamepad1.x && previousFrameGamepad1.x != currentFrameGamepad1.x) {
-                fieldCentricAutomatedTurning = !fieldCentricAutomatedTurning;
-            }
-/*
-            // Handle Drivetrain
-            if (fieldCentricAutomatedTurning) {
-                robot.drivetrain.fieldCentricRotationPIDFromGamepad(
-                        currentFrameGamepad1.left_stick_y,
-                        currentFrameGamepad1.left_stick_x,
-                        currentFrameGamepad1.right_stick_y,
-                        currentFrameGamepad1.right_stick_x
-                );
-            } else {
-                if (robotCentric) {
-                    robot.drivetrain.robotCentricDriveFromGamepad(
-                            currentFrameGamepad1.left_stick_y * 0.75,
-                            currentFrameGamepad1.left_stick_x * 0.75,
-                            currentFrameGamepad1.right_stick_x * 0.5
-                    );
-                } else {
-                    robot.drivetrain.fieldCentricDriveFromGamepad(
-                            currentFrameGamepad1.left_stick_y * 0.5,
-                            currentFrameGamepad1.left_stick_x * 0.5,
-                            currentFrameGamepad1.right_stick_x * 0.5
-                    );
-                }
-            }*/
-
-            robot.drivetrain.robotCentricDriveFromGamepad(
-                    currentFrameGamepad1.left_stick_y * 0.75,
-                    currentFrameGamepad1.left_stick_x * 0.75,
-                    currentFrameGamepad1.right_stick_x * 0.5
-            );
-
-            // Handle Manual Lift State
-            robot.lift.driveLiftFromGamepad(
-                    currentFrameGamepad2.left_trigger,
-                    currentFrameGamepad2.right_trigger
-            );
-
-            if (currentFrameGamepad2.dpad_up) {
-                robot.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.HIGH_JUNCTION);
-            } else if (currentFrameGamepad2.dpad_left) {
-                robot.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.MIDDLE_JUNCTION);
-            } else if (currentFrameGamepad2.dpad_right) {
-                robot.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.LOW_JUNCTION);
-            } else if (currentFrameGamepad2.dpad_down) {
-                robot.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.GROUND_JUNCTION);
-            } else if (currentFrameGamepad2.x) {
-                robot.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.DEFAULT);
-            }
-
-            if (currentFrameGamepad2.right_bumper && currentFrameGamepad2.right_bumper != currentFrameGamepad1.right_bumper) {
-                robot.lift.incrementOffset(1);
-            } else if (currentFrameGamepad2.left_bumper && previousFrameGamepad1.left_bumper != currentFrameGamepad1.left_bumper) {
-                robot.lift.incrementOffset(-1);
-            }
-
-
+            robot.lift.setOffset(OFFSET);
 /*
             if (currentFrameGamepad1.x) {
                 robot.drivetrain.disableAntiTip();
