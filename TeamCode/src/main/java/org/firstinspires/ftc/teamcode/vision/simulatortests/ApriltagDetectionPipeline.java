@@ -97,7 +97,7 @@ public class ApriltagDetectionPipeline extends OpenCvPipeline {
         constructMatrix();
 
         this.t = t;
-        nativeApriltagPtr = AprilTagDetectorJNI.createApriltagDetector(AprilTagDetectorJNI.TagFamily.TAG_36h11.string, 1, 1);
+        nativeApriltagPtr = AprilTagDetectorJNI.createApriltagDetector(AprilTagDetectorJNI.TagFamily.TAG_36h11.string, 1, 3);
     }
 
     public ApriltagDetectionPipeline()
@@ -112,7 +112,7 @@ public class ApriltagDetectionPipeline extends OpenCvPipeline {
 
         constructMatrix();
 
-        nativeApriltagPtr = AprilTagDetectorJNI.createApriltagDetector(AprilTagDetectorJNI.TagFamily.TAG_36h11.string, 1, 1);
+        nativeApriltagPtr = AprilTagDetectorJNI.createApriltagDetector(AprilTagDetectorJNI.TagFamily.TAG_36h11.string, 1, 3);
     }
 
     @Override
@@ -166,19 +166,6 @@ public class ApriltagDetectionPipeline extends OpenCvPipeline {
             draw3dCubeMarker(input, tagsizeX, tagsizeX, tagsizeY, 5, pose.rvec, pose.tvec, cameraMatrix);
         }
 
-        if (this.t != null) {
-            t.addData("Detection: ", this.getLatestDetections().size() != 0 ? this.getLatestDetections().get(0).id : "None");
-            t.addData("Position: ", this.getParkingPosition());
-            t.addData("Dt: ", System.currentTimeMillis() - start);
-            t.update();
-        }
-
-        try {
-            Thread.sleep(50);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        // t.addData("Time: ", System.currentTimeMillis() - start);
         return input;
     }
 
