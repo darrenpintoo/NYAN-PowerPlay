@@ -82,6 +82,8 @@ public class MotionProfileCycleLeft extends LinearOpMode {
 
         ParkingPosition parkPosition = sleeveDetection.getParkingPosition();
 
+        camera.stopStreaming();
+
         // robotDrivetrain.turnToIMUAngle(Math.toRadians(180));
 
         robot.pause(0.5);
@@ -93,7 +95,7 @@ public class MotionProfileCycleLeft extends LinearOpMode {
         robot.pause(0.25);
         robotDrivetrain.driveForward(8);
         robot.pause(0.15);
-        robot.lift.setOffset(-2);
+        robot.lift.setOffset(-5);
         robot.pause(0.5);
         robot.claw.setClawState(Claw.ClawStates.OPENED);
         robot.pause(0.25);

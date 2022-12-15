@@ -50,6 +50,8 @@ public class RobotEx {
 
     public BaseLocalizer localizer;
 
+    private double voltageCompensator = 12;
+
     private RobotEx() {
         if (RobotEx.robotInstance != null) {
             throw new IllegalStateException("Robot already instantiated");
@@ -68,7 +70,8 @@ public class RobotEx {
 
         this.allHubs = hardwareMap.getAll(LynxModule.class);
         this.voltageSensor = hardwareMap.voltageSensor.iterator().next();
-        
+        this.voltageCompensator = this.voltageSensor.getVoltage();
+
         this.localizer = new IMUEncoderLocalizer(drivetrain, internalIMU, telemetry);
         this.localizer.setPoseEstimation(new Pose(0, 0, Math.PI / 2));
 
@@ -130,7 +133,7 @@ public class RobotEx {
     }
 
     public double getPowerMultiple() {
-        return 12 / this.getVoltage();
+        return 12 / this.voltageCompensator;
     }
 
 

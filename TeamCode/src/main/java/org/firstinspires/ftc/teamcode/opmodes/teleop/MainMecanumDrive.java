@@ -145,10 +145,10 @@ public class MainMecanumDrive extends LinearOpMode {
                     );
                 }
             }*/
-
+            
             robot.drivetrain.robotCentricDriveFromGamepad(
-                    currentFrameGamepad1.left_stick_y * 0.75,
-                    currentFrameGamepad1.left_stick_x * 0.75,
+                    currentFrameGamepad1.left_stick_y,
+                    currentFrameGamepad1.left_stick_x,
                     currentFrameGamepad1.right_stick_x * 0.5
             );
 
@@ -174,6 +174,10 @@ public class MainMecanumDrive extends LinearOpMode {
                 robot.lift.incrementOffset(1);
             } else if (currentFrameGamepad2.left_bumper && previousFrameGamepad1.left_bumper != currentFrameGamepad1.left_bumper) {
                 robot.lift.incrementOffset(-1);
+            }
+
+            if (currentFrameGamepad2.right_stick_button && previousFrameGamepad2.right_stick_button != currentFrameGamepad2.right_stick_button) {
+                robot.lift.resetEncoderPosition();
             }
 
 

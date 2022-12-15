@@ -164,4 +164,9 @@ public class Lift implements Subsystem {
     public void resetOffset() {
         this.offset = 0;
     }
+
+    public void resetEncoderPosition() {
+        this.liftMotors.setRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        this.liftMotors.setRunMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+    }
 }
