@@ -135,6 +135,98 @@ public class MotionProfilingDrive {
         // robot.pause(3);
     }
 
+
+    public void driveForwardWithConstantHeading(double forwardInches, double targetHeading) {
+
+        MotionProfile profile = new MotionProfile(
+                0,
+                forwardInches,
+                DriveConstants.MAX_VELOCITY,
+                DriveConstants.MAX_ACCELERATION
+        );
+
+        double duration = profile.getDuration();
+        double startAveragePosition = Drivetrain.getAverageFromArray(this.dt.getCWMotorTicks());
+
+        this.profileTimer.reset();
+
+        double currentFrameTime = 0.001;
+        double previousFrameTime = 0;
+
+        double previousFramePositionTicks = startAveragePosition;
+
+        while (duration > currentFrameTime && !this.currentOpmode.isStopRequested()) {
+
+            double dt = currentFrameTime - previousFrameTime;
+
+            double targetCurrentFramePosition = profile.getPositionFromTime(currentFrameTime);
+            double targetCurrentFrameVelocity = profile.getVelocityFromTime(currentFrameTime);
+            double targetCurrentFrameAcceleration = profile.getAccelerationFromTime(currentFrameTime);
+
+            double currentFramePosition = Drivetrain.getAverageFromArray(this.dt.getCWMotorTicks()) - startAveragePosition;
+            double currentFrameVelocity = (currentFramePosition - previousFramePositionTicks) / dt;
+
+            if (telemetry != null) {
+                telemetry.addData("Target Position: ", targetCurrentFramePosition);
+                telemetry.addData("Current Position: ", DriveConstants.getInchesFromEncoderTicks(currentFramePosition));
+                telemetry.addData("Position Error: ", targetCurrentFramePosition - DriveConstants.getInchesFromEncoderTicks(currentFramePosition));
+                telemetry.addData("Target Velocity: ", targetCurrentFrameVelocity);
+                telemetry.addData("Current Velocity: ", DriveConstants.getInchesFromEncoderTicks(currentFrameVelocity));
+                telemetry.addData("Velocity Error: ", targetCurrentFrameVelocity - DriveConstants.getInchesFromEncoderTicks(currentFrameVelocity));
+                telemetry.addData("Target Acceleration: ", targetCurrentFrameAcceleration);
+
+                telemetry.update();
+            }
+
+            double feedforward = targetCurrentFrameVelocity * kV + targetCurrentFrameAcceleration * kA;
+
+            double feedback = this.followerPID.getOutputFromError(
+                    targetCurrentFramePosition,
+                    DriveConstants.getInchesFromEncoderTicks(currentFramePosition)
+            );
+
+            double output = feedforward + feedback;
+
+            output += Math.signum(output) * kStatic;
+
+            double targetAngle = targetHeading;
+            double currentAngle = robot.internalIMU.getCurrentFrameHeadingCCW();
+            double error = targetAngle - currentAngle;
+
+            if (Math.abs(error) > Math.PI) {
+                if (targetAngle < 0) {
+                    targetAngle = AngleHelper.norm(targetAngle);
+                    error = targetAngle - currentAngle;
+                } else if (targetAngle > 0) {
+                    currentAngle = AngleHelper.norm(currentAngle);
+                    error = targetAngle - currentAngle;
+                }
+            }
+
+            double outputH = robot.drivetrain.headingPID.getOutputFromError(
+                    error
+            );
+
+            this.dt.robotCentricDriveFromGamepad(
+                    -(output),
+                    0,
+                    Math.min(Math.max(outputH, -1), 1)
+            );
+
+            previousFramePositionTicks = currentFramePosition;
+            previousFrameTime = currentFrameTime;
+
+            currentFrameTime = this.profileTimer.seconds();
+
+            robot.update();
+
+        }
+
+
+
+        // robot.pause(3);
+    }
+
     public void strafeRight(double strafeRight) {
 
         MotionProfile profile = new MotionProfile(

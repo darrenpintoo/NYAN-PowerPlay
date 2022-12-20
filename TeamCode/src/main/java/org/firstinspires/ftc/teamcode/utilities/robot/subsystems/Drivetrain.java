@@ -57,9 +57,9 @@ public class Drivetrain implements Subsystem {
 
     private double weight = 1;
 
-    public static double kP = 0.75;
+    public static double kP = 0.5;
     public static double kI = 0;
-    public static double kD = 10;
+    public static double kD = 25;
 
     @Override
     public void onInit(HardwareMap hardwareMap, Telemetry telemetry) {
