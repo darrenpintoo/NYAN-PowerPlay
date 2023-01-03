@@ -22,7 +22,6 @@ dependencies {
     implementation 'org.openftc:easyopencv:1.5.3'
     implementation 'com.acmerobotics.dashboard:dashboard:0.4.6'
     implementation 'org.openftc:apriltag:1.1.1'
-    implementation 'com.github.Eeshwar-Krishnan:PhotonFTC:v2.0.1'
     implementation 'com.acmerobotics.roadrunner:core:0.5.6'
 }
 
