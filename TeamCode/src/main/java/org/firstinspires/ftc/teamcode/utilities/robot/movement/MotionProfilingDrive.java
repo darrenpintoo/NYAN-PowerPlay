@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.utilities.robot.movement;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -267,6 +268,7 @@ public class MotionProfilingDrive {
                 telemetry.addData("Current Velocity: ", DriveConstants.getInchesFromEncoderTicks(currentFrameVelocity));
                 telemetry.addData("Velocity Error: ", targetCurrentFrameVelocity - DriveConstants.getInchesFromEncoderTicks(currentFrameVelocity));
                 telemetry.addData("Target Acceleration: ", targetCurrentFrameAcceleration);
+
 
                 telemetry.update();
             }
