@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.utilities.robot.movement;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -45,7 +46,7 @@ public class MotionProfileLocalizerDrive {
 
     public void driveToXHeading(double xPoint, double heading) {
 
-        Pose displacementPose = robot.localizer.getDisplacement();
+        Pose2d displacementPose = robot.localizer.getPoseEstimate();
 
         double xError = xPoint - displacementPose.getX();
         MotionProfile profileX = new MotionProfile(
@@ -71,13 +72,13 @@ public class MotionProfileLocalizerDrive {
 
             double dt = currentFrameTime - previousFrameTime;
 
-            double currentIMUPosition = robot.localizer.getDisplacement().getHeading();
+            double currentIMUPosition = robot.localizer.getPoseEstimate().getHeading();
 
             double targetCurrentFramePosition = profileX.getPositionFromTime(currentFrameTime);
             double targetCurrentFrameVelocity = profileX.getVelocityFromTime(currentFrameTime);
             double targetCurrentFrameAcceleration = profileX.getAccelerationFromTime(currentFrameTime);
 
-            double currentFramePosition = robot.localizer.getDisplacement().getX();
+            double currentFramePosition = robot.localizer.getPoseEstimate().getX();
             double currentFrameVelocity = (currentFramePosition - previousFramePositionTicks) / dt;
 
             if (telemetry != null) {
@@ -124,7 +125,7 @@ public class MotionProfileLocalizerDrive {
 
     public void driveToYHeading(double yPoint, double heading) {
 
-        Pose displacementPose = robot.localizer.getDisplacement();
+        Pose2d displacementPose = robot.localizer.getPoseEstimate();
 
         double xError = yPoint - displacementPose.getY();
         MotionProfile profileX = new MotionProfile(
@@ -150,13 +151,13 @@ public class MotionProfileLocalizerDrive {
 
             double dt = currentFrameTime - previousFrameTime;
 
-            double currentIMUPosition = robot.localizer.getDisplacement().getHeading();
+            double currentIMUPosition = robot.localizer.getPoseEstimate().getHeading();
 
             double targetCurrentFramePosition = profileX.getPositionFromTime(currentFrameTime);
             double targetCurrentFrameVelocity = profileX.getVelocityFromTime(currentFrameTime);
             double targetCurrentFrameAcceleration = profileX.getAccelerationFromTime(currentFrameTime);
 
-            double currentFramePosition = robot.localizer.getDisplacement().getY();
+            double currentFramePosition = robot.localizer.getPoseEstimate().getY();
             double currentFrameVelocity = (currentFramePosition - previousFramePositionTicks) / dt;
 
             if (telemetry != null) {

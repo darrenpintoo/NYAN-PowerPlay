@@ -16,6 +16,8 @@ import org.firstinspires.ftc.teamcode.utilities.robot.extensions.MotorGroup;
 import org.firstinspires.ftc.teamcode.utilities.robot.extensions.RobotOrientation;
 import org.firstinspires.ftc.teamcode.utilities.robot.movement.EncoderDrive;
 
+import java.util.ArrayList;
+
 /**
  * Robot Drivetrain
  */
@@ -60,6 +62,10 @@ public class Drivetrain implements Subsystem {
     public static double kP = 0.5;
     public static double kI = 0;
     public static double kD = 25;
+
+    private double trackWidth = 10;
+    private double wheelBase = 10;
+    private double lateralMultiplier = 1;
 
     @Override
     public void onInit(HardwareMap hardwareMap, Telemetry telemetry) {
@@ -283,6 +289,26 @@ public class Drivetrain implements Subsystem {
         );
     }
 
+    public ArrayList<Integer> getMotorTicksCCWFromFL() {
+        ArrayList<Integer> returnArray = new ArrayList<>();
+        returnArray.add(this.leftFrontMotor.getCurrentPosition());
+        returnArray.add(this.leftBackMotor.getCurrentPosition());
+        returnArray.add(this.rightBackMotor.getCurrentPosition());
+        returnArray.add(this.rightFrontMotor.getCurrentPosition());
+
+        return returnArray;
+    }
+
+    public ArrayList<Double> getMotorVelocitiesCCWFromFL() {
+        ArrayList<Double> returnArray = new ArrayList<>();
+        returnArray.add(this.leftFrontMotor.getVelocity());
+        returnArray.add(this.leftBackMotor.getVelocity());
+        returnArray.add(this.rightBackMotor.getVelocity());
+        returnArray.add(this.rightFrontMotor.getVelocity());
+
+        return returnArray;
+    }
+
     public void setWeightedDrivePower(double weight) {
         this.weight = weight;
     }
@@ -296,6 +322,18 @@ public class Drivetrain implements Subsystem {
 
         return (double) sum / array.length;
 
+    }
+
+    public double getTrackWidth() {
+        return this.trackWidth;
+    }
+
+    public double getWheelBase() {
+        return this.wheelBase;
+    }
+
+    public double getLateralMultiplier() {
+        return this.lateralMultiplier;
     }
 }
 

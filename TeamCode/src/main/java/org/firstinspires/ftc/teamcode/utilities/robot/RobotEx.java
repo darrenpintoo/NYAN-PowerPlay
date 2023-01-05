@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.utilities.robot;
 
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.LynxModuleMeta;
@@ -10,6 +11,7 @@ import org.checkerframework.checker.units.qual.C;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.utilities.localizer.BaseLocalizer;
 import org.firstinspires.ftc.teamcode.utilities.localizer.IMUEncoderLocalizer;
+import org.firstinspires.ftc.teamcode.utilities.localizer.RoadrunnerLocalizer;
 import org.firstinspires.ftc.teamcode.utilities.math.linearalgebra.Pose;
 import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.Claw;
 import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.ClawExtension;
@@ -48,7 +50,7 @@ public class RobotEx {
 
     Telemetry telemetry;
 
-    public BaseLocalizer localizer;
+    public RoadrunnerLocalizer localizer;
 
     private double voltageCompensator = 12;
 
@@ -72,8 +74,7 @@ public class RobotEx {
         this.voltageSensor = hardwareMap.voltageSensor.iterator().next();
         this.voltageCompensator = this.voltageSensor.getVoltage();
 
-        this.localizer = new IMUEncoderLocalizer(drivetrain, internalIMU, telemetry);
-        this.localizer.setPoseEstimation(new Pose(0, 0, Math.PI / 2));
+        this.localizer = new RoadrunnerLocalizer(drivetrain, internalIMU, telemetry);
 
         for (LynxModule hub: allHubs) {
             hub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
@@ -104,8 +105,8 @@ public class RobotEx {
             subsystem.onCyclePassed();
         }
 
-        this.localizer.updatePose();
-        Pose currentPose = this.localizer.getDisplacement();
+        this.localizer.update();
+        Pose2d currentPose = this.localizer.getPoseEstimate();
         telemetry.addData("X: ", currentPose.getX());
         telemetry.addData("Y: ", currentPose.getY());
         telemetry.addData("Heading: ", currentPose.getHeading());
