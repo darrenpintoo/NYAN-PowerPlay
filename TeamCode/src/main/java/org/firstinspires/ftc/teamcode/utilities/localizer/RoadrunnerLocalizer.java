@@ -32,6 +32,8 @@ public class RoadrunnerLocalizer {
         this.drivetrain = drivetrain;
         this.imu = imu;
         this.telemetry = telemetry;
+
+        imu.trackAngularVelocity();
     }
 
     public void update() {
@@ -49,7 +51,7 @@ public class RoadrunnerLocalizer {
         }
 
         List<Double> wheelVelocities = drivetrain.getMotorVelocitiesCCWFromFL();
-        Double extHeadingVel = this.imu.getCurrentFrameRobotVelocity().getTurnVelocity();
+        double extHeadingVel = this.imu.getCurrentFrameRobotVelocity().getTurnVelocity();
         if (wheelVelocities != null) {
             poseVelocity = MecanumKinematics.wheelToRobotVelocities(
                     wheelVelocities, drivetrain.getTrackWidth(), drivetrain.getWheelBase(), drivetrain.getLateralMultiplier());
@@ -61,7 +63,12 @@ public class RoadrunnerLocalizer {
     }
 
     public Pose2d getPoseEstimate() {
-        Pose2d inchesPose = new Pose2d(DriveConstants.getInchesFromEncoderTicks(this._poseEstimate.getX()), DriveConstants.getInchesFromEncoderTicks(this._poseEstimate.getY()), this._poseEstimate.getHeading());
+        Pose2d inchesPose = new Pose2d(
+                DriveConstants.getInchesFromEncoderTicks(this._poseEstimate.getX()),
+                DriveConstants.getInchesFromEncoderTicks(this._poseEstimate.getY()),
+                this._poseEstimate.getHeading()
+        );
+
         return this._poseEstimate;
     }
 }

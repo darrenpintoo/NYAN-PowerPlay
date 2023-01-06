@@ -19,7 +19,7 @@ public class InternalIMU implements Subsystem {
     public static double TILT_THRESHOLD = Math.toRadians(20);
     public static double YAW_THRESHOLD = Math.toRadians(20);
 
-    private boolean trackAngularVelocity = false;
+    private boolean trackAngularVelocity = true;
     private static InternalIMU imuInstance = null;
     private BNO055IMU internalIMU;
 
