@@ -89,7 +89,8 @@ public class MotionProfileLocalizerCycle extends LinearOpMode {
 
         robot.update();
         robot.pause(2);
-        robotDrivetrain.forwardX(30);
+        robotDrivetrain.forwardX(50);
+        robotDrivetrain.strafeY(30);
 
 /*        switch (parkPosition) {
             case LEFT:

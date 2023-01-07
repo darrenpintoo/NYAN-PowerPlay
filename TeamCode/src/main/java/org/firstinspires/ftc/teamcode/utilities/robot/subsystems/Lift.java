@@ -36,7 +36,7 @@ public class Lift implements Subsystem {
     public static double kD = 0;
     public static double kF = 0;
 
-    public static int OFFSET_INCREASE = 80;
+    public static int OFFSET_INCREASE = 130;// 80;
 
     public static int GROUND_HEIGHT = 500;
     public static int LOW_HEIGHT = 1850;
@@ -163,6 +163,10 @@ public class Lift implements Subsystem {
 
     public void resetOffset() {
         this.offset = 0;
+    }
+
+    public int getOffset() {
+        return this.offset;
     }
 
     public void resetEncoderPosition() {

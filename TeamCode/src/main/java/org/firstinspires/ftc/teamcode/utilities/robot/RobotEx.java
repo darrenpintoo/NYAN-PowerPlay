@@ -140,4 +140,7 @@ public class RobotEx {
     }
 
 
+    public void clearPersistData() {
+        PersistentData.startPose = new Pose2d();
+    }
 }

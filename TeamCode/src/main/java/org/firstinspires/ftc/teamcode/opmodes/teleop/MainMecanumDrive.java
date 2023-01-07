@@ -146,7 +146,7 @@ public class MainMecanumDrive extends LinearOpMode {
             robot.drivetrain.robotCentricDriveFromGamepad(
                     currentFrameGamepad1.left_stick_y,
                     currentFrameGamepad1.left_stick_x,
-                    currentFrameGamepad1.right_stick_x * 0.5
+                    currentFrameGamepad1.right_stick_x * 0.55
             );
 
             // Handle Manual Lift State
@@ -167,9 +167,9 @@ public class MainMecanumDrive extends LinearOpMode {
                 robot.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.DEFAULT);
             }
 
-            if (currentFrameGamepad2.right_bumper && currentFrameGamepad2.right_bumper != currentFrameGamepad1.right_bumper) {
+            if (currentFrameGamepad2.right_bumper && previousFrameGamepad2.right_bumper != currentFrameGamepad2.right_bumper) {
                 robot.lift.incrementOffset(1);
-            } else if (currentFrameGamepad2.left_bumper && previousFrameGamepad1.left_bumper != currentFrameGamepad1.left_bumper) {
+            } else if (currentFrameGamepad2.left_bumper && previousFrameGamepad2.left_bumper != currentFrameGamepad2.left_bumper) {
                 robot.lift.incrementOffset(-1);
             }
 
@@ -190,6 +190,7 @@ public class MainMecanumDrive extends LinearOpMode {
             telemetry.addData("Robot Tilt : ", robot.internalIMU.getCurrentFrameTilt());
             telemetry.addData("Frame Time: ", frameTime);
             telemetry.addData("Refresh Rate: ", (frameTime != 0) ? (1000 / frameTime) : "inf");
+            telemetry.addData("Increment offset: ", robot.lift.getOffset());
             // telemetry.addData("IMU orientation: ", robot.internalIMU.getCurrentFrameOrientation());
             // telemetry.addData("CCW IMU orientation: ", robot.internalIMU.getCurrentFrameHeadingCCW());
             // telemetry.addData("CW IMU orientation: ", robot.internalIMU.getCurrentFrameHeadingCW());
@@ -207,5 +208,8 @@ public class MainMecanumDrive extends LinearOpMode {
 
 
         }
+
+        robot.clearPersistData();
     }
+
 }

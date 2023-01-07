@@ -48,13 +48,15 @@ public class MotionProfileLocalizerLineDrive {
         this.telemetry = telemetry;
     }
 
-    public void forwardY(double forwardInches) {
+    public void strafeY(double strafeInches) {
+
+        robot.update();
 
         Pose2d startPosition = this.localizer.getPoseEstimate();
 
         MotionProfile yProfile = new MotionProfile(
-                startPosition.getY(),
-                startPosition.getY()+forwardInches,
+                startPosition.getX(),
+                startPosition.getX()+strafeInches,
                 DriveConstants.MAX_VELOCITY,
                 DriveConstants.MAX_ACCELERATION
         );
@@ -66,7 +68,7 @@ public class MotionProfileLocalizerLineDrive {
         double currentFrameTime = 0.001;
         double previousFrameTime = 0;
 
-        Pose2d previousFramePositionTicks = startPosition;
+        Pose2d previousFramePosition = startPosition;
 
         while (duration > currentFrameTime && !this.currentOpmode.isStopRequested()) {
 
@@ -77,12 +79,12 @@ public class MotionProfileLocalizerLineDrive {
             double targetCurrentFrameAcceleration = yProfile.getAccelerationFromTime(currentFrameTime);
 
             Pose2d currentFramePosition = localizer.getPoseEstimate();
-            double currentFrameVelocity = (currentFramePosition.getY() - previousFramePositionTicks.getY()) / dt;
+            double currentFrameVelocity = (currentFramePosition.getY() - previousFramePosition.getY()) / dt;
 
             if (telemetry != null) {
                 telemetry.addData("Target Position: ", targetCurrentFramePosition);
-                telemetry.addData("Current Position: ", DriveConstants.getInchesFromEncoderTicks(currentFramePosition.getY()));
-                telemetry.addData("Position Error: ", targetCurrentFramePosition - DriveConstants.getInchesFromEncoderTicks(currentFramePosition.getY()));
+                telemetry.addData("Current Position: ", currentFramePosition.getY());
+                telemetry.addData("Position Error: ", targetCurrentFramePosition - currentFramePosition.getY());
                 telemetry.addData("Target Velocity: ", targetCurrentFrameVelocity);
                 telemetry.addData("Current Velocity: ", DriveConstants.getInchesFromEncoderTicks(currentFrameVelocity));
                 telemetry.addData("Velocity Error: ", targetCurrentFrameVelocity - DriveConstants.getInchesFromEncoderTicks(currentFrameVelocity));
@@ -95,21 +97,25 @@ public class MotionProfileLocalizerLineDrive {
 
             double forwardFeedback = this.followerPID.getOutputFromError(
                     targetCurrentFramePosition,
-                    currentFramePosition.getY()
-            );
-
-            double xFeedback = this.laterialPID.getOutputFromError(
-                    startPosition.getX(),
                     currentFramePosition.getX()
             );
 
-            double turnError = startPosition.getHeading() - currentFramePosition.getHeading();
+            double lateralFeedback = -this.laterialPID.getOutputFromError(
+                    startPosition.getY() - currentFramePosition.getY()
+            );
+
+            double angle = AngleHelper.normDelta(startPosition.getHeading());
+            double currentIMUPosition = AngleHelper.normDelta(currentFramePosition.getHeading());
+
+            double turnError = angle - currentIMUPosition;
 
             if (Math.abs(turnError) > Math.PI) {
-                if (startPosition.getHeading() < 0) {
-                    turnError = AngleHelper.norm(startPosition.getHeading()) - currentFramePosition.getHeading();
-                } else if (startPosition.getHeading() > 0) {
-                    turnError = startPosition.getHeading() - AngleHelper.norm(currentFramePosition.getHeading());
+                if (angle < 0) {
+                    angle = AngleHelper.norm(angle);
+                    turnError = angle - currentIMUPosition;
+                } else if (angle > 0) {
+                    currentIMUPosition = AngleHelper.norm(currentIMUPosition);
+                    turnError = angle - currentIMUPosition;
                 }
             }
 
@@ -117,17 +123,25 @@ public class MotionProfileLocalizerLineDrive {
                     turnError
             );
 
-            double output = feedforward + forwardFeedback;
+            telemetry.addData("Turn: ", turnError);
+
+
+            telemetry.addData("Feedback angle: ", angleFeedback);
+            telemetry.addData("Lateral Output: ", lateralFeedback);
+            telemetry.addData("Start Position: ", startPosition.getY());
+            telemetry.addData("End Position: ", currentFramePosition.getY());
+
+            double output = feedforward + lateralFeedback;
 
             output += Math.signum(output) * kStatic;
 
             this.dt.fieldCentricDriveFromGamepad(
-                    -(xFeedback),
+                    -(forwardFeedback),
                     output,
                     Math.min(Math.max(angleFeedback, -1), 1)
             );
 
-            previousFramePositionTicks = currentFramePosition;
+            previousFramePosition = currentFramePosition;
             previousFrameTime = currentFrameTime;
 
             currentFrameTime = this.profileTimer.seconds();
@@ -137,8 +151,9 @@ public class MotionProfileLocalizerLineDrive {
         }
 
 
+        this.correctionTimer.reset();
 
-        // robot.pause(3);
+
     }
 
 
@@ -177,8 +192,8 @@ public class MotionProfileLocalizerLineDrive {
 
             if (telemetry != null) {
                 telemetry.addData("Target Position: ", targetCurrentFramePosition);
-                telemetry.addData("Current Position: ", DriveConstants.getInchesFromEncoderTicks(currentFramePosition.getX()));
-                telemetry.addData("Position Error: ", targetCurrentFramePosition - DriveConstants.getInchesFromEncoderTicks(currentFramePosition.getX()));
+                telemetry.addData("Current Position: ", currentFramePosition.getX());
+                telemetry.addData("Position Error: ", targetCurrentFramePosition - currentFramePosition.getX());
                 telemetry.addData("Target Velocity: ", targetCurrentFrameVelocity);
                 telemetry.addData("Current Velocity: ", DriveConstants.getInchesFromEncoderTicks(currentFrameVelocity));
                 telemetry.addData("Velocity Error: ", targetCurrentFrameVelocity - DriveConstants.getInchesFromEncoderTicks(currentFrameVelocity));
@@ -198,8 +213,8 @@ public class MotionProfileLocalizerLineDrive {
                     startPosition.getY() - currentFramePosition.getY()
             );
 
-            double angle = startPosition.getHeading();
-            double currentIMUPosition = currentFramePosition.getHeading();
+            double angle = AngleHelper.normDelta(startPosition.getHeading());
+            double currentIMUPosition = AngleHelper.normDelta(currentFramePosition.getHeading());
 
             double turnError = angle - currentIMUPosition;
 
@@ -249,13 +264,6 @@ public class MotionProfileLocalizerLineDrive {
         this.correctionTimer.reset();
         
 
-
-
-
-
-
-
-        // robot.pause(3);
     }
 
 
