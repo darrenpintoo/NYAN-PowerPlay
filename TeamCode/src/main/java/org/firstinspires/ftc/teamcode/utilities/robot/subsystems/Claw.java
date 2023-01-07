@@ -40,9 +40,9 @@ public class Claw implements Subsystem {
     private Telemetry telemetry;
 
     //need to tune still
-    public static double openPosition = 0.40;
-    public static double closePosition = 0.7;
-    public static double slightlyOpenPosition = 0.55;
+    public static double openPosition = 0.63;
+    public static double closePosition = 0.9;
+    public static double slightlyOpenPosition = 0.75;
 
     private boolean enableAutoClose = true;
 

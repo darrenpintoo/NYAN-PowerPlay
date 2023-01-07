@@ -69,6 +69,6 @@ public class RoadrunnerLocalizer {
                 this._poseEstimate.getHeading()
         );
 
-        return this._poseEstimate;
+        return inchesPose;
     }
 }

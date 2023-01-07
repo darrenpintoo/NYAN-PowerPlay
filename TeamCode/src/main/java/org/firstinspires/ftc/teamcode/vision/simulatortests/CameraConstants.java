@@ -6,14 +6,13 @@ public class CameraConstants {
 
 
     private final static double[][] CAMERA_MATRIX_ARRAY = new double[][]{
-            new double[] {503.48766935, 0D, 332.82644397},
-            new double[] {0D, 506.33668582, 259.40084312},
+            new double[] {923.4816977, 0D, 363.33918839},
+            new double[] {0D, 910.24574257, 235.6905383},
             new double[] {0D, 0D, 1D}
     };
 
     public final static int WIDTH = 640;
     public final static int HEIGHT = 480;
-
 
     public final static double fx = CAMERA_MATRIX_ARRAY[0][0];
     public final static double fy = CAMERA_MATRIX_ARRAY[1][1];

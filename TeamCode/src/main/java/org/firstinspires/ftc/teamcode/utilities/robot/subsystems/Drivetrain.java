@@ -63,8 +63,8 @@ public class Drivetrain implements Subsystem {
     public static double kI = 0;
     public static double kD = 25;
 
-    private double trackWidth = 10;
-    private double wheelBase = 10;
+    private double trackWidth = 12;
+    private double wheelBase = 6.5;
     private double lateralMultiplier = 1;
 
     @Override
