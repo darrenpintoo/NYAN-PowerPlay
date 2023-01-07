@@ -37,6 +37,7 @@ public class MotionProfileLocalizerLineDrive {
     LinearOpMode currentOpmode;
 
     ElapsedTime profileTimer = new ElapsedTime();
+    ElapsedTime correctionTimer = new ElapsedTime();
 
     public MotionProfileLocalizerLineDrive(LinearOpMode currentOpmode) {
         this.currentOpmode = currentOpmode;
@@ -161,7 +162,7 @@ public class MotionProfileLocalizerLineDrive {
         double currentFrameTime = 0.001;
         double previousFrameTime = 0;
 
-        Pose2d previousFramePositionTicks = startPosition;
+        Pose2d previousFramePosition = startPosition;
 
         while (duration > currentFrameTime && !this.currentOpmode.isStopRequested()) {
 
@@ -172,7 +173,7 @@ public class MotionProfileLocalizerLineDrive {
             double targetCurrentFrameAcceleration = xProfile.getAccelerationFromTime(currentFrameTime);
 
             Pose2d currentFramePosition = localizer.getPoseEstimate();
-            double currentFrameVelocity = (currentFramePosition.getX() - previousFramePositionTicks.getX()) / dt;
+            double currentFrameVelocity = (currentFramePosition.getX() - previousFramePosition.getX()) / dt;
 
             if (telemetry != null) {
                 telemetry.addData("Target Position: ", targetCurrentFramePosition);
@@ -234,7 +235,7 @@ public class MotionProfileLocalizerLineDrive {
                     Math.min(Math.max(angleFeedback, -1), 1)
             );
 
-            previousFramePositionTicks = currentFramePosition;
+            previousFramePosition = currentFramePosition;
             previousFrameTime = currentFrameTime;
 
             currentFrameTime = this.profileTimer.seconds();
@@ -242,6 +243,15 @@ public class MotionProfileLocalizerLineDrive {
             robot.update();
 
         }
+
+        currentFrameTime = 0;
+
+        this.correctionTimer.reset();
+        
+
+
+
+
 
 
 

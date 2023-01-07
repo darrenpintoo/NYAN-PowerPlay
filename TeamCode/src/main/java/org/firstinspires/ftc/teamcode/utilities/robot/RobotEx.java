@@ -106,10 +106,12 @@ public class RobotEx {
         }
 
         this.localizer.update();
+
         Pose2d currentPose = this.localizer.getPoseEstimate();
         telemetry.addData("X: ", currentPose.getX());
         telemetry.addData("Y: ", currentPose.getY());
         telemetry.addData("Heading: ", currentPose.getHeading());
+
         double frameTime = frameTimer.milliseconds();
         frameTimer.reset();
 
@@ -126,7 +128,7 @@ public class RobotEx {
     }
 
     public void persistData() {
-        PersistentData.startPose = new Pose(0, 0, this.internalIMU.getCurrentFrameHeadingCCW());
+        PersistentData.startPose = this.localizer.getPoseEstimate();
     }
 
     public double getVoltage() {

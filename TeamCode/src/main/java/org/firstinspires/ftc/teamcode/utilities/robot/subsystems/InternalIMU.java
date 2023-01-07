@@ -38,6 +38,7 @@ public class InternalIMU implements Subsystem {
     public RobotOrientation startFrameRobotOrientation = new RobotOrientation();
 
     private double startTilt = 0;
+    private double headingOffset = 0;
 
     private Telemetry telemetry;
 
@@ -129,7 +130,7 @@ public class InternalIMU implements Subsystem {
     }
 
     public double getCurrentFrameHeadingCCW() {
-        return -this.getCurrentFrameHeadingCW();
+        return -this.getCurrentFrameHeadingCW() - this.headingOffset;
     }
 
     public RobotOrientation getCurrentFrameRobotOrientation() {
@@ -162,5 +163,9 @@ public class InternalIMU implements Subsystem {
 
     public void stopAngularVelocityTracking() {
         this.trackAngularVelocity = false;
+    }
+
+    public void setHeadingOffset(double headingOffset) {
+        this.headingOffset = headingOffset;
     }
 }

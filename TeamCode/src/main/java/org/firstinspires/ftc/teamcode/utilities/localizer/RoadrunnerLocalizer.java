@@ -71,4 +71,8 @@ public class RoadrunnerLocalizer {
 
         return inchesPose;
     }
+
+    public void setPoseEstimate(Pose2d poseEstimate) {
+        this._poseEstimate = poseEstimate;
+    }
 }

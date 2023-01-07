@@ -1,6 +1,9 @@
 package org.firstinspires.ftc.teamcode.utilities.robot;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.roadrunner.geometry.Pose2d;
+
+import org.firstinspires.ftc.teamcode.utilities.math.linearalgebra.Pose;
 
 @Config
 public class DriveConstants {
@@ -25,6 +28,9 @@ public class DriveConstants {
 
     public static double TURN_THRESHOLD = Math.toRadians(2);
     public static double ANGULAR_VELOCITY_THRESHOLD = Math.toRadians(10);
+
+    public static Pose2d POSITION_THRESHOLD = new Pose2d(0.5, 0.5, TURN_THRESHOLD);
+    public static double MAX_CORRECTION_TIME = 0.5;
 
     public static double MAX_VELOCITY = 60;
     public static double MAX_ACCELERATION = 40;

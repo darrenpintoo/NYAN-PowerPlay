@@ -33,6 +33,10 @@ public class MainMecanumDrive extends LinearOpMode {
 
         waitForStart();
 
+        if (PersistentData.startPose != null) {
+            robot.localizer.setPoseEstimate(PersistentData.startPose);
+            robot.internalIMU.setHeadingOffset(PersistentData.startPose.getHeading());
+        }
         // Notify subsystems before loop
         robot.postInit();
 
@@ -58,6 +62,7 @@ public class MainMecanumDrive extends LinearOpMode {
         robot.update();
         robot.claw.enableAutoClose();
         robot.drivetrain.disableAntiTip();
+
         while(opModeIsActive()) {
 
             // Retain information about the previous frame's gamepad
@@ -96,13 +101,6 @@ public class MainMecanumDrive extends LinearOpMode {
                 intakeOn = !intakeOn;
                 intakeDirection = true;
             }
-
-
-/*            if (intakeOn) {
-                robot.intake.enableIntakeMotor(intakeDirection);
-            } else {
-                robot.intake.disableIntakeMotor();
-            }*/
 
             // Handle Claw State
             if (currentFrameGamepad2.b) {
