@@ -80,11 +80,11 @@ public class Claw implements Subsystem {
 
         this.currentFrameBlue = this.getBlueColorFromI2C();
         this.currentFrameRed = this.getRedColorFromI2C();
-        this.currentDistance = this.getDistanceFromI2C();
+        // this.currentDistance = this.getDistanceFromI2C();
 
         this.telemetry.addData("Claw -> Red: ", this.getRedColor());
         this.telemetry.addData("Claw -> Blue: ", this.getBlueColor());
-        this.telemetry.addData("Claw -> Distance: ", this.currentDistance);
+        // this.telemetry.addData("Claw -> Distance: ", this.currentDistance);
 
         this.telemetry.addData("Claw Servo Pos: ", this.clawGrabberServo.getPosition());
         this.telemetry.addData("Cone in grabber: ", this.checkConeInClaw());

@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.checkerframework.checker.units.qual.C;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.utilities.localizer.BaseLocalizer;
 import org.firstinspires.ftc.teamcode.utilities.localizer.IMUEncoderLocalizer;
 import org.firstinspires.ftc.teamcode.utilities.localizer.RoadrunnerLocalizer;
@@ -97,8 +98,11 @@ public class RobotEx {
 
     public double update() {
 
+        double hubCurrent = 0;
+
         for (LynxModule hub : allHubs) {
             hub.clearBulkCache();
+            hubCurrent += hub.getCurrent(CurrentUnit.AMPS);
         }
 
         for (Subsystem subsystem : this.robotSubsystems) {
@@ -111,6 +115,7 @@ public class RobotEx {
         telemetry.addData("X: ", currentPose.getX());
         telemetry.addData("Y: ", currentPose.getY());
         telemetry.addData("Heading: ", currentPose.getHeading());
+        telemetry.addData("Current Draw: ", hubCurrent);
 
         double frameTime = frameTimer.milliseconds();
         frameTimer.reset();

@@ -31,17 +31,17 @@ public class MotionProfile {
             double dt2 = absdx / this.vMax - this.vMax / this.aMax;
 
             trajectoryPhases = new Phase[] {
-                    new Phase(Math.copySign(this.aMax, x1), dt1),
+                    new Phase(Math.copySign(this.aMax, dx), dt1),
                     new Phase(0, dt2),
-                    new Phase(-Math.copySign(this.aMax, x1), dt1)
+                    new Phase(-Math.copySign(this.aMax, dx), dt1)
             };
         } else {
 
             double dt1 = Math.sqrt(absdx / this.aMax);
 
             trajectoryPhases = new Phase[] {
-                    new Phase(Math.copySign(this.aMax, x1), dt1),
-                    new Phase(-Math.copySign(this.aMax, x1), dt1)
+                    new Phase(Math.copySign(this.aMax, dx), dt1),
+                    new Phase(-Math.copySign(this.aMax, dx), dt1)
             };
         }
 
