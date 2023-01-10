@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.utilities.robot.movement;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.util.Angle;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -97,12 +98,12 @@ public class MotionProfileLocalizerLineDrive {
             double feedforward = targetCurrentFrameVelocity * kV + targetCurrentFrameAcceleration * kA;
 
             double forwardFeedback = this.followerPID.getOutputFromError(
-                    targetCurrentFramePosition,
+                    startPosition.getX(),
                     currentFramePosition.getX()
             );
 
             double lateralFeedback = -this.laterialPID.getOutputFromError(
-                    startPosition.getY() - currentFramePosition.getY()
+                    targetCurrentFramePosition - currentFramePosition.getY()
             );
 
             double angle = AngleHelper.normDelta(startPosition.getHeading());
@@ -320,15 +321,15 @@ public class MotionProfileLocalizerLineDrive {
             double feedforward = targetCurrentFrameVelocity * kV + targetCurrentFrameAcceleration * kA;
 
             double forwardFeedback = this.followerPID.getOutputFromError(
-                    targetCurrentFramePosition,
+                    targetPose.getX(),
                     currentFramePosition.getX()
             );
 
             double lateralFeedback = -this.laterialPID.getOutputFromError(
-                    startPosition.getY() - currentFramePosition.getY()
+                    targetCurrentFramePosition - currentFramePosition.getY()
             );
 
-            double angle = MathHelper.lerp(startPosition.getHeading(), targetPose.getHeading(), currentFrameTime / duration);
+            double angle = MathHelper.lerp(AngleHelper.normDelta(startPosition.getHeading()), targetPose.getHeading(), currentFrameTime / duration);
             double currentIMUPosition = AngleHelper.normDelta(currentFramePosition.getHeading());
 
             double turnError = angle - currentIMUPosition;

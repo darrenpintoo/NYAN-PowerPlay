@@ -40,9 +40,9 @@ public class Claw implements Subsystem {
     private Telemetry telemetry;
 
     //need to tune still
-    public static double openPosition = 0.63;
-    public static double closePosition = 0.9;
-    public static double slightlyOpenPosition = 0.75;
+    public static double openPosition = 0.38;
+    public static double closePosition = 0.07;
+    public static double slightlyOpenPosition = 0.2;
 
     private boolean enableAutoClose = true;
 
@@ -66,7 +66,7 @@ public class Claw implements Subsystem {
 
         this.telemetry = telemetry;
 
-        this.onCyclePassed();
+        // this.onCyclePassed();
     }
 
     @Override
@@ -78,6 +78,7 @@ public class Claw implements Subsystem {
     public void onCyclePassed() {
 
 
+        this.cacheCurrentFrameColors();
 
         // this.currentDistance = this.getDistanceFromI2C();
 
@@ -91,7 +92,7 @@ public class Claw implements Subsystem {
 */
 
         if (this.enableAutoClose) {
-/*            if (this.checkConeInClaw() != this.coneInClawLast && this.checkConeInClaw() && this.currentClawState != ClawStates.CLOSED) {
+            if (this.checkConeInClaw() != this.coneInClawLast && this.checkConeInClaw() && this.currentClawState != ClawStates.CLOSED) {
                 this.setClawState(ClawStates.CLOSED);
 
                 this.requestedLift = true;
@@ -107,8 +108,8 @@ public class Claw implements Subsystem {
                 }
 
                 this.requestedLift = false;
-            }*/
-            if (this.lift.getCurrentLiftTarget() != Lift.LIFT_POSITIONS.DEFAULT || this.lift.getOffset() != 0) {
+            }
+/*            if (this.lift.getCurrentLiftTarget() != Lift.LIFT_POSITIONS.DEFAULT || this.lift.getOffset() != 0) {
                 return;
             }
 
@@ -126,9 +127,9 @@ public class Claw implements Subsystem {
                     this.requestedLift = true;
                     this.requestedTime.reset();
                 }
-            }
+            }*/
         }
-        // this.coneInClawLast = this.checkConeInClaw();
+        this.coneInClawLast = this.checkConeInClaw();
 
         /*
         switch (this.currentClawState) {

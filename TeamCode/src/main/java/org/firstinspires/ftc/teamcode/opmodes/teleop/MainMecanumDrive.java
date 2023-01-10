@@ -177,6 +177,9 @@ public class MainMecanumDrive extends LinearOpMode {
                 robot.lift.resetEncoderPosition();
             }
 
+            if (currentFrameGamepad2.left_stick_button && previousFrameGamepad2.left_stick_button != currentFrameGamepad2.left_stick_button) {
+                robot.lift.setOffset(5);
+            }
 
 /*
             if (currentFrameGamepad1.x) {
@@ -191,6 +194,7 @@ public class MainMecanumDrive extends LinearOpMode {
             telemetry.addData("Frame Time: ", frameTime);
             telemetry.addData("Refresh Rate: ", (frameTime != 0) ? (1000 / frameTime) : "inf");
             telemetry.addData("Increment offset: ", robot.lift.getOffset());
+            telemetry.addData("Angular Velocity: ", robot.internalIMU.getCurrentFrameVelocity().xRotationRate);
             // telemetry.addData("IMU orientation: ", robot.internalIMU.getCurrentFrameOrientation());
             // telemetry.addData("CCW IMU orientation: ", robot.internalIMU.getCurrentFrameHeadingCCW());
             // telemetry.addData("CW IMU orientation: ", robot.internalIMU.getCurrentFrameHeadingCW());

@@ -105,20 +105,12 @@ public class RobotEx {
             hubCurrent += hub.getCurrent(CurrentUnit.AMPS);
         }
 
-        double previousUpdateTime = frameTimer.seconds();
-        telemetry.addData("Subsystem update time: ", previousUpdateTime);
-
         int i = 1;
 
         for (Subsystem subsystem : this.robotSubsystems) {
 
             subsystem.onCyclePassed();
 
-            double currentUpdateTIme = frameTimer.seconds();
-            telemetry.addData(String.format("Subsystem %d" , i), currentUpdateTIme - previousUpdateTime);
-
-            i++;
-            previousUpdateTime = currentUpdateTIme;
         }
 
         this.localizer.update();
