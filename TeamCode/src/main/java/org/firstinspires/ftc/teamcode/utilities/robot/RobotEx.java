@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.utilities.robot;
 
+import android.annotation.SuppressLint;
+
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -32,7 +34,6 @@ public class RobotEx {
     public InternalIMU internalIMU = InternalIMU.getInstance();
 
     public Drivetrain drivetrain = new Drivetrain();
-    // public Intake intake = new Intake();
     public Lift lift = new Lift();
     public Claw claw = new Claw();
 
@@ -42,11 +43,9 @@ public class RobotEx {
 
     private final Subsystem[] robotSubsystems = new Subsystem[] {
             internalIMU,
-            // intake,
             drivetrain,
             lift,
-            claw//,
-           //  clawExtension
+            claw
     };
 
     Telemetry telemetry;
@@ -96,6 +95,7 @@ public class RobotEx {
         }
     }
 
+    @SuppressLint("")
     public double update() {
 
         double hubCurrent = 0;
@@ -105,8 +105,20 @@ public class RobotEx {
             hubCurrent += hub.getCurrent(CurrentUnit.AMPS);
         }
 
+        double previousUpdateTime = frameTimer.seconds();
+        telemetry.addData("Subsystem update time: ", previousUpdateTime);
+
+        int i = 1;
+
         for (Subsystem subsystem : this.robotSubsystems) {
+
             subsystem.onCyclePassed();
+
+            double currentUpdateTIme = frameTimer.seconds();
+            telemetry.addData(String.format("Subsystem %d" , i), currentUpdateTIme - previousUpdateTime);
+
+            i++;
+            previousUpdateTime = currentUpdateTIme;
         }
 
         this.localizer.update();
