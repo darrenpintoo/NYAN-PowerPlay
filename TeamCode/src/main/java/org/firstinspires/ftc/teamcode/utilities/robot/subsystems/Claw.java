@@ -78,19 +78,20 @@ public class Claw implements Subsystem {
     public void onCyclePassed() {
 
 
-        this.currentFrameBlue = this.getBlueColorFromI2C();
-        this.currentFrameRed = this.getRedColorFromI2C();
+
         // this.currentDistance = this.getDistanceFromI2C();
 
+/*
         this.telemetry.addData("Claw -> Red: ", this.getRedColor());
         this.telemetry.addData("Claw -> Blue: ", this.getBlueColor());
         // this.telemetry.addData("Claw -> Distance: ", this.currentDistance);
 
         this.telemetry.addData("Claw Servo Pos: ", this.clawGrabberServo.getPosition());
         this.telemetry.addData("Cone in grabber: ", this.checkConeInClaw());
+*/
 
         if (this.enableAutoClose) {
-            if (this.checkConeInClaw() != this.coneInClawLast && this.checkConeInClaw() && this.currentClawState != ClawStates.CLOSED) {
+/*            if (this.checkConeInClaw() != this.coneInClawLast && this.checkConeInClaw() && this.currentClawState != ClawStates.CLOSED) {
                 this.setClawState(ClawStates.CLOSED);
 
                 this.requestedLift = true;
@@ -106,9 +107,28 @@ public class Claw implements Subsystem {
                 }
 
                 this.requestedLift = false;
+            }*/
+            if (this.lift.getCurrentLiftTarget() != Lift.LIFT_POSITIONS.DEFAULT || this.lift.getOffset() != 0) {
+                return;
+            }
+
+
+            if (this.currentClawState == ClawStates.CLOSED) {
+                if (this.requestedLift && this.requestedTime.seconds() > TIME_THRESHOLD) {
+                    this.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.GROUND_JUNCTION);
+                }
+            } else {
+                this.cacheCurrentFrameColors();
+
+                if (this.checkConeInClaw()) {
+                    this.setClawState(ClawStates.CLOSED);
+
+                    this.requestedLift = true;
+                    this.requestedTime.reset();
+                }
             }
         }
-        this.coneInClawLast = this.checkConeInClaw();
+        // this.coneInClawLast = this.checkConeInClaw();
 
         /*
         switch (this.currentClawState) {
@@ -135,13 +155,16 @@ public class Claw implements Subsystem {
         }
 
          */
+
         clawGrabberServo.setPosition(getServoPosition(this.currentClawState));
-
-
     }
 
     public void setClawState(ClawStates newClawState) {
         this.currentClawState = newClawState;
+
+        if (newClawState != ClawStates.CLOSED) {
+            this.requestedLift = false;
+        }
     }
 
 /*    public void setClawState(ClawStates newClawState) {
@@ -191,6 +214,10 @@ public class Claw implements Subsystem {
         return this.getServoPosition(ClawPositions.OPEN);
     }
 
+    public void cacheCurrentFrameColors() {
+        this.currentFrameBlue = this.getBlueColorFromI2C();
+        this.currentFrameRed = this.getRedColorFromI2C();
+    }
 
     private int getRedColorFromI2C() {
         return this.clawColorSensor.red();
@@ -234,6 +261,7 @@ public class Claw implements Subsystem {
     public void disableAutoClose() {
         this.enableAutoClose = false;
     }
+
 }
 
 
