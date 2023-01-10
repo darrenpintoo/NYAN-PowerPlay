@@ -100,7 +100,7 @@ public class OffsetTuning extends LinearOpMode {
 
             double frameTime = robot.update();
 
-            telemetry.addData("Robot Tilt : ", robot.internalIMU.getCurrentFrameTilt());
+            // telemetry.addData("Robot Tilt : ", robot.internalIMU.getCurrentFrameTilt());
             telemetry.addData("Frame Time: ", frameTime);
             telemetry.addData("Refresh Rate: ", (frameTime != 0) ? (1000 / frameTime) : "inf");
             // telemetry.addData("IMU orientation: ", robot.internalIMU.getCurrentFrameOrientation());

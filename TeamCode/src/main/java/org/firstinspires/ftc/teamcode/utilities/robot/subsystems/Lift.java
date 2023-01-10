@@ -89,8 +89,8 @@ public class Lift implements Subsystem {
 
     @Override
     public void onCyclePassed() {
-        telemetry.addData("Left Lift Pos: ", this.leftLiftMotor.getCurrentPosition());
-        telemetry.addData("Right Lift Pos: ", this.rightLiftMotor.getCurrentPosition());
+/*        telemetry.addData("Left Lift Pos: ", this.leftLiftMotor.getCurrentPosition());
+        telemetry.addData("Right Lift Pos: ", this.rightLiftMotor.getCurrentPosition());*/
 
         liftPID.updateCoefficients(kP, kI, kD, kF);
 
@@ -99,7 +99,7 @@ public class Lift implements Subsystem {
         int targetPosition = this.getEncoderPositionFromLevel(this.currentLiftTargetPosition) + offset * OFFSET_INCREASE;
 
         if (this.currentFrameOutput == 0) {
-            currentFrameOutput = liftPID.getOutputFromError(targetPosition, this.liftMotors.getAveragePosition());
+            currentFrameOutput = liftPID.getOutputFromError(targetPosition, currentPosition);
         }
 
 
@@ -108,7 +108,9 @@ public class Lift implements Subsystem {
         this.currentFrameOutput = 0;
         this.lastLiftTargetPosition = this.currentLiftTargetPosition;
 
-        telemetry.addData("Target Position: ", targetPosition);
+        telemetry.addData("Lift Pos: ", currentPosition);
+
+        // telemetry.addData("Target Position: ", targetPosition);
     }
 
     public void driveLiftFromGamepad(double leftTrigger, double rightTrigger) {
