@@ -89,12 +89,61 @@ public class MotionProfileLocalizerCycle extends LinearOpMode {
 
         ParkingPosition parkPosition = ParkingPosition.CENTER;
 
+/*
         robot.update();
         robot.pause(2);
         robotDrivetrain.forwardX(50);
         robotDrivetrain.strafeY(10);
         robotDrivetrain.strafeYToPoseLinearHeading(new Pose2d(50, -70, Math.toRadians(90)));
+*/
 
+        robot.pause(0.5);
+        robot.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.GROUND_JUNCTION);
+        robot.pause(0.5);
+        robotDrivetrain.forwardX(-16);
+        robotDrivetrainE.turnToIMUAngle(-Math.toRadians(90));
+        robot.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.LOW_JUNCTION);
+        robot.pause(0.25);
+        robotDrivetrain.strafeY( 8);
+        robot.pause(0.15);
+        robot.lift.setOffset(-5);
+        robot.pause(0.5);
+        robot.claw.setClawState(Claw.ClawStates.OPENED);
+        robot.pause(0.25);
+        robot.lift.setOffset(0);
+        robot.pause(0.25);
+        robot.claw.setClawState(Claw.ClawStates.CLOSED);
+        robotDrivetrain.strafeY(-8);
+        robot.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.DEFAULT);
+        robotDrivetrainE.turnToIMUAngle(Math.toRadians(180));
+        robotDrivetrain.forwardX(41);
+        robot.claw.setClawState(Claw.ClawStates.OPENED);
+        robotDrivetrain.forwardX(-5);
+        robot.claw.setClawState(Claw.ClawStates.SLIGHTLY_OPENED);
+        robotDrivetrainE.turnToIMUAngle(Math.toRadians(90));
+        robot.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.LOW_JUNCTION);
+        robotDrivetrain.strafeY(29);
+        robot.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.GROUND_JUNCTION);
+        robot.lift.incrementOffset(5);
+        robot.pause(0.5);
+        robot.claw.setClawState(Claw.ClawStates.CLOSED);
+        robot.pause(0.5);
+        robot.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.LOW_JUNCTION);
+        robotDrivetrain.strafeY(-40);
+        robotDrivetrainE.turnToIMUAngle(Math.toRadians(0));
+        robot.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.MIDDLE_JUNCTION);
+        robotDrivetrain.forwardX(8);
+        robot.pause(0.1);
+        robot.lift.setOffset(-10);
+        robot.pause(0.5);
+        robot.claw.setClawState(Claw.ClawStates.OPENED);
+        robot.pause(0.1);
+        robot.lift.setOffset(0);
+        robot.pause(0.25);
+        robot.claw.setClawState(Claw.ClawStates.SLIGHTLY_OPENED);
+        robotDrivetrain.forwardX(-8);
+        robot.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.DEFAULT);
+        robotDrivetrainE.turnToIMUAngle(Math.toRadians(90));
 /*        switch (parkPosition) {
             case LEFT:
                 robotDrivetrain.forwardX(30);

@@ -40,7 +40,7 @@ public class Lift implements Subsystem {
 
     public static int GROUND_HEIGHT = 500;
     public static int LOW_HEIGHT = 1850;
-    public static int MIDDLE_HEIGHT = 3150;
+    public static int MIDDLE_HEIGHT = 3000;
     public static int HIGH_HEIGHT = 4150;
 
     public DcMotorEx leftLiftMotor;
