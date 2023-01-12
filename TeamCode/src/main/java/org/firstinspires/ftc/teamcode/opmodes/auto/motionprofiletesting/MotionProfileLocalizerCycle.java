@@ -91,6 +91,7 @@ public class MotionProfileLocalizerCycle extends LinearOpMode {
         ParkingPosition parkPosition = ParkingPosition.CENTER;
         robot.localizer.setPoseEstimate(new Pose2d(-34, -58, Math.toRadians(-180)));
         robot.internalIMU.setHeadingOffset(Math.toRadians(-180));
+        robot.internalIMU.enableHeadingOffsetCorrection();
 /*
         robot.update();
         robot.pause(2);

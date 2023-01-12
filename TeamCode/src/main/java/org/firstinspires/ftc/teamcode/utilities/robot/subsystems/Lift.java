@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.utilities.controltheory.feedback.GeneralPIDController;
@@ -37,6 +38,8 @@ public class Lift implements Subsystem {
     public static double kF = 0;
 
     public static int OFFSET_INCREASE = 130;// 80;
+    public static int AT_POSITION_THRESHOLD = 200;
+    public static int AT_VELOCITY_THRESHOLD = 50;
 
     public static int GROUND_HEIGHT = 500;
     public static int LOW_HEIGHT = 1850;
@@ -48,8 +51,11 @@ public class Lift implements Subsystem {
 
     private MotorGroup<DcMotorEx> liftMotors;
 
+    private double previousFramePosition = 0;
     private double currentFrameOutput = 0;
     private int offset = 0;
+
+    private boolean liftAtTarget = false
 
     LIFT_POSITIONS currentLiftTargetPosition = LIFT_POSITIONS.DEFAULT;
     LIFT_POSITIONS lastLiftTargetPosition = LIFT_POSITIONS.DEFAULT;
@@ -60,12 +66,13 @@ public class Lift implements Subsystem {
 
     private Telemetry telemetry;
 
+    private ElapsedTime velocityTimer = new ElapsedTime();
+
     @Override
     public void onInit(HardwareMap hardwareMap, Telemetry telemetry) {
 
         this.leftLiftMotor = (DcMotorEx) hardwareMap.get(DcMotor.class, "leftLiftMotor");
         this.rightLiftMotor = (DcMotorEx) hardwareMap.get(DcMotor.class, "rightLiftMotor");
-
 
         // todo: figure out the directions
         rightLiftMotor.setDirection(DcMotorEx.Direction.REVERSE);
@@ -100,6 +107,17 @@ public class Lift implements Subsystem {
 
         if (this.currentFrameOutput == 0) {
             currentFrameOutput = liftPID.getOutputFromError(targetPosition, currentPosition);
+
+            if (
+                    targetPosition - currentPosition < AT_POSITION_THRESHOLD &&
+                    ((currentPosition - this.previousFramePosition) / this.velocityTimer.seconds()) < AT_VELOCITY_THRESHOLD
+            ) {
+                this.liftAtTarget = true;
+            } else {
+                this.liftAtTarget = false;
+            }
+        } else {
+            this.liftAtTarget = false;
         }
 
 
@@ -107,9 +125,11 @@ public class Lift implements Subsystem {
 
         this.currentFrameOutput = 0;
         this.lastLiftTargetPosition = this.currentLiftTargetPosition;
+        this.previousFramePosition = currentPosition;
 
         telemetry.addData("Lift Pos: ", currentPosition);
 
+        this.velocityTimer.reset();
         // telemetry.addData("Target Position: ", targetPosition);
     }
 
@@ -174,5 +194,9 @@ public class Lift implements Subsystem {
     public void resetEncoderPosition() {
         this.liftMotors.setRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         this.liftMotors.setRunMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+    }
+
+    public boolean checkAtTarget() {
+        return this.liftAtTarget;
     }
 }

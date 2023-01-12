@@ -40,6 +40,8 @@ public class InternalIMU implements Subsystem {
     private double startTilt = 0;
     private double headingOffset = 0;
 
+    private boolean enabledHeadingOffset = false;
+
     private Telemetry telemetry;
 
     private InternalIMU() {
@@ -105,7 +107,7 @@ public class InternalIMU implements Subsystem {
 
     @Deprecated
     public double getPreviousFrameHeadingCCW() {
-        return -this.getPreviousFrameHeadingCW() + this.headingOffset;
+        return this.enabledHeadingOffset ? -this.getPreviousFrameHeadingCW() + this.headingOffset : -this.getPreviousFrameHeadingCW();
     }
 
     @Deprecated
@@ -167,5 +169,9 @@ public class InternalIMU implements Subsystem {
 
     public void setHeadingOffset(double headingOffset) {
         this.headingOffset = headingOffset;
+    }
+
+    public void enableHeadingOffsetCorrection() {
+
     }
 }

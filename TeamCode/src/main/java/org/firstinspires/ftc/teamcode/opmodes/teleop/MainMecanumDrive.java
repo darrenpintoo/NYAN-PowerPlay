@@ -195,6 +195,7 @@ public class MainMecanumDrive extends LinearOpMode {
             telemetry.addData("Refresh Rate: ", (frameTime != 0) ? (1000 / frameTime) : "inf");
             telemetry.addData("Increment offset: ", robot.lift.getOffset());
             telemetry.addData("Angular Velocity: ", robot.internalIMU.getCurrentFrameVelocity().xRotationRate);
+            telemetry.addData("Lift at Target: ", robot.lift.checkAtTarget());
             // telemetry.addData("IMU orientation: ", robot.internalIMU.getCurrentFrameOrientation());
             // telemetry.addData("CCW IMU orientation: ", robot.internalIMU.getCurrentFrameHeadingCCW());
             // telemetry.addData("CW IMU orientation: ", robot.internalIMU.getCurrentFrameHeadingCW());
