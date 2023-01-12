@@ -63,6 +63,7 @@ public class MainMecanumDrive extends LinearOpMode {
         robot.claw.enableAutoClose();
         robot.drivetrain.disableAntiTip();
 
+        robot.internalIMU.setHeadingOffset(Math.toRadians(90));
         while(opModeIsActive()) {
 
             // Retain information about the previous frame's gamepad
@@ -197,7 +198,7 @@ public class MainMecanumDrive extends LinearOpMode {
             telemetry.addData("Angular Velocity: ", robot.internalIMU.getCurrentFrameVelocity().xRotationRate);
             telemetry.addData("Lift at Target: ", robot.lift.checkAtTarget());
             // telemetry.addData("IMU orientation: ", robot.internalIMU.getCurrentFrameOrientation());
-            // telemetry.addData("CCW IMU orientation: ", robot.internalIMU.getCurrentFrameHeadingCCW());
+            telemetry.addData("CCW IMU orientation: ", robot.internalIMU.getCurrentFrameHeadingCCW());
             // telemetry.addData("CW IMU orientation: ", robot.internalIMU.getCurrentFrameHeadingCW());
             // telemetry.addData("Robot Tilt Acceleration y: ", robot.internalIMU.getCurrentFrameVelocity().yRotationRate);
             // telemetry.addData("Joystick Orientation: ", Math.atan2(-currentFrameGamepad1.right_stick_x, -currentFrameGamepad1.right_stick_y));

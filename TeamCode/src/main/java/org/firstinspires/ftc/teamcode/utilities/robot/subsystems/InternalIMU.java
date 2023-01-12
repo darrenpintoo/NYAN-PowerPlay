@@ -132,7 +132,7 @@ public class InternalIMU implements Subsystem {
     }
 
     public double getCurrentFrameHeadingCCW() {
-        return -this.getCurrentFrameHeadingCW() - this.headingOffset;
+        return this.enabledHeadingOffset ? -this.getCurrentFrameHeadingCW() + this.headingOffset : -this.getCurrentFrameHeadingCW();
     }
 
     public RobotOrientation getCurrentFrameRobotOrientation() {

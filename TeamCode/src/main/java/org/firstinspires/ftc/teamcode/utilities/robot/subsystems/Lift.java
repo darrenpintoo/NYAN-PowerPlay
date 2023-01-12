@@ -37,7 +37,7 @@ public class Lift implements Subsystem {
     public static double kD = 0;
     public static double kF = 0;
 
-    public static int OFFSET_INCREASE = 130;// 80;
+    public static int OFFSET_INCREASE = 150;// 80;
     public static int AT_POSITION_THRESHOLD = 200;
     public static int AT_VELOCITY_THRESHOLD = 50;
 
@@ -55,7 +55,7 @@ public class Lift implements Subsystem {
     private double currentFrameOutput = 0;
     private int offset = 0;
 
-    private boolean liftAtTarget = false
+    private boolean liftAtTarget = false;
 
     LIFT_POSITIONS currentLiftTargetPosition = LIFT_POSITIONS.DEFAULT;
     LIFT_POSITIONS lastLiftTargetPosition = LIFT_POSITIONS.DEFAULT;
@@ -109,7 +109,7 @@ public class Lift implements Subsystem {
             currentFrameOutput = liftPID.getOutputFromError(targetPosition, currentPosition);
 
             if (
-                    targetPosition - currentPosition < AT_POSITION_THRESHOLD &&
+                    Math.abs(targetPosition - currentPosition) < AT_POSITION_THRESHOLD &&
                     ((currentPosition - this.previousFramePosition) / this.velocityTimer.seconds()) < AT_VELOCITY_THRESHOLD
             ) {
                 this.liftAtTarget = true;
@@ -176,7 +176,16 @@ public class Lift implements Subsystem {
     }
 
     public void incrementOffset(int offsetIncrease) {
-        this.offset += offsetIncrease;
+
+        if (this.currentLiftTargetPosition != LIFT_POSITIONS.DEFAULT) {
+            this.offset += offsetIncrease;
+        } else {
+            if (offsetIncrease > 0) {
+                this.offset += offsetIncrease;
+            } else if (this.getOffset() > 0) {
+                this.offset += offsetIncrease;
+            }
+        }
     }
 
     public void incrementOffset() {

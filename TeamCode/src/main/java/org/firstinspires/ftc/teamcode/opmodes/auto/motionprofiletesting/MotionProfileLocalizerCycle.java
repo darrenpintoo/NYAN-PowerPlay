@@ -89,7 +89,7 @@ public class MotionProfileLocalizerCycle extends LinearOpMode {
 
 
         ParkingPosition parkPosition = ParkingPosition.CENTER;
-        robot.localizer.setPoseEstimate(new Pose2d(-34, -58, Math.toRadians(-180)));
+        robot.localizer.setPoseEstimate(new Pose2d(-34, -36, Math.toRadians(-180)));
         robot.internalIMU.setHeadingOffset(Math.toRadians(-180));
         robot.internalIMU.enableHeadingOffsetCorrection();
 /*
@@ -105,8 +105,8 @@ public class MotionProfileLocalizerCycle extends LinearOpMode {
         motionProfileLocalizerLineDrive.strafeYToPoseLinearHeading(new Pose2d(-18, -28, Math.toRadians(-90)));
         // Place Cone
         motionProfileLocalizerLineDrive.strafeYToPoseLinearHeading(new Pose2d(-18, -36, Math.toRadians(-90)));
-        motionProfileLocalizerLineDrive.strafeYToPoseLinearHeading(new Pose2d(23, -36, Math.toRadians(-90)));
-        motionProfileLocalizerLineDrive.strafeYToPoseLinearHeading(new Pose2d(18, -36, Math.toRadians(-90)));
+        motionProfileLocalizerLineDrive.forwardXToPose(new Pose2d(23, -36, Math.toRadians(-90)));
+        motionProfileLocalizerLineDrive.forwardXToPose(new Pose2d(18, -36, Math.toRadians(-90)));
         robotDrivetrainE.turnToIMUAngle(Math.toRadians(90));
         motionProfileLocalizerLineDrive.strafeYToPoseLinearHeading(new Pose2d(18, -58, Math.toRadians(-90)));
         // Pick up Cone
