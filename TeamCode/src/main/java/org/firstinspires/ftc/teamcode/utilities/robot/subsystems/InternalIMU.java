@@ -105,7 +105,7 @@ public class InternalIMU implements Subsystem {
 
     @Deprecated
     public double getPreviousFrameHeadingCCW() {
-        return -this.getPreviousFrameHeadingCW();
+        return -this.getPreviousFrameHeadingCW() + this.headingOffset;
     }
 
     @Deprecated

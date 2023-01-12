@@ -92,12 +92,12 @@ public class MainMecanumDrive extends LinearOpMode {
                     0,
                     F
             );*/
-            if (currentFrameGamepad1.right_trigger > 0.2 && previousFrameGamepad1.right_trigger < 0.2) {
+            if (currentFrameGamepad1.right_trigger > 0.1 && previousFrameGamepad1.right_trigger < 0.21) {
                 intakeOn = !intakeOn;
                 intakeDirection = false;
             }
 
-            if (currentFrameGamepad1.left_trigger > 0.2 && previousFrameGamepad1.left_trigger < 0.2) {
+            if (currentFrameGamepad1.left_trigger > 0.1 && previousFrameGamepad1.left_trigger < 0.1) {
                 intakeOn = !intakeOn;
                 intakeDirection = true;
             }

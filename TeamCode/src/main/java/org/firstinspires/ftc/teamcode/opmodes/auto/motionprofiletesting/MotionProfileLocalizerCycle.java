@@ -79,7 +79,8 @@ public class MotionProfileLocalizerCycle extends LinearOpMode {
         if (isStopRequested()) return;
 
         // robot.drivetrain.enableAntiTip();
-        MotionProfileLocalizerLineDrive robotDrivetrain = new MotionProfileLocalizerLineDrive(this, telemetry);
+        MotionProfileLocalizerLineDrive motionProfileLocalizerLineDrive = new MotionProfileLocalizerLineDrive(this, telemetry);
+        MotionProfilingDrive motionProfilingDrive = new MotionProfilingDrive(this, telemetry);
         EncoderDrive robotDrivetrainE = new EncoderDrive(this, telemetry);
 
         robot.drivetrain.setRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -88,23 +89,50 @@ public class MotionProfileLocalizerCycle extends LinearOpMode {
 
 
         ParkingPosition parkPosition = ParkingPosition.CENTER;
-
+        robot.localizer.setPoseEstimate(new Pose2d(-34, -58, Math.toRadians(-180)));
+        robot.internalIMU.setHeadingOffset(Math.toRadians(-180));
 /*
         robot.update();
         robot.pause(2);
-        robotDrivetrain.forwardX(50);
-        robotDrivetrain.strafeY(10);
-        robotDrivetrain.strafeYToPoseLinearHeading(new Pose2d(50, -70, Math.toRadians(90)));
+        motionProfileLocalizerLineDrive.forwardX(50);
+        motionProfileLocalizerLineDrive.strafeY(10);
+        motionProfileLocalizerLineDrive.strafeYToPoseLinearHeading(new Pose2d(50, -70, Math.toRadians(90)));
 */
 
+        motionProfileLocalizerLineDrive.forwardXToPose(new Pose2d(-18, -36, Math.toRadians(-180)));
+        robotDrivetrainE.turnToIMUAngle(Math.toRadians(-90));
+        motionProfileLocalizerLineDrive.strafeYToPoseLinearHeading(new Pose2d(-18, -28, Math.toRadians(-90)));
+        // Place Cone
+        motionProfileLocalizerLineDrive.strafeYToPoseLinearHeading(new Pose2d(-18, -36, Math.toRadians(-90)));
+        motionProfileLocalizerLineDrive.strafeYToPoseLinearHeading(new Pose2d(23, -36, Math.toRadians(-90)));
+        motionProfileLocalizerLineDrive.strafeYToPoseLinearHeading(new Pose2d(18, -36, Math.toRadians(-90)));
+        robotDrivetrainE.turnToIMUAngle(Math.toRadians(90));
+        motionProfileLocalizerLineDrive.strafeYToPoseLinearHeading(new Pose2d(18, -58, Math.toRadians(-90)));
+        // Pick up Cone
+        motionProfileLocalizerLineDrive.strafeYToPoseLinearHeading(new Pose2d(18, -36, Math.toRadians(-90)));
+        robotDrivetrainE.turnToIMUAngle(-Math.toRadians(135));
+        motionProfilingDrive.driveForward(20);
+        // Place Cone
+        motionProfilingDrive.driveForward(-20);
+        robotDrivetrainE.turnToIMUAngle(Math.toRadians(90));
+        motionProfileLocalizerLineDrive.strafeYToPoseLinearHeading(new Pose2d(18, -58, Math.toRadians(-90)));
+        // Pick up Cone
+        motionProfileLocalizerLineDrive.strafeYToPoseLinearHeading(new Pose2d(18, -36, Math.toRadians(-90)));
+        motionProfilingDrive.driveForward(20);
+        // Place Cone
+        motionProfilingDrive.driveForward(-20);
+        // Park
+
+
+/*
         robot.pause(0.5);
         robot.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.GROUND_JUNCTION);
         robot.pause(0.5);
-        robotDrivetrain.forwardX(-16);
+        motionProfileLocalizerLineDrive.forwardX(-16);
         robotDrivetrainE.turnToIMUAngle(-Math.toRadians(90));
         robot.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.LOW_JUNCTION);
         robot.pause(0.25);
-        robotDrivetrain.strafeY( 8);
+        motionProfileLocalizerLineDrive.strafeY( 8);
         robot.pause(0.15);
         robot.lift.setOffset(-5);
         robot.pause(0.5);
@@ -113,26 +141,26 @@ public class MotionProfileLocalizerCycle extends LinearOpMode {
         robot.lift.setOffset(0);
         robot.pause(0.25);
         robot.claw.setClawState(Claw.ClawStates.CLOSED);
-        robotDrivetrain.strafeY(-8);
+        motionProfileLocalizerLineDrive.strafeY(-8);
         robot.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.DEFAULT);
         robotDrivetrainE.turnToIMUAngle(Math.toRadians(180));
-        robotDrivetrain.forwardX(41);
+        motionProfileLocalizerLineDrive.forwardX(41);
         robot.claw.setClawState(Claw.ClawStates.OPENED);
-        robotDrivetrain.forwardX(-5);
+        motionProfileLocalizerLineDrive.forwardX(-5);
         robot.claw.setClawState(Claw.ClawStates.SLIGHTLY_OPENED);
         robotDrivetrainE.turnToIMUAngle(Math.toRadians(90));
         robot.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.LOW_JUNCTION);
-        robotDrivetrain.strafeY(29);
+        motionProfileLocalizerLineDrive.strafeY(29);
         robot.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.GROUND_JUNCTION);
         robot.lift.incrementOffset(5);
         robot.pause(0.5);
         robot.claw.setClawState(Claw.ClawStates.CLOSED);
         robot.pause(0.5);
         robot.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.LOW_JUNCTION);
-        robotDrivetrain.strafeY(-40);
+        motionProfileLocalizerLineDrive.strafeY(-40);
         robotDrivetrainE.turnToIMUAngle(Math.toRadians(0));
         robot.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.MIDDLE_JUNCTION);
-        robotDrivetrain.forwardX(8);
+        motionProfileLocalizerLineDrive.forwardX(8);
         robot.pause(0.1);
         robot.lift.setOffset(-10);
         robot.pause(0.5);
@@ -141,22 +169,22 @@ public class MotionProfileLocalizerCycle extends LinearOpMode {
         robot.lift.setOffset(0);
         robot.pause(0.25);
         robot.claw.setClawState(Claw.ClawStates.SLIGHTLY_OPENED);
-        robotDrivetrain.forwardX(-8);
+        motionProfileLocalizerLineDrive.forwardX(-8);
         robot.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.DEFAULT);
-        robotDrivetrainE.turnToIMUAngle(Math.toRadians(90));
+        robotDrivetrainE.turnToIMUAngle(Math.toRadians(90));*/
 /*        switch (parkPosition) {
             case LEFT:
-                robotDrivetrain.forwardX(30);
+                motionProfileLocalizerLineDrive.forwardX(30);
                 break;
             case RIGHT:
-                robotDrivetrain.forwardX(-15);
+                motionProfileLocalizerLineDrive.forwardX(-15);
                 break;
             case CENTER:
-                robotDrivetrain.forwardX(10);
+                motionProfileLocalizerLineDrive.forwardX(10);
                 break;
         }*/
 
-//        robotDrivetrain.turnToIMUAngle(Math.toRadians(180));
+//        motionProfileLocalizerLineDrive.turnToIMUAngle(Math.toRadians(180));
         // robot.drivetrain.enableAntiTip();
 
         robot.persistData();
