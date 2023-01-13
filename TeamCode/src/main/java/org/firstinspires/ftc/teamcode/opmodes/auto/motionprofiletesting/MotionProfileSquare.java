@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.opmodes.auto.motionprofiletesting;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
@@ -18,6 +19,7 @@ import org.openftc.easyopencv.OpenCvCamera;
 /**
  * Example teleop code for a basic mecanum drive
  */
+@Disabled
 @Autonomous(name = "Motion Profile Square")
 public class MotionProfileSquare extends LinearOpMode {
 

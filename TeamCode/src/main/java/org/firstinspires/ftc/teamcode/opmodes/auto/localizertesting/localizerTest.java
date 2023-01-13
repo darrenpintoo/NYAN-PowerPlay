@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opmodes.auto.motionprofiletesting;
+package org.firstinspires.ftc.teamcode.opmodes.auto.localizertesting;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;

@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmodes.teleop;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.exception.RobotCoreException;
@@ -11,6 +12,7 @@ import org.firstinspires.ftc.teamcode.utilities.robot.RobotEx;
  * Example teleop code for a basic mecanum drive
  */
 @TeleOp(name = "Template Teleop")
+@Disabled
 public class TemplateTeleop extends LinearOpMode {
 
     // Create new Instance of the robot
