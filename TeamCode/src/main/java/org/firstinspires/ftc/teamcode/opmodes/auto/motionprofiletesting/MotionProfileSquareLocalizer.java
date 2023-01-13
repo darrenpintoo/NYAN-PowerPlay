@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.opmodes.auto.motionprofiletesting;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -9,6 +10,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import org.firstinspires.ftc.teamcode.utilities.robot.RobotEx;
 import org.firstinspires.ftc.teamcode.utilities.robot.movement.EncoderDrive;
 import org.firstinspires.ftc.teamcode.utilities.robot.movement.MotionProfileLocalizerDrive;
+import org.firstinspires.ftc.teamcode.utilities.robot.movement.MotionProfileLocalizerLineDrive;
 import org.firstinspires.ftc.teamcode.utilities.robot.movement.MotionProfilingDrive;
 import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.Claw;
 import org.firstinspires.ftc.teamcode.vision.simulatortests.ApriltagDetectionPipeline;
@@ -68,7 +70,7 @@ public class MotionProfileSquareLocalizer extends LinearOpMode {
 
         if (isStopRequested()) return;
 
-        MotionProfileLocalizerDrive robotDrivetrain = new MotionProfileLocalizerDrive(this, telemetry);
+        MotionProfileLocalizerLineDrive robotDrivetrain = new MotionProfileLocalizerLineDrive(this, telemetry);
         EncoderDrive robotDrivetrainE = new EncoderDrive(this, telemetry);
 
         robot.drivetrain.setRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -83,11 +85,10 @@ public class MotionProfileSquareLocalizer extends LinearOpMode {
 
         // robot.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.LOW_JUNCTION);
         while (!isStopRequested()) {
-            robotDrivetrain.driveToYHeading(-25, -Math.toRadians(90));
-            robotDrivetrain.driveToXHeading(-25, Math.toRadians(180));
-            robotDrivetrain.driveToYHeading(-25, -Math.toRadians(90));
-            robotDrivetrain.driveToXHeading(25, Math.toRadians(0));
-            robot.pause(5);
+            robotDrivetrain.forwardXToPose(new Pose2d(25, 0, 0));
+            robotDrivetrain.strafeYToPoseLinearHeading(new Pose2d(25, 25, 0));
+            robotDrivetrain.forwardXToPose(new Pose2d(0, 25, 0));
+            robotDrivetrain.strafeYToPoseLinearHeading(new Pose2d(0, 0, 0));
         }
 
         // sleep(5000);
