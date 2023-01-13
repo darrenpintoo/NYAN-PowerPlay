@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.utilities.math;
 
-import org.firstinspires.ftc.teamcode.vision.simulatortests.CameraConstants;
-
 public class MathHelper {
 
     public static double getDegreesErrorFromCamera(double centerCoordinate, double frameSize, double focalLength) {
@@ -23,5 +21,28 @@ public class MathHelper {
         return ((double) p0) * (1 - t) + ((double) p1) * t;
     }
 
+    public static double clamp(double value, double min, double max) {
+        return Math.min(Math.max(value, min), max);
+    }
+
+
+    public static double getErrorBetweenAngles(double targetAngle, double currentAngle) {
+        double angle = AngleHelper.normDelta(targetAngle);
+        double currentIMUPosition = AngleHelper.normDelta(currentAngle);
+
+        double turnError = angle - currentIMUPosition;
+
+        if (Math.abs(turnError) > Math.PI) {
+            if (angle < 0) {
+                angle = AngleHelper.norm(angle);
+                turnError = angle - currentIMUPosition;
+            } else if (angle > 0) {
+                currentIMUPosition = AngleHelper.norm(currentIMUPosition);
+                turnError = angle - currentIMUPosition;
+            }
+        }
+
+        return turnError;
+    }
 
 }

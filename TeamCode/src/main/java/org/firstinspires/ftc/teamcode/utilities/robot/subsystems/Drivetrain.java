@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.robot.Robot;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.utilities.math.AngleHelper;
 import org.firstinspires.ftc.teamcode.utilities.controltheory.feedback.GeneralPIDController;
-import org.firstinspires.ftc.teamcode.utilities.physics.states.MecanumMovementState;
+import org.firstinspires.ftc.teamcode.utilities.math.MathHelper;
 import org.firstinspires.ftc.teamcode.utilities.physics.states.MecanumWheelState;
 import org.firstinspires.ftc.teamcode.utilities.robot.RobotEx;
 import org.firstinspires.ftc.teamcode.utilities.robot.extensions.MotorGroup;
@@ -174,9 +174,9 @@ public class Drivetrain implements Subsystem {
 
         double multiple = this.robotInstance.getPowerMultiple();
 
-        leftJoystickY = leftJoystickY * multiple;
-        leftJoystickX = leftJoystickX * multiple;
-        rightJoystickX = rightJoystickX * multiple;
+        leftJoystickY = MathHelper.clamp(leftJoystickY * multiple, -1, 1);
+        leftJoystickX = MathHelper.clamp(leftJoystickX * multiple, -1, 1);
+        rightJoystickX = MathHelper.clamp(rightJoystickX * multiple, -1, 1);
 
         double denominator = Math.max(Math.abs(leftJoystickY) + Math.abs(leftJoystickX) + Math.abs(rightJoystickX), 1);
         this.leftFrontPower += (leftJoystickY + leftJoystickX + rightJoystickX) / denominator;

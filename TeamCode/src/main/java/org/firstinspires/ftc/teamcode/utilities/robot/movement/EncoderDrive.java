@@ -109,11 +109,12 @@ public class EncoderDrive {
         double turnError;
 
         ElapsedTime turnTimer = new ElapsedTime();
+        ElapsedTime elapsedTurnTime = new ElapsedTime();
 
         boolean atTarget = false;
         double atTargetStartTime = -1;
 
-        while (!atTarget && !this.currentOpmode.isStopRequested()) {
+        while (!atTarget && !this.currentOpmode.isStopRequested() && elapsedTurnTime.seconds() < DriveConstants.MAX_TURN_TIME) {
 
             turnError = angle  - currentIMUPosition;
 

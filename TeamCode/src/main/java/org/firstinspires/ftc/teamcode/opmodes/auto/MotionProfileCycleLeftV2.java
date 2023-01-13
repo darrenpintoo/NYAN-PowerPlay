@@ -90,7 +90,7 @@ public class MotionProfileCycleLeftV2 extends LinearOpMode {
         robotDrivetrain.driveForwardWithConstantHeading(41, Math.toRadians(180));
         robotDrivetrain.driveForwardWithConstantHeading(-5, Math.toRadians(180));
         robotDrivetrainE.turnToIMUAngle(Math.toRadians(90));
-        robotDrivetrain.driveForwardWithConstantHeading(20, Math.toRadians(90));
+        robotDrivetrain.driveForwardWithConstantHeading(20, Math .toRadians(90));
         robotDrivetrain.driveForwardWithConstantHeading(-31, Math.toRadians(90));
         robotDrivetrainE.turnToIMUAngle(Math.toRadians(0));
         robotDrivetrainE.turnToIMUAngle(Math.toRadians(90));

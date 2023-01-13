@@ -88,6 +88,7 @@ public class MotionProfileCycleLeft extends LinearOpMode {
 
         // robotDrivetrain.turnToIMUAngle(Math.toRadians(180));
 
+        robot.claw.setClawState(Claw.ClawStates.CLOSED);
         robot.pause(0.5);
         robot.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.GROUND_JUNCTION);
         robot.pause(0.5);

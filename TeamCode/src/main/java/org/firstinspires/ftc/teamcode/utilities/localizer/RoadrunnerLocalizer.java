@@ -75,5 +75,6 @@ public class RoadrunnerLocalizer {
 
     public void setPoseEstimate(Pose2d poseEstimate) {
         this._poseEstimate = poseEstimate;
+        this.lastExtHeading = poseEstimate.getHeading();
     }
 }
