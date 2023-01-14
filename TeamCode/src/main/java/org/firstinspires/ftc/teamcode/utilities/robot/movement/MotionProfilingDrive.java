@@ -131,6 +131,8 @@ public class MotionProfilingDrive {
 
         }
 
+        this.dt.robotCentricDriveFromGamepad(0, 0, 0);
+
 
 
         // robot.pause(3);

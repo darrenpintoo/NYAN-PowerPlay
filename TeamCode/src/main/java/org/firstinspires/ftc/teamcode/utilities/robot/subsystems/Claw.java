@@ -23,8 +23,11 @@ public class Claw implements Subsystem {
     Lift lift;
 
     public static double TIME_THRESHOLD = 0.5;
-    public static int RED_THRESHOLD = 60;
-    public static int BLUE_THRESHOLD = 60;
+    public static int RED_THRESHOLD = 100;
+    public static int RED_THRESHOLD2 = 350;
+    public static int BLUE_THRESHOLD = 100;
+    public static int BLUE_THRESHOLD2 = 350;
+
 
     public enum ClawStates {
         OPENED, CLOSED, SLIGHTLY_OPENED
@@ -36,6 +39,7 @@ public class Claw implements Subsystem {
 
     public Servo clawGrabberServo;
     public ColorRangeSensor clawColorSensor;
+    public ColorRangeSensor clawColorSensor2;
 
     private Telemetry telemetry;
 
@@ -63,7 +67,7 @@ public class Claw implements Subsystem {
 
         this.clawGrabberServo = hardwareMap.get(Servo.class, "clawGrabber");
         this.clawColorSensor = hardwareMap.get(ColorRangeSensor.class, "ConeDetector");
-
+        this.clawColorSensor2 = hardwareMap.get(ColorRangeSensor.class, "ConeDetector2");
         this.telemetry = telemetry;
 
         // this.onCyclePassed();
@@ -79,6 +83,9 @@ public class Claw implements Subsystem {
 
 
         this.cacheCurrentFrameColors();
+
+        telemetry.addData("Red: ", this.currentFrameRed);
+        telemetry.addData("Blue: ", this.currentFrameBlue);
 
         // this.currentDistance = this.getDistanceFromI2C();
 
@@ -216,16 +223,24 @@ public class Claw implements Subsystem {
     }
 
     public void cacheCurrentFrameColors() {
-        this.currentFrameBlue = this.getBlueColorFromI2C();
-        this.currentFrameRed = this.getRedColorFromI2C();
+        this.currentFrameBlue = this.getBlueColorFromI2C1() + this.getBlueColorFromI2C2() / 2;
+        this.currentFrameRed = this.getRedColorFromI2C1() + this.getRedColorFromI2C2() / 2;
     }
 
-    private int getRedColorFromI2C() {
+    private int getRedColorFromI2C1() {
         return this.clawColorSensor.red();
     }
 
-    private int getBlueColorFromI2C() {
+    private int getBlueColorFromI2C1() {
         return this.clawColorSensor.blue();
+    }
+
+    private int getRedColorFromI2C2() {
+        return this.clawColorSensor2.red();
+    }
+
+    private int getBlueColorFromI2C2() {
+        return this.clawColorSensor2.blue();
     }
 
     public int getBlueColor() {
@@ -241,11 +256,11 @@ public class Claw implements Subsystem {
     }
 
     public boolean checkRedConeInClaw() {
-        return this.getRedColor() > Claw.RED_THRESHOLD;
+        return this.getRedColor() < Claw.RED_THRESHOLD || this.getRedColor() > RED_THRESHOLD2;
     }
 
     public boolean checkBlueConeInClaw() {
-        return this.getBlueColor() > Claw.BLUE_THRESHOLD;
+        return this.getBlueColor() < Claw.BLUE_THRESHOLD || this.getBlueColor() > BLUE_THRESHOLD2;
     }
 
     public boolean checkDistanceFromClaw() {

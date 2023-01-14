@@ -42,7 +42,7 @@ public class MotionProfileLocalizerCycle extends LinearOpMode {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         robot.init(hardwareMap, telemetry);
-/*
+
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, webcamName), cameraMonitorViewId);
         sleeveDetection = new ApriltagDetectionPipeline();
@@ -58,12 +58,12 @@ public class MotionProfileLocalizerCycle extends LinearOpMode {
 
             @Override
             public void onError(int errorCode) {}
-        });*/
-/*
+        });
+
         while (!isStarted()) {
             telemetry.addData("ROTATION: ", sleeveDetection.getParkingPosition());
             telemetry.update();
-        }*/
+        }
 
         // scan sleeve
 
@@ -89,8 +89,8 @@ public class MotionProfileLocalizerCycle extends LinearOpMode {
 
 
         ParkingPosition parkPosition = ParkingPosition.CENTER;
-        robot.localizer.setPoseEstimate(new Pose2d(-34, -36, Math.toRadians(-180)));
-        robot.internalIMU.setHeadingOffset(Math.toRadians(-180));
+        robot.localizer.setPoseEstimate(new Pose2d(-34, -36, Math.toRadians(-270)));
+        robot.internalIMU.setHeadingOffset(Math.toRadians(-270));
         robot.internalIMU.enableHeadingOffsetCorrection();
 /*
         robot.update();

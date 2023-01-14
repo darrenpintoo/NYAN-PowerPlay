@@ -35,6 +35,7 @@ public class MotionProfileCycleRight extends LinearOpMode {
     public void runOpMode() {
 
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+
         robot.init(hardwareMap, telemetry);
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
@@ -82,8 +83,11 @@ public class MotionProfileCycleRight extends LinearOpMode {
 
         ParkingPosition parkPosition = sleeveDetection.getParkingPosition();
 
+        camera.stopStreaming();
+
         // robotDrivetrain.turnToIMUAngle(Math.toRadians(180));
 
+        robot.claw.setClawState(Claw.ClawStates.CLOSED);
         robot.pause(0.5);
         robot.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.GROUND_JUNCTION);
         robot.pause(0.5);
@@ -93,7 +97,7 @@ public class MotionProfileCycleRight extends LinearOpMode {
         robot.pause(0.25);
         robotDrivetrain.driveForward(8);
         robot.pause(0.15);
-        robot.lift.setOffset(-2);
+        robot.lift.setOffset(-5);
         robot.pause(0.5);
         robot.claw.setClawState(Claw.ClawStates.OPENED);
         robot.pause(0.25);
@@ -108,10 +112,10 @@ public class MotionProfileCycleRight extends LinearOpMode {
         robotDrivetrain.driveForward(-5);
         robot.claw.setClawState(Claw.ClawStates.SLIGHTLY_OPENED);
         robotDrivetrainE.turnToIMUAngle(-Math.toRadians(90));
-        robot.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.LOW_JUNCTION);
-        robotDrivetrain.driveForward(29);
-        robot.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.GROUND_JUNCTION);
-        robot.lift.incrementOffset(4);
+        robot.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.DEFAULT);
+        robot.lift.setOffset(8);
+        robotDrivetrain.driveForward(32);
+        robot.lift.setOffset(4);
         robot.pause(0.5);
         robot.claw.setClawState(Claw.ClawStates.CLOSED);
         robot.pause(0.5);
@@ -119,23 +123,23 @@ public class MotionProfileCycleRight extends LinearOpMode {
         robotDrivetrain.driveForward(-40);
         robotDrivetrainE.turnToIMUAngle(-Math.toRadians(0));
         robot.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.MIDDLE_JUNCTION);
-        robotDrivetrain.driveForward(8);
-        robot.pause(0.1);
-        robot.lift.setOffset(-10);
+        robotDrivetrain.driveForward(12);
+        robot.pause(0.5);
+        robot.lift.setOffset(-7);
         robot.pause(0.5);
         robot.claw.setClawState(Claw.ClawStates.OPENED);
         robot.pause(0.1);
         robot.lift.setOffset(0);
         robot.pause(0.25);
         robot.claw.setClawState(Claw.ClawStates.SLIGHTLY_OPENED);
-        robotDrivetrain.driveForward(-8);
+        robotDrivetrain.driveForward(-9);
         robot.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.DEFAULT);
-        robotDrivetrainE.turnToIMUAngle(-Math.toRadians(90));
+        robotDrivetrainE.turnToIMUAngle(-Math.toRadians(-90));
 
 /*        robot.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.DEFAULT);
         robotDrivetrainE.turnToIMUAngle(Math.toRadians(90));
         robot.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.LOW_JUNCTION);
-        robotDrivetrain.driveForward(40); 
+        robotDrivetrain.driveForward(40);
         robot.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.GROUND_JUNCTION);
         robot.lift.incrementOffset(5);
         robot.pause(0.5);
@@ -157,15 +161,16 @@ public class MotionProfileCycleRight extends LinearOpMode {
 
         switch (parkPosition) {
             case LEFT:
-                robotDrivetrain.driveForward(30);
+                robotDrivetrain.driveForward(-35);
                 break;
             case RIGHT:
-                robotDrivetrain.driveForward(-15);
+                robotDrivetrain.driveForward(15);
                 break;
             case CENTER:
-                robotDrivetrain.driveForward(10);
+                robotDrivetrain.driveForward(-10);
                 break;
         }
+
 
 //        robotDrivetrain.turnToIMUAngle(Math.toRadians(180));
         // robot.drivetrain.enableAntiTip();

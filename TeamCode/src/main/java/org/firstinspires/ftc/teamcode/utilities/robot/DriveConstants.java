@@ -25,7 +25,7 @@ public class DriveConstants {
     public static double BANG_BANG_POWER = -0.5;
     public static double TICK_THRESHOLD = 50;
     public static double ANGLE_AT_TIME = 0;
-    public static double MAX_TURN_TIME = 5;
+    public static double MAX_TURN_TIME = 2;
 
     public static double TURN_THRESHOLD = Math.toRadians(2);
     public static double ANGULAR_VELOCITY_THRESHOLD = Math.toRadians(10);
@@ -33,8 +33,8 @@ public class DriveConstants {
     public static Pose2d POSITION_THRESHOLD = new Pose2d(0.5, 0.5, TURN_THRESHOLD);
     public static double MAX_CORRECTION_TIME = 0.5;
 
-    public static double MAX_VELOCITY = 60;
-    public static double MAX_ACCELERATION = 40;
+    public static double MAX_VELOCITY = 30;
+    public static double MAX_ACCELERATION = 30;
 
     public static double trackWidth = 10;
 
