@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.utilities.controltheory.feedback.GeneralPIDController;
+import org.firstinspires.ftc.teamcode.utilities.math.MathHelper;
 import org.firstinspires.ftc.teamcode.utilities.robot.extensions.MotorGroup;
 
 @Config
@@ -32,19 +33,19 @@ public class Lift implements Subsystem {
 
     private final double GAMEPAD_THRESHOLD = 0.1;
 
-    public static double kP = 0.003;
+    public static double kP = 0.005;
     public static double kI = 0;
     public static double kD = 0;
     public static double kF = 0;
 
-    public static int OFFSET_INCREASE = 150;// 80;
+    public static int OFFSET_INCREASE = 15;// 80;
     public static int AT_POSITION_THRESHOLD = 200;
     public static int AT_VELOCITY_THRESHOLD = 50;
 
-    public static int GROUND_HEIGHT = 500;
-    public static int LOW_HEIGHT = 1850;
-    public static int MIDDLE_HEIGHT = 3000;
-    public static int HIGH_HEIGHT = 4150;
+    public static int GROUND_HEIGHT = 100;
+    public static int LOW_HEIGHT = 700;
+    public static int MIDDLE_HEIGHT = 1200;
+    public static int HIGH_HEIGHT = 1600;
 
     public DcMotorEx leftLiftMotor;
     public DcMotorEx rightLiftMotor;
@@ -118,10 +119,11 @@ public class Lift implements Subsystem {
             }
         } else {
             this.liftAtTarget = false;
+            this.currentFrameOutput = this.currentFrameOutput / 2;
         }
 
 
-        this.liftMotors.setPower(currentFrameOutput);
+        this.liftMotors.setPower(MathHelper.clamp(currentFrameOutput, -1, 1));
 
         this.currentFrameOutput = 0;
         this.lastLiftTargetPosition = this.currentLiftTargetPosition;
