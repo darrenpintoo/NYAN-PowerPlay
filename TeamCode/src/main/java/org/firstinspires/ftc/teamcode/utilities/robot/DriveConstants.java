@@ -29,6 +29,7 @@ public class DriveConstants {
 
     public static double TURN_THRESHOLD = Math.toRadians(2);
     public static double ANGULAR_VELOCITY_THRESHOLD = Math.toRadians(10);
+    public static double ANGULAR_VELOCITY_THRESHOLD_MIN = Math.toRadians(1);
 
     public static Pose2d POSITION_THRESHOLD = new Pose2d(0.5, 0.5, TURN_THRESHOLD);
     public static double MAX_CORRECTION_TIME = 0.5;

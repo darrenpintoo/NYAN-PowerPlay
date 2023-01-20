@@ -6,11 +6,13 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.robot.Robot;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.utilities.controltheory.feedback.GeneralPIDController;
 import org.firstinspires.ftc.teamcode.utilities.math.MathHelper;
+import org.firstinspires.ftc.teamcode.utilities.robot.RobotEx;
 import org.firstinspires.ftc.teamcode.utilities.robot.extensions.MotorGroup;
 
 @Config
@@ -39,8 +41,8 @@ public class Lift implements Subsystem {
     public static double kF = 0;
 
     public static int OFFSET_INCREASE = 15;// 80;
-    public static int AT_POSITION_THRESHOLD = 200;
-    public static int AT_VELOCITY_THRESHOLD = 50;
+    public static int AT_POSITION_THRESHOLD = 75;
+    public static int AT_VELOCITY_THRESHOLD = 10;
 
     public static int GROUND_HEIGHT = 100;
     public static int LOW_HEIGHT = 700;
@@ -209,5 +211,13 @@ public class Lift implements Subsystem {
 
     public boolean checkAtTarget() {
         return this.liftAtTarget;
+    }
+
+    public void yieldTillAtPosition() {
+        RobotEx robot = RobotEx.getInstance();
+
+        while (!this.liftAtTarget) {
+            robot.update();
+        }
     }
 }
