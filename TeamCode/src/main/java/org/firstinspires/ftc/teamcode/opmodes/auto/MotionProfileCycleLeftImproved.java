@@ -66,6 +66,7 @@ public class MotionProfileCycleLeftImproved extends LinearOpMode {
 
         robot.claw.setClawState(Claw.ClawStates.CLOSED);
         robot.claw.disableAutoClose();
+        robot.claw.onCyclePassed(); // REMOVE THIS LINE IF IT CAUSES WEIRD BEHAVIOR
         waitForStart();
 
         // Notify subsystems before loop

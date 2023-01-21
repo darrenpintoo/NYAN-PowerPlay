@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.utilities.robot.DriveConstants;
 import org.firstinspires.ftc.teamcode.utilities.robot.movement.EncoderDrive;
 import org.firstinspires.ftc.teamcode.utilities.robot.RobotEx;
 import org.firstinspires.ftc.teamcode.utilities.robot.movement.MotionProfilingDrive;
@@ -66,6 +67,7 @@ public class MotionProfileCycleRight extends LinearOpMode {
 
         robot.claw.setClawState(Claw.ClawStates.CLOSED);
         robot.claw.disableAutoClose();
+        robot.claw.onCyclePassed(); // REMOVE THIS LINE IF IT CAUSES WEIRD BEHAVIOR
         waitForStart();
 
         // Notify subsystems before loop
@@ -86,6 +88,9 @@ public class MotionProfileCycleRight extends LinearOpMode {
         camera.stopStreaming();
 
         // robotDrivetrain.turnToIMUAngle(Math.toRadians(180));
+
+        DriveConstants.MAX_VELOCITY = 35;
+        DriveConstants.MAX_ACCELERATION = 30;
 
         robot.claw.setClawState(Claw.ClawStates.CLOSED);
         robot.pause(0.5);

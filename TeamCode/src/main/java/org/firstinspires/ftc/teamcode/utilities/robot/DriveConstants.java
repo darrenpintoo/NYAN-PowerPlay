@@ -34,7 +34,7 @@ public class DriveConstants {
     public static Pose2d POSITION_THRESHOLD = new Pose2d(0.5, 0.5, TURN_THRESHOLD);
     public static double MAX_CORRECTION_TIME = 0.5;
 
-    public static double MAX_VELOCITY = 55;
+    public static double MAX_VELOCITY = 55; // If doing 1
     public static double MAX_ACCELERATION = 45;
 
     public static double trackWidth = 10;
