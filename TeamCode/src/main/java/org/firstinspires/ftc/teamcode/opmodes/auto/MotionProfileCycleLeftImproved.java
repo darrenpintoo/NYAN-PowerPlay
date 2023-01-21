@@ -69,6 +69,7 @@ public class MotionProfileCycleLeftImproved extends LinearOpMode {
         waitForStart();
 
         // Notify subsystems before loop
+        robot.claw.setClawState(Claw.ClawStates.CLOSED);
         robot.postInit();
 
         if (isStopRequested()) return;
@@ -86,9 +87,8 @@ public class MotionProfileCycleLeftImproved extends LinearOpMode {
         camera.stopStreaming();
 
         // robotDrivetrain.turnToIMUAngle(Math.toRadians(180));
-
+        robot.pause(0.2);
         robot.claw.setClawState(Claw.ClawStates.CLOSED);
-        robot.pause(0.5);
         robot.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.GROUND_JUNCTION);
         robotDrivetrain.driveForward(-16);
         robotDrivetrainE.turnToIMUAngle(-Math.toRadians(90));
@@ -98,7 +98,7 @@ public class MotionProfileCycleLeftImproved extends LinearOpMode {
         robot.lift.setOffset(-5);
         robot.lift.yieldTillAtPosition();
         robot.claw.setClawState(Claw.ClawStates.OPENED);
-        robot.pause(0.25);
+        robot.pause(0.2);
         robot.lift.setOffset(0);
         robot.claw.setClawState(Claw.ClawStates.CLOSED);
         robotDrivetrain.driveForward(-8);
@@ -110,28 +110,55 @@ public class MotionProfileCycleLeftImproved extends LinearOpMode {
         robot.claw.setClawState(Claw.ClawStates.SLIGHTLY_OPENED);
         robotDrivetrainE.turnToIMUAngle(Math.toRadians(90));
         robot.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.DEFAULT);
-        robot.lift.setOffset(8);
+        robot.lift.setOffset(6);
         robotDrivetrain.driveForward(32);
         robot.lift.setOffset(4);
         robot.lift.yieldTillAtPosition();
+        robot.pause(0.1);
         robot.claw.setClawState(Claw.ClawStates.CLOSED);
-        robot.pause(0.3);
+        robot.pause(0.1);
         robot.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.LOW_JUNCTION);
         robotDrivetrain.driveForward(-40);
         robotDrivetrainE.turnToIMUAngle(Math.toRadians(0));
         robot.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.MIDDLE_JUNCTION);
-        robotDrivetrain.driveForward(12);
+        robotDrivetrain.driveForward(9);
         robot.lift.yieldTillAtPosition();
-        robot.lift.setOffset(-5);
+        robot.lift.setOffset(-3);
         robot.lift.yieldTillAtPosition();
+        robot.pause(0.1);
         robot.claw.setClawState(Claw.ClawStates.OPENED);
         robot.pause(0.1);
         robot.lift.setOffset(0);
         robot.lift.yieldTillAtPosition();
         robot.claw.setClawState(Claw.ClawStates.SLIGHTLY_OPENED);
-        robotDrivetrain.driveForward(-9);
+        robotDrivetrain.driveForward(-8);
         robot.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.DEFAULT);
-        robotDrivetrainE.turnToIMUAngle(Math.toRadians(-90));
+        robotDrivetrainE.turnToIMUAngle(Math.toRadians(90));
+        robot.lift.setOffset(6);
+        robot.claw.setClawState(Claw.ClawStates.SLIGHTLY_OPENED);
+        robotDrivetrain.driveForward(42);
+        robot.pause(0.25);
+        robot.lift.setOffset(3);
+        robot.lift.yieldTillAtPosition();
+        robot.pause(0.25);
+        robot.claw.setClawState(Claw.ClawStates.CLOSED);
+        robot.pause(0.3);
+        robot.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.LOW_JUNCTION);
+        robotDrivetrain.driveForward(-17);
+        robotDrivetrainE.turnToIMUAngle(Math.toRadians(0));
+        robotDrivetrain.driveForward(11);
+        robot.lift.setOffset(-3);
+        robot.lift.yieldTillAtPosition();
+        robot.claw.setClawState(Claw.ClawStates.OPENED);
+        robot.pause(0.1);
+        robot.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.LOW_JUNCTION );
+        robotDrivetrain.driveForward(-11);
+        robot.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.DEFAULT);
+        robotDrivetrainE.turnToIMUAngle(-Math.toRadians(90));
+
+
+
+
 
 /*        robot.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.DEFAULT);
         robotDrivetrainE.turnToIMUAngle(Math.toRadians(90));
@@ -157,13 +184,13 @@ public class MotionProfileCycleLeftImproved extends LinearOpMode {
         // sleep(5000);
 
         switch (parkPosition) {
-            case LEFT:
-                robotDrivetrain.driveForward(-35);
-                break;
             case RIGHT:
-                robotDrivetrain.driveForward(15);
+                robotDrivetrain.driveForward(35);
                 break;
             case CENTER:
+                robotDrivetrain.driveForward(15);
+                break;
+            case LEFT:
                 robotDrivetrain.driveForward(-10);
                 break;
         }

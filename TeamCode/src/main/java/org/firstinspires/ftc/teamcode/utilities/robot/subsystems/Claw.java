@@ -23,10 +23,10 @@ public class Claw implements Subsystem {
     Lift lift;
 
     public static double TIME_THRESHOLD = 0.5;
-    public static int RED_THRESHOLD = 100;
-    public static int RED_THRESHOLD2 = 350;
-    public static int BLUE_THRESHOLD = 100;
-    public static int BLUE_THRESHOLD2 = 350;
+    public static int RED_THRESHOLD = 50;
+    public static int RED_THRESHOLD2 = 100;
+    public static int BLUE_THRESHOLD = 50;
+    public static int BLUE_THRESHOLD2 = 100;
 
 
     public enum ClawStates {
@@ -76,6 +76,7 @@ public class Claw implements Subsystem {
     @Override
     public void onOpmodeStarted() {
         this.lift = RobotEx.getInstance().lift;
+        this.onCyclePassed();
     }
 
     @Override
@@ -223,8 +224,8 @@ public class Claw implements Subsystem {
     }
 
     public void cacheCurrentFrameColors() {
-        this.currentFrameBlue = this.getBlueColorFromI2C1() + this.getBlueColorFromI2C2() / 2;
-        this.currentFrameRed = this.getRedColorFromI2C1() + this.getRedColorFromI2C2() / 2;
+        this.currentFrameBlue = this.getBlueColorFromI2C1() / 2;
+        this.currentFrameRed = this.getRedColorFromI2C1() / 2;
     }
 
     private int getRedColorFromI2C1() {
@@ -266,6 +267,7 @@ public class Claw implements Subsystem {
     public boolean checkDistanceFromClaw() {
         return this.currentDistance < 4;
     }
+
     public double getDistanceFromI2C() {
         return this.clawColorSensor.getDistance(DistanceUnit.INCH);
     }
@@ -278,6 +280,9 @@ public class Claw implements Subsystem {
         this.enableAutoClose = false;
     }
 
+    public void setServoPosition(double position) {
+        this.clawGrabberServo.setPosition(position);
+    }
 }
 
 

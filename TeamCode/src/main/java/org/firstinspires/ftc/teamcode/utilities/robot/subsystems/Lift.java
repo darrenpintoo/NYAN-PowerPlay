@@ -40,7 +40,7 @@ public class Lift implements Subsystem {
     public static double kD = 0;
     public static double kF = 0;
 
-    public static int OFFSET_INCREASE = 15;// 80;
+    public static int OFFSET_INCREASE = 60;// 80;
     public static int AT_POSITION_THRESHOLD = 75;
     public static int AT_VELOCITY_THRESHOLD = 10;
 

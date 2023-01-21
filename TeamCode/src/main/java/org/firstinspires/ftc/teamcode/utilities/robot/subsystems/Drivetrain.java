@@ -59,9 +59,9 @@ public class Drivetrain implements Subsystem {
 
     private double weight = 1;
 
-    public static double kP = 0.5;
+    public static double kP = 0.6;
     public static double kI = 0;
-    public static double kD = 25;
+    public static double kD = 20;
 
     private double trackWidth = 12;
     private double wheelBase = 6.5;
