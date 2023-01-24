@@ -227,6 +227,11 @@ public class Drivetrain implements Subsystem {
         this.rightFrontPower += (leftJoystickY - leftJoystickX - rightJoystickX) / denominator;
         this.rightBackPower += (leftJoystickY + leftJoystickX - rightJoystickX) / denominator;
 
+
+        this.lastX = leftJoystickX;
+        this.lastY = leftJoystickY;
+        this.lastRot = rightJoystickX;
+
     }
 
     public void fieldCentricDriveFromGamepad(double leftJoystickY, double leftJoystickX, double rightJoystickX) {

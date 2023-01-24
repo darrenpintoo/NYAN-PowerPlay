@@ -61,6 +61,7 @@ public class MainMecanumDrive extends LinearOpMode {
 
         robot.update();
         robot.claw.enableAutoClose();
+        robot.drivetrain.enableHeadingRetention();
         robot.drivetrain.disableAntiTip();
 
         robot.internalIMU.setHeadingOffset(Math.toRadians(90));
