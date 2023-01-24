@@ -43,6 +43,7 @@ public class Drivetrain implements Subsystem {
 
 
     private boolean enableAntiTip = false;
+    private boolean enableHeadingRetention = false;
 
     public GeneralPIDController headingPID = new GeneralPIDController(0.6, 0, 20, 0);
     public GeneralPIDController translationalPID = new GeneralPIDController(1, 0, 0, 0);
@@ -128,6 +129,14 @@ public class Drivetrain implements Subsystem {
         this.enableAntiTip = false;
     }
 
+    public void enableHeadingRetention() {
+        this.enableHeadingRetention = true;
+    }
+
+    public void disableHeadingRetention() {
+        this.enableHeadingRetention = false;
+    }
+
     @Override
     public void onOpmodeStarted() {
     }
@@ -188,19 +197,22 @@ public class Drivetrain implements Subsystem {
     public void robotCentricDriveFromGamepad(double leftJoystickY, double leftJoystickX, double rightJoystickX) {
         // todo: write code for robot centric drive
 
-        if (rightJoystickX == 0) {
+        if (this.enableHeadingRetention) {
+            if (rightJoystickX == 0) {
 
-            if (lastRot != 0) {
-                this.targetTurnAngle = this.internalIMU.getCurrentFrameHeadingCCW();
+                if (lastRot != 0) {
+                    this.targetTurnAngle = this.internalIMU.getCurrentFrameHeadingCCW();
+                }
+
+                double headingError = MathHelper.getErrorBetweenAngles(
+                        this.internalIMU.getCurrentFrameHeadingCCW(),
+                        this.targetTurnAngle
+                );
+
+                rightJoystickX = headingPID.getOutputFromError(headingError);
             }
-
-            double headingError = MathHelper.getErrorBetweenAngles(
-                    this.internalIMU.getCurrentFrameHeadingCCW(),
-                    this.targetTurnAngle
-            );
-
-            rightJoystickX = headingPID.getOutputFromError(headingError);
         }
+
         leftJoystickY = -leftJoystickY;
 
         double multiple = this.robotInstance.getPowerMultiple();
