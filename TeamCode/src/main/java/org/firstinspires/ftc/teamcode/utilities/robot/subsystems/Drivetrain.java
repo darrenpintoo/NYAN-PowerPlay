@@ -44,7 +44,7 @@ public class Drivetrain implements Subsystem {
 
     private boolean enableAntiTip = false;
 
-    public GeneralPIDController headingPID = new GeneralPIDController(0.5, 0, 10, 0);
+    public GeneralPIDController headingPID = new GeneralPIDController(0.6, 0, 20, 0);
     public GeneralPIDController translationalPID = new GeneralPIDController(1, 0, 0, 0);
 
     public GeneralPIDController tiltPID = new GeneralPIDController(1, 0, 0, 0);
@@ -56,6 +56,19 @@ public class Drivetrain implements Subsystem {
     private double leftFrontPower = 0;
     private double leftBackPower = 0;
     private double rightBackPower = 0;
+
+    private double lastRightFrontPower = 0;
+    private double lastLeftFrontPower = 0;
+    private double lastLeftBackPower = 0;
+    private double lastRightBackPower = 0;
+
+    private double targetTurnAngle = 0;
+
+    private double lastX = 0;
+    private double lastY = 0;
+    private double lastRot = 0;
+
+
 
     private double weight = 1;
 
@@ -151,6 +164,11 @@ public class Drivetrain implements Subsystem {
         this.leftBackMotor.setPower(leftBackPower * this.weight);
         this.leftFrontMotor.setPower(leftFrontPower * this.weight);
 
+        this.lastRightBackPower = this.rightBackPower;
+        this.lastLeftBackPower= this.leftBackPower;
+        this.lastLeftFrontPower = this.leftFrontPower;
+        this.lastRightFrontPower = this.rightFrontPower;
+
         this.rightBackPower = 0;
         this.leftBackPower = 0;
         this.leftFrontPower = 0;
@@ -170,6 +188,19 @@ public class Drivetrain implements Subsystem {
     public void robotCentricDriveFromGamepad(double leftJoystickY, double leftJoystickX, double rightJoystickX) {
         // todo: write code for robot centric drive
 
+        if (rightJoystickX == 0) {
+
+            if (lastRot != 0) {
+                this.targetTurnAngle = this.internalIMU.getCurrentFrameHeadingCCW();
+            }
+
+            double headingError = MathHelper.getErrorBetweenAngles(
+                    this.internalIMU.getCurrentFrameHeadingCCW(),
+                    this.targetTurnAngle
+            );
+
+            rightJoystickX = headingPID.getOutputFromError(headingError);
+        }
         leftJoystickY = -leftJoystickY;
 
         double multiple = this.robotInstance.getPowerMultiple();
