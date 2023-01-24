@@ -2,7 +2,10 @@ package org.firstinspires.ftc.teamcode.utilities.robot;
 
 import android.annotation.SuppressLint;
 
+import com.acmerobotics.dashboard.canvas.Canvas;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.LynxModuleMeta;
@@ -121,6 +124,14 @@ public class RobotEx {
         telemetry.addData("Heading: ", currentPose.getHeading());
         telemetry.addData("Current Draw: ", hubCurrent);
 
+        TelemetryPacket packet = new TelemetryPacket();
+        Canvas fieldOverlay = packet.fieldOverlay();
+
+        fieldOverlay.setStrokeWidth(1);
+        fieldOverlay.setStroke("#4CAF50");
+        drawRobot(fieldOverlay, currentPose);
+
+
         double frameTime = frameTimer.milliseconds();
         frameTimer.reset();
 
@@ -148,7 +159,13 @@ public class RobotEx {
         return 12 / this.voltageCompensator;
     }
 
-
+    public static void drawRobot(Canvas canvas, Pose2d pose) {
+        canvas.strokeCircle(pose.getX(), pose.getY(), 9);
+        Vector2d v = pose.headingVec().times(9);
+        double x1 = pose.getX() + v.getX() / 2, y1 = pose.getY() + v.getY() / 2;
+        double x2 = pose.getX() + v.getX(), y2 = pose.getY() + v.getY();
+        canvas.strokeLine(x1, y1, x2, y2);
+    }
     public void clearPersistData() {
         PersistentData.startPose = new Pose2d();
     }
