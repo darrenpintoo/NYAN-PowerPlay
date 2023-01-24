@@ -147,13 +147,13 @@ public class MotionProfileCycleLeftImprovedFliped extends LinearOpMode {
         robot.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.LOW_JUNCTION);
         robotDrivetrain.driveForward(-17);
         robotDrivetrainE.turnToIMUAngle(Math.toRadians(180));
-        robotDrivetrain.driveForward(11);
+        robotDrivetrain.driveForward(8);
         robot.lift.setOffset(-3);
         robot.lift.yieldTillAtPosition();
         robot.claw.setClawState(Claw.ClawStates.OPENED);
         robot.pause(0.1);
         robot.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.LOW_JUNCTION );
-        robotDrivetrain.driveForward(-11);
+        robotDrivetrain.driveForward(-8);
         robot.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.DEFAULT);
         robotDrivetrainE.turnToIMUAngle(Math.toRadians(90));
 
@@ -186,7 +186,7 @@ public class MotionProfileCycleLeftImprovedFliped extends LinearOpMode {
 
         switch (parkPosition) {
             case RIGHT:
-                robotDrivetrain.driveForward(35);
+                robotDrivetrain.driveForward(32);
                 break;
             case CENTER:
                 robotDrivetrain.driveForward(15);
