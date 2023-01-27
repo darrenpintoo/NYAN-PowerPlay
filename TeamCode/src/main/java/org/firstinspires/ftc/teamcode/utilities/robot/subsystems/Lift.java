@@ -141,6 +141,7 @@ public class Lift implements Subsystem {
         if (leftTrigger > GAMEPAD_THRESHOLD) {
             this.currentFrameOutput = -leftTrigger;
         } else if (rightTrigger > GAMEPAD_THRESHOLD) {
+            rightTrigger *= 2;
             this.currentFrameOutput = rightTrigger;
         } else {
             this.currentFrameOutput = 0;

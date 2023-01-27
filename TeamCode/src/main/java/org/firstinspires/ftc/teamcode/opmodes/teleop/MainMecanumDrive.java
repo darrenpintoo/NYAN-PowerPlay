@@ -61,7 +61,6 @@ public class MainMecanumDrive extends LinearOpMode {
 
         robot.update();
         robot.claw.enableAutoClose();
-        robot.drivetrain.enableHeadingRetention();
         robot.drivetrain.disableAntiTip();
 
         robot.internalIMU.setHeadingOffset(Math.toRadians(90));
@@ -78,6 +77,9 @@ public class MainMecanumDrive extends LinearOpMode {
 
             }
 
+            if (gamepad1.right_bumper) {
+                robot.drivetrain.enableHeadingRetention();
+            }
             // Handle Intake State
 /*            if (currentFrameGamepad1.a != previousFrameGamepad1.a && currentFrameGamepad1.a) {
                 intakeOn = !intakeOn;
@@ -180,7 +182,7 @@ public class MainMecanumDrive extends LinearOpMode {
             }
 
             if (currentFrameGamepad2.left_stick_button && previousFrameGamepad2.left_stick_button != currentFrameGamepad2.left_stick_button) {
-                robot.lift.setOffset(5);
+                robot.lift.setOffset(4);
             }
 
 /*
