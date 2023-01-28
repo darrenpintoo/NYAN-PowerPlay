@@ -23,9 +23,9 @@ public class Claw implements Subsystem {
     Lift lift;
 
     public static double TIME_THRESHOLD = 0.5;
-    public static int RED_THRESHOLD = 50;
+    public static int RED_THRESHOLD = 30;
     public static int RED_THRESHOLD2 = 100;
-    public static int BLUE_THRESHOLD = 50;
+    public static int BLUE_THRESHOLD = 30;
     public static int BLUE_THRESHOLD2 = 100;
 
 
