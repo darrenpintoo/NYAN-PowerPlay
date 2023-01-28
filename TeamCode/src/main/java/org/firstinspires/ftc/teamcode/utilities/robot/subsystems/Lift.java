@@ -40,14 +40,14 @@ public class Lift implements Subsystem {
     public static double kD = 0;
     public static double kF = 0;
 
-    public static int OFFSET_INCREASE = 60;// 80;
+    public static int OFFSET_INCREASE = 70;// 80;
     public static int AT_POSITION_THRESHOLD = 75;
     public static int AT_VELOCITY_THRESHOLD = 10;
 
     public static int GROUND_HEIGHT = 100;
-    public static int LOW_HEIGHT = 700;
-    public static int MIDDLE_HEIGHT = 1200;
-    public static int HIGH_HEIGHT = 1600;
+    public static int LOW_HEIGHT = 750;
+    public static int MIDDLE_HEIGHT = 1225;
+    public static int HIGH_HEIGHT = 1700;
 
     public DcMotorEx leftLiftMotor;
     public DcMotorEx rightLiftMotor;

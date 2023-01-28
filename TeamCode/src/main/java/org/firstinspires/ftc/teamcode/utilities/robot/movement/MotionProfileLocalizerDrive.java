@@ -20,7 +20,7 @@ public class MotionProfileLocalizerDrive {
     GeneralPIDController followerPID = new GeneralPIDController(0.1, 0, 0, 0);
 
     public static double kV = 0.018;//1 / DriveConstants.MAX_VELOCITY;
-    public static double kA = 0.003;
+    public static double kA = 0.005;
 
     public static double kStatic = 0.05;
 
