@@ -22,7 +22,7 @@ public class Claw implements Subsystem {
 
     Lift lift;
 
-    public static double TIME_THRESHOLD = 0.5;
+    public static double TIME_THRESHOLD = 0.25;
     public static int RED_THRESHOLD = 30;
     public static int RED_THRESHOLD2 = 100;
     public static int BLUE_THRESHOLD = 30;
@@ -45,7 +45,7 @@ public class Claw implements Subsystem {
 
     //need to tune still
     public static double openPosition = 0.38;
-    public static double closePosition = 0.05;
+    public static double closePosition = 0;
     public static double slightlyOpenPosition = 0.2;
 
     private boolean enableAutoClose = true;
