@@ -21,6 +21,7 @@ import org.firstinspires.ftc.teamcode.utilities.localizer.RoadrunnerLocalizer;
 import org.firstinspires.ftc.teamcode.utilities.math.linearalgebra.Pose;
 import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.Claw;
 import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.ClawExtension;
+import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.ClawTilt;
 import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.Drivetrain;
 import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.InternalIMU;
@@ -39,6 +40,8 @@ public class RobotEx {
     public Drivetrain drivetrain = new Drivetrain();
     public Lift lift = new Lift();
     public Claw claw = new Claw();
+    public ClawTilt clawTilt = new ClawTilt();
+    public ClawExtension clawExtension = new ClawExtension();
 
     public VoltageSensor voltageSensor;
 
@@ -48,7 +51,9 @@ public class RobotEx {
             internalIMU,
             drivetrain,
             lift,
-            claw
+            claw,
+            clawTilt,
+            clawExtension
     };
 
     Telemetry telemetry;
