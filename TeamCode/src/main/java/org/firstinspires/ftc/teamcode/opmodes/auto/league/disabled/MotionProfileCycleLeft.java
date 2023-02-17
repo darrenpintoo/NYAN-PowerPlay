@@ -1,14 +1,16 @@
-package org.firstinspires.ftc.teamcode.opmodes.auto;
+package org.firstinspires.ftc.teamcode.opmodes.auto.league.disabled;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.utilities.robot.RobotEx;
+import org.firstinspires.ftc.teamcode.utilities.robot.DriveConstants;
 import org.firstinspires.ftc.teamcode.utilities.robot.movement.EncoderDrive;
+import org.firstinspires.ftc.teamcode.utilities.robot.RobotEx;
 import org.firstinspires.ftc.teamcode.utilities.robot.movement.MotionProfilingDrive;
 import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.Claw;
 import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.Lift;
@@ -21,8 +23,9 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 /**
  * Example teleop code for a basic mecanum drive
  */
-@Autonomous(name = "Motion Profile Cycle Right Flipped 1+2")
-public class MotionProfileCycleRightImprovedFlipped extends LinearOpMode {
+@Autonomous(name = "Motion Profile Cycle Left")
+@Disabled
+public class MotionProfileCycleLeft extends LinearOpMode {
 
     // Create new Instance of the robot
     RobotEx robot = RobotEx.getInstance();
@@ -70,7 +73,6 @@ public class MotionProfileCycleRightImprovedFlipped extends LinearOpMode {
         waitForStart();
 
         // Notify subsystems before loop
-        robot.claw.setClawState(Claw.ClawStates.CLOSED);
         robot.postInit();
 
         if (isStopRequested()) return;
@@ -88,78 +90,58 @@ public class MotionProfileCycleRightImprovedFlipped extends LinearOpMode {
         camera.stopStreaming();
 
         // robotDrivetrain.turnToIMUAngle(Math.toRadians(180));
-        robot.pause(0.5);
+
+        DriveConstants.MAX_VELOCITY = 35;
+        DriveConstants.MAX_ACCELERATION = 30;
+
         robot.claw.setClawState(Claw.ClawStates.CLOSED);
+        robot.pause(0.5);
         robot.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.GROUND_JUNCTION);
-        robotDrivetrain.driveForward(18);
+        robot.pause(0.5);
+        robotDrivetrain.driveForward(-16);
         robotDrivetrainE.turnToIMUAngle(-Math.toRadians(90));
         robot.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.LOW_JUNCTION);
+        robot.pause(0.25);
         robotDrivetrain.driveForward(8);
-        robot.lift.yieldTillAtPosition();
+        robot.pause(0.15);
         robot.lift.setOffset(-5);
-        robot.lift.yieldTillAtPosition();
+        robot.pause(0.5);
         robot.claw.setClawState(Claw.ClawStates.OPENED);
-        robot.pause(0.2);
+        robot.pause(0.25);
         robot.lift.setOffset(0);
+        robot.pause(0.25);
         robot.claw.setClawState(Claw.ClawStates.CLOSED);
         robotDrivetrain.driveForward(-8);
         robot.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.DEFAULT);
-        robotDrivetrainE.turnToIMUAngle(0);
+        robotDrivetrainE.turnToIMUAngle(Math.toRadians(180));
         robotDrivetrain.driveForward(41);
         robot.claw.setClawState(Claw.ClawStates.OPENED);
-        robotDrivetrain.driveForward(-6);
+        robotDrivetrain.driveForward(-5);
         robot.claw.setClawState(Claw.ClawStates.SLIGHTLY_OPENED);
         robotDrivetrainE.turnToIMUAngle(Math.toRadians(90));
         robot.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.DEFAULT);
-        robot.lift.setOffset(6);
+        robot.lift.setOffset(8);
         robotDrivetrain.driveForward(32);
         robot.lift.setOffset(4);
-        robot.lift.yieldTillAtPosition();
-        robot.pause(0.1);
+        robot.pause(0.5);
         robot.claw.setClawState(Claw.ClawStates.CLOSED);
-        robot.pause(0.1);
+        robot.pause(0.5);
         robot.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.LOW_JUNCTION);
         robotDrivetrain.driveForward(-40);
-        robotDrivetrainE.turnToIMUAngle(-Math.toRadians(-180));
+        robotDrivetrainE.turnToIMUAngle(Math.toRadians(0));
         robot.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.MIDDLE_JUNCTION);
-        robotDrivetrain.driveForward(9);
-        robot.lift.yieldTillAtPosition();
-        robot.lift.setOffset(-3);
-        robot.lift.yieldTillAtPosition();
-        robot.pause(0.1);
+        robotDrivetrain.driveForward(12);
+        robot.pause(0.5);
+        robot.lift.setOffset(-7);
+        robot.pause(0.5);
         robot.claw.setClawState(Claw.ClawStates.OPENED);
         robot.pause(0.1);
         robot.lift.setOffset(0);
-        robot.lift.yieldTillAtPosition();
-        robot.claw.setClawState(Claw.ClawStates.SLIGHTLY_OPENED);
-        robotDrivetrain.driveForward(-8);
-        robot.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.DEFAULT);
-        robotDrivetrainE.turnToIMUAngle(Math.toRadians(90));
-        robot.lift.setOffset(6);
-        robot.claw.setClawState(Claw.ClawStates.SLIGHTLY_OPENED);
-        robotDrivetrain.driveForward(43);
         robot.pause(0.25);
-        robot.lift.setOffset(3);
-        robot.lift.yieldTillAtPosition();
-        robot.pause(0.25);
-        robot.claw.setClawState(Claw.ClawStates.CLOSED);
-        robot.pause(0.3);
-        robot.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.LOW_JUNCTION);
-        robotDrivetrain.driveForward(-17);
-        robotDrivetrainE.turnToIMUAngle(-Math.toRadians(180));
-        robotDrivetrain.driveForward(8);
-        robot.lift.setOffset(-5);
-        robot.lift.yieldTillAtPosition();
-        robot.claw.setClawState(Claw.ClawStates.OPENED);
-        robot.pause(0.1);
-        robot.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.LOW_JUNCTION );
-        robotDrivetrain.driveForward(-8);
+        robot.claw.setClawState(Claw.ClawStates.SLIGHTLY_OPENED);
+        robotDrivetrain.driveForward(-9);
         robot.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.DEFAULT);
-        robotDrivetrainE.turnToIMUAngle(-Math.toRadians(90));
-
-
-
-
+        robotDrivetrainE.turnToIMUAngle(Math.toRadians(-90));
 
 /*        robot.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.DEFAULT);
         robotDrivetrainE.turnToIMUAngle(Math.toRadians(90));
@@ -185,14 +167,14 @@ public class MotionProfileCycleRightImprovedFlipped extends LinearOpMode {
         // sleep(5000);
 
         switch (parkPosition) {
+            case LEFT:
+                robotDrivetrain.driveForward(-35);
+                break;
             case RIGHT:
-                robotDrivetrain.driveForward(-10);
+                robotDrivetrain.driveForward(15);
                 break;
             case CENTER:
-                robotDrivetrain.driveForward(13);
-                break;
-            case LEFT:
-                robotDrivetrain.driveForward(32);
+                robotDrivetrain.driveForward(-10);
                 break;
         }
 

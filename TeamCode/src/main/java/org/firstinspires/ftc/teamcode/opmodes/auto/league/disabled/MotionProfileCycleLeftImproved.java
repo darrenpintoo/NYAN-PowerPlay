@@ -1,8 +1,9 @@
-package org.firstinspires.ftc.teamcode.opmodes.auto;
+package org.firstinspires.ftc.teamcode.opmodes.auto.league.disabled;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
@@ -21,8 +22,9 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 /**
  * Example teleop code for a basic mecanum drive
  */
-@Autonomous(name = "Motion Profile Cycle Left Flipped 1+2")
-public class MotionProfileCycleLeftImprovedFlipped extends LinearOpMode {
+@Autonomous(name = "Motion Profile Cycle Left 1+2")
+@Disabled
+public class MotionProfileCycleLeftImproved extends LinearOpMode {
 
     // Create new Instance of the robot
     RobotEx robot = RobotEx.getInstance();
@@ -88,11 +90,11 @@ public class MotionProfileCycleLeftImprovedFlipped extends LinearOpMode {
         camera.stopStreaming();
 
         // robotDrivetrain.turnToIMUAngle(Math.toRadians(180));
-        robot.pause(0.5);
+        robot.pause(1);
         robot.claw.setClawState(Claw.ClawStates.CLOSED);
         robot.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.GROUND_JUNCTION);
-        robotDrivetrain.driveForward(18);
-        robotDrivetrainE.turnToIMUAngle(Math.toRadians(90));
+        robotDrivetrain.driveForward(-16);
+        robotDrivetrainE.turnToIMUAngle(-Math.toRadians(90));
         robot.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.LOW_JUNCTION);
         robotDrivetrain.driveForward(8);
         robot.lift.yieldTillAtPosition();
@@ -104,12 +106,12 @@ public class MotionProfileCycleLeftImprovedFlipped extends LinearOpMode {
         robot.claw.setClawState(Claw.ClawStates.CLOSED);
         robotDrivetrain.driveForward(-8);
         robot.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.DEFAULT);
-        robotDrivetrainE.turnToIMUAngle(0);
+        robotDrivetrainE.turnToIMUAngle(Math.toRadians(180));
         robotDrivetrain.driveForward(41);
         robot.claw.setClawState(Claw.ClawStates.OPENED);
-        robotDrivetrain.driveForward(-6);
+        robotDrivetrain.driveForward(-5);
         robot.claw.setClawState(Claw.ClawStates.SLIGHTLY_OPENED);
-        robotDrivetrainE.turnToIMUAngle(-Math.toRadians(90));
+        robotDrivetrainE.turnToIMUAngle(Math.toRadians(90));
         robot.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.DEFAULT);
         robot.lift.setOffset(6);
         robotDrivetrain.driveForward(32);
@@ -119,10 +121,10 @@ public class MotionProfileCycleLeftImprovedFlipped extends LinearOpMode {
         robot.claw.setClawState(Claw.ClawStates.CLOSED);
         robot.pause(0.1);
         robot.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.LOW_JUNCTION);
-        robotDrivetrain.driveForward(-40);
-        robotDrivetrainE.turnToIMUAngle(Math.toRadians(-180));
+        robotDrivetrain.driveForward(-39);
+        robotDrivetrainE.turnToIMUAngle(Math.toRadians(0));
         robot.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.MIDDLE_JUNCTION);
-        robotDrivetrain.driveForward(8);
+        robotDrivetrain.driveForward(9);
         robot.lift.yieldTillAtPosition();
         robot.lift.setOffset(-3);
         robot.lift.yieldTillAtPosition();
@@ -134,10 +136,10 @@ public class MotionProfileCycleLeftImprovedFlipped extends LinearOpMode {
         robot.claw.setClawState(Claw.ClawStates.SLIGHTLY_OPENED);
         robotDrivetrain.driveForward(-8);
         robot.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.DEFAULT);
-        robotDrivetrainE.turnToIMUAngle(-Math.toRadians(90));
+        robotDrivetrainE.turnToIMUAngle(Math.toRadians(90));
         robot.lift.setOffset(6);
         robot.claw.setClawState(Claw.ClawStates.SLIGHTLY_OPENED);
-        robotDrivetrain.driveForward(43);
+        robotDrivetrain.driveForward(44);
         robot.pause(0.25);
         robot.lift.setOffset(3);
         robot.lift.yieldTillAtPosition();
@@ -146,16 +148,16 @@ public class MotionProfileCycleLeftImprovedFlipped extends LinearOpMode {
         robot.pause(0.3);
         robot.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.LOW_JUNCTION);
         robotDrivetrain.driveForward(-17);
-        robotDrivetrainE.turnToIMUAngle(Math.toRadians(180));
-        robotDrivetrain.driveForward(8);
-        robot.lift.setOffset(-5);
+        robotDrivetrainE.turnToIMUAngle(Math.toRadians(0));
+        robotDrivetrain.driveForward(11);
+        robot.lift.setOffset(-3);
         robot.lift.yieldTillAtPosition();
         robot.claw.setClawState(Claw.ClawStates.OPENED);
         robot.pause(0.1);
         robot.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.LOW_JUNCTION );
-        robotDrivetrain.driveForward(-8);
+        robotDrivetrain.driveForward(-11);
         robot.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.DEFAULT);
-        robotDrivetrainE.turnToIMUAngle(Math.toRadians(90));
+        robotDrivetrainE.turnToIMUAngle(-Math.toRadians(90));
 
 
 
@@ -186,13 +188,13 @@ public class MotionProfileCycleLeftImprovedFlipped extends LinearOpMode {
 
         switch (parkPosition) {
             case RIGHT:
-                robotDrivetrain.driveForward(32);
+                robotDrivetrain.driveForward(35);
                 break;
             case CENTER:
-                robotDrivetrain.driveForward(10);
+                robotDrivetrain.driveForward(15);
                 break;
             case LEFT:
-                robotDrivetrain.driveForward(-13);
+                robotDrivetrain.driveForward(-10);
                 break;
         }
 

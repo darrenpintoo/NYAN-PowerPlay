@@ -11,7 +11,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 @Config
 public class ClawExtension implements Subsystem {
 
-    enum ExtensionState {
+    public enum ExtensionState {
         ACTIVE,
         DEFAULT
     }
@@ -45,6 +45,10 @@ public class ClawExtension implements Subsystem {
             default:
                 return defaultServoPosition;
         }
+    }
+
+    public void setCurrentExtensionState(ExtensionState newExtensionState) {
+        this.currentExtensionState = newExtensionState;
     }
 
 }

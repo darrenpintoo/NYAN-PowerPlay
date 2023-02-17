@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import org.firstinspires.ftc.teamcode.utilities.robot.PersistentData;
 import org.firstinspires.ftc.teamcode.utilities.robot.RobotEx;
 import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.Claw;
+import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.ClawExtension;
 import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.Lift;
 
 /**
@@ -82,31 +83,6 @@ public class MainMecanumDrive extends LinearOpMode {
             if (gamepad1.right_bumper) {
                 robot.drivetrain.enableHeadingRetention();
             }
-            // Handle Intake State
-/*            if (currentFrameGamepad1.a != previousFrameGamepad1.a && currentFrameGamepad1.a) {
-                intakeOn = !intakeOn;
-                intakeDirection = false;
-            }
-
-            if (currentFrameGamepad1.b != previousFrameGamepad1.b && currentFrameGamepad1.b) {
-                intakeOn = !intakeOn;
-                intakeDirection = true;
-            }*/
-
-/*           robot.drivetrain.robotCentricDriveFromGamepad(
-                    0,
-                    0,
-                    F
-            );*/
-            if (currentFrameGamepad1.right_trigger > 0.1 && previousFrameGamepad1.right_trigger < 0.21) {
-                intakeOn = !intakeOn;
-                intakeDirection = false;
-            }
-
-            if (currentFrameGamepad1.left_trigger > 0.1 && previousFrameGamepad1.left_trigger < 0.1) {
-                intakeOn = !intakeOn;
-                intakeDirection = true;
-            }
 
             // Handle Claw State
             if (currentFrameGamepad2.b) {
@@ -116,38 +92,6 @@ public class MainMecanumDrive extends LinearOpMode {
             } else if (currentFrameGamepad2.y) {
                 robot.claw.setClawState(Claw.ClawStates.SLIGHTLY_OPENED);
             }
-
-            if (currentFrameGamepad1.y && previousFrameGamepad1.y != currentFrameGamepad1.y) {
-                robotCentric = !robotCentric;
-            }
-
-            if (currentFrameGamepad1.x && previousFrameGamepad1.x != currentFrameGamepad1.x) {
-                fieldCentricAutomatedTurning = !fieldCentricAutomatedTurning;
-            }
-/*
-            // Handle Drivetrain
-            if (fieldCentricAutomatedTurning) {
-                robot.drivetrain.fieldCentricRotationPIDFromGamepad(
-                        currentFrameGamepad1.left_stick_y,
-                        currentFrameGamepad1.left_stick_x,
-                        currentFrameGamepad1.right_stick_y,
-                        currentFrameGamepad1.right_stick_x
-                );
-            } else {
-                if (robotCentric) {
-                    robot.drivetrain.robotCentricDriveFromGamepad(
-                            currentFrameGamepad1.left_stick_y * 0.75,
-                            currentFrameGamepad1.left_stick_x * 0.75,
-                            currentFrameGamepad1.right_stick_x * 0.5
-                    );
-                } else {
-                    robot.drivetrain.fieldCentricDriveFromGamepad(
-                            currentFrameGamepad1.left_stick_y * 0.5,
-                            currentFrameGamepad1.left_stick_x * 0.5,
-                            currentFrameGamepad1.right_stick_x * 0.5
-                    );
-                }
-            }*/
 
             robot.drivetrain.robotCentricDriveFromGamepad(
                     currentFrameGamepad1.left_stick_y,
@@ -160,6 +104,12 @@ public class MainMecanumDrive extends LinearOpMode {
                     currentFrameGamepad2.left_trigger,
                     currentFrameGamepad2.right_trigger
             );
+
+            if (currentFrameGamepad1.right_bumper && previousFrameGamepad1.right_bumper != currentFrameGamepad1.right_bumper) {
+                robot.clawExtension.setCurrentExtensionState(ClawExtension.ExtensionState.ACTIVE);
+            } else if (currentFrameGamepad1.left_bumper && previousFrameGamepad1.left_bumper != currentFrameGamepad1.left_bumper) {
+                robot.clawExtension.setCurrentExtensionState(ClawExtension.ExtensionState.DEFAULT);
+            }
 
             if (currentFrameGamepad2.dpad_up) {
                 robot.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.HIGH_JUNCTION);

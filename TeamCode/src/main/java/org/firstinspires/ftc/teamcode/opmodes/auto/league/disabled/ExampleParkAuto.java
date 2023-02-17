@@ -1,6 +1,7 @@
-package org.firstinspires.ftc.teamcode.opmodes.auto;
+package org.firstinspires.ftc.teamcode.opmodes.auto.league.disabled;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
@@ -18,6 +19,7 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
  * Example teleop code for a basic mecanum drive
  */
 @Autonomous(name = "Example Park Auto")
+@Disabled
 public class ExampleParkAuto extends LinearOpMode {
 
     // Create new Instance of the robot
