@@ -16,6 +16,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.utilities.localizer.RoadrunnerLocalizer;
 import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.Claw;
 import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.ClawExtension;
+import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.ClawRotation;
 import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.ClawTilt;
 import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.Drivetrain;
 import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.InternalIMU;
@@ -36,7 +37,7 @@ public class RobotEx {
     public Claw claw = new Claw();
     public ClawTilt clawTilt = new ClawTilt();
     public ClawExtension clawExtension = new ClawExtension();
-
+    public ClawRotation clawRotation = new ClawRotation();
     public VoltageSensor voltageSensor;
 
     private final ElapsedTime frameTimer = new ElapsedTime();
@@ -47,7 +48,8 @@ public class RobotEx {
             lift,
             claw,
             clawTilt,
-            clawExtension
+            clawExtension,
+            clawRotation
     };
 
     Telemetry telemetry;

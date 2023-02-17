@@ -80,7 +80,7 @@ public class MainMecanumDrive extends LinearOpMode {
 
             }
 
-            if (gamepad1.right_bumper) {
+            if (currentFrameGamepad1.right_bumper) {
                 robot.drivetrain.enableHeadingRetention();
             }
 
@@ -137,12 +137,16 @@ public class MainMecanumDrive extends LinearOpMode {
                 robot.lift.setOffset(4);
             }
 
+            robot.clawRotation.handleRotationFromGamepad(
+                    currentFrameGamepad2.right_stick_y,
+                    currentFrameGamepad2.right_stick_x
+            );
 /*
             if (currentFrameGamepad1.x) {
                 robot.drivetrain.disableAntiTip();
             }*/
 
-            robot.drivetrain.setWeightedDrivePower(1 - gamepad1.left_trigger);
+            robot.drivetrain.setWeightedDrivePower(1 - currentFrameGamepad1.left_trigger);
 
             double frameTime = robot.update();
 
