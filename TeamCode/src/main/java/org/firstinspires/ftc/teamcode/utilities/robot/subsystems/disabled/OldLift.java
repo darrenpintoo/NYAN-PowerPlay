@@ -1,23 +1,20 @@
-package org.firstinspires.ftc.teamcode.utilities.robot.subsystems;
+package org.firstinspires.ftc.teamcode.utilities.robot.subsystems.disabled;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.robot.Robot;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.utilities.controltheory.feedback.GeneralPIDController;
-import org.firstinspires.ftc.teamcode.utilities.controltheory.motionprofiler.MotionProfile;
 import org.firstinspires.ftc.teamcode.utilities.math.MathHelper;
 import org.firstinspires.ftc.teamcode.utilities.robot.RobotEx;
 import org.firstinspires.ftc.teamcode.utilities.robot.extensions.MotorGroup;
+import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.Subsystem;
 
 @Config
-public class Lift implements Subsystem {
+public class OldLift implements Subsystem {
 
     public enum LIFT_POSITIONS {
         DEFAULT,
@@ -34,33 +31,13 @@ public class Lift implements Subsystem {
         EXTENDED
     }
 
-    public enum PROFILE_TYPE {
-        DOWN, UP
-    }
+    private final double GAMEPAD_THRESHOLD = 0.1;
 
-    private final double GAMEPAD_THRESHOLD = 0.05;
-
-    public static double upvMax = 3000;
-    public static double upaMax = 2000;
-    public static double upkV = 0.00045;
-    public static double upkA = 0.0001;
-
-    public static double upkP = 0.005;
-    public static double upkI = 0;
-    public static double upkD = 0;
-    public static double upkF1 = 0.25;
-    public static double upkF2 = 0.35;
-
-    public static double downvMax = 4000;
-    public static double downaMax = 3000;
-    public static double downkV = 0.0001;
-    public static double downkA = 0.00005;
-
-    public static double downkP = 0.001;
-    public static double downkI = 0;
-    public static double downkD = 0;
-    public static double downkF1 = 0.05;
-    public static double downkF2 = 0.05;
+    public static double kP = 0.002;
+    public static double kI = 0;
+    public static double kD = 0;
+    public static double kF1 = 0.1;
+    public static double kF2 = 0.15;
 
     public static int OFFSET_INCREASE = 70;// 80;
     public static int AT_POSITION_THRESHOLD = 75;
@@ -87,16 +64,11 @@ public class Lift implements Subsystem {
 
     LIFT_STATES currentLiftState = LIFT_STATES.DEFAULT;
 
-    GeneralPIDController upLiftPID = new GeneralPIDController(upkP, upkI, upkD, 0);
-    GeneralPIDController downLiftPID = new GeneralPIDController(downkP, downkI, downkD, 0);
-
-    private MotionProfile currentMotionProfile = new MotionProfile(0, 0, upvMax, upaMax);
-    PROFILE_TYPE profileType = PROFILE_TYPE.UP;
+    GeneralPIDController liftPID = new GeneralPIDController(kP, kI, kD, 0);
 
     private Telemetry telemetry;
 
     private ElapsedTime velocityTimer = new ElapsedTime();
-    private ElapsedTime motionProfileTimer = new ElapsedTime();
 
     @Override
     public void onInit(HardwareMap hardwareMap, Telemetry telemetry) {
@@ -126,66 +98,43 @@ public class Lift implements Subsystem {
 
     @Override
     public void onCyclePassed() {
-        upLiftPID.updateCoefficients(upkP, upkI, upkD, 0);
-        downLiftPID.updateCoefficients(downkP, downkI, downkD, 0);
+/*        telemetry.addData("Left Lift Pos: ", this.leftLiftMotor.getCurrentPosition());
+        telemetry.addData("Right Lift Pos: ", this.rightLiftMotor.getCurrentPosition());*/
 
-        double currentMotionProfileTime = this.motionProfileTimer.seconds();
+        liftPID.updateCoefficients(kP, kI, kD, 0);
 
         double currentPosition = this.liftMotors.getAveragePosition();
 
-        double targetPosition = this.currentMotionProfile.getPositionFromTime(currentMotionProfileTime);
-        double targetVelocity = this.currentMotionProfile.getVelocityFromTime(currentMotionProfileTime);
-        double targetAcceleration = this.currentMotionProfile.getAccelerationFromTime(currentMotionProfileTime);
+        int targetPosition = this.getEncoderPositionFromLevel(this.currentLiftTargetPosition) + offset * OFFSET_INCREASE;
 
-        telemetry.addData("target Position: ", targetPosition);
-        telemetry.addData("target Velocity: ", targetVelocity);
-        telemetry.addData("target Acceleration: ", targetAcceleration);
-
-        telemetry.addData("Current Position: ", currentPosition);
-        telemetry.addData("Target pos: ", targetPosition);
-        double feedforward = 0;
-        double feedback = 0;
-        double kF = 0;
-
-        if (this.profileType == PROFILE_TYPE.UP) {
-            kF = MathHelper.lerp(upkF1, upkF2, currentPosition / this.getEncoderPositionFromLevel(LIFT_POSITIONS.HIGH_JUNCTION));
-            feedforward = targetAcceleration * upkA + targetVelocity * upkV + kF;
-            feedback = upLiftPID.getOutputFromError(
-                    targetPosition - currentPosition
-            );
-        } else {
-            kF = MathHelper.lerp(downkF1, downkF2, currentPosition / this.getEncoderPositionFromLevel(LIFT_POSITIONS.HIGH_JUNCTION));
-            feedforward = targetAcceleration * downkA + targetVelocity * downkV + kF;
-            feedback = downLiftPID.getOutputFromError(
-                    targetPosition - currentPosition
-            );
-        }
-
-        telemetry.addData("feed forward: ", feedforward);
-        telemetry.addData("feed back: ", feedback);
-        currentFrameOutput = feedforward + feedback;
-
-        if (this.getTargetPosition() == 0 && currentPosition < 200) {
-            currentFrameOutput = -0.1 * currentPosition / 100;
-        }
-/*        if (this.currentFrameOutput == 0) {
+        if (this.currentFrameOutput == 0) {
             currentFrameOutput = liftPID.getOutputFromError(targetPosition, currentPosition);
 
-            this.liftAtTarget = Math.abs(targetPosition - currentPosition) < AT_POSITION_THRESHOLD &&
-                    ((currentPosition - this.previousFramePosition) / this.velocityTimer.seconds()) < AT_VELOCITY_THRESHOLD;
+            if (
+                    Math.abs(targetPosition - currentPosition) < AT_POSITION_THRESHOLD &&
+                    ((currentPosition - this.previousFramePosition) / this.velocityTimer.seconds()) < AT_VELOCITY_THRESHOLD
+            ) {
+                this.liftAtTarget = true;
+            } else {
+                this.liftAtTarget = false;
+            }
         } else {
             this.liftAtTarget = false;
-        }*/
+            this.currentFrameOutput = this.currentFrameOutput / 2;
+        }
 
+        double kF = MathHelper.lerp(kF1, kF2, currentPosition / this.getEncoderPositionFromLevel(LIFT_POSITIONS.HIGH_JUNCTION));
+
+        currentFrameOutput += kF * RobotEx.getInstance().getPowerMultiple();
         this.liftMotors.setPower(MathHelper.clamp(currentFrameOutput, -1, 1));
 
-        telemetry.addData("output: ", currentFrameOutput);
-        telemetry.addData("Type: ", this.profileType.toString());
-
+        telemetry.addData("Output: ", currentFrameOutput);
 
         this.currentFrameOutput = 0;
         this.lastLiftTargetPosition = this.currentLiftTargetPosition;
         this.previousFramePosition = currentPosition;
+
+        telemetry.addData("Lift Pos: ", currentPosition);
 
         this.velocityTimer.reset();
         // telemetry.addData("Target Position: ", targetPosition);
@@ -205,36 +154,6 @@ public class Lift implements Subsystem {
     public void setCurrentLiftTargetPosition(LIFT_POSITIONS targetListPosition) {
         this.resetOffset();
         this.currentLiftTargetPosition = targetListPosition;
-
-        this.updateMotionProfile();
-    }
-
-    public void updateMotionProfile() {
-        if (this.previousFramePosition > this.getTargetPosition()) {
-            this.currentMotionProfile = new MotionProfile(
-                    this.previousFramePosition,
-                    this.getTargetPosition(),
-                    downvMax,
-                    downaMax
-            );
-
-            this.profileType = PROFILE_TYPE.DOWN;
-        } else {
-            this.currentMotionProfile = new MotionProfile(
-                    this.previousFramePosition,
-                    this.getTargetPosition(),
-                    upvMax,
-                    upaMax
-            );
-            this.profileType = PROFILE_TYPE.UP;
-        }
-
-        this.motionProfileTimer.reset();
-
-    }
-
-    public int getTargetPosition() {
-        return this.getEncoderPositionFromLevel(this.currentLiftTargetPosition) + offset * OFFSET_INCREASE;
     }
 
     public int getEncoderPositionFromLevel(LIFT_POSITIONS currentLiftPosition) {
@@ -274,8 +193,6 @@ public class Lift implements Subsystem {
                 this.offset += offsetIncrease;
             }
         }
-
-        this.updateMotionProfile();
     }
 
     public void incrementOffset() {

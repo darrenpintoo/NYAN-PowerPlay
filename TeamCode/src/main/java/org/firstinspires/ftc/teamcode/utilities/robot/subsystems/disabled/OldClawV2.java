@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.utilities.robot.subsystems;
+package org.firstinspires.ftc.teamcode.utilities.robot.subsystems.disabled;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.ColorRangeSensor;
@@ -10,11 +10,14 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.utilities.controltheory.motionprofiler.MotionProfile;
 import org.firstinspires.ftc.teamcode.utilities.robot.RobotEx;
+import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.ClawTilt;
+import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.Lift;
+import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.Subsystem;
 import org.firstinspires.ftc.teamcode.utilities.statehandling.Debounce;
 import org.firstinspires.ftc.teamcode.utilities.statehandling.DebounceObject;
 
 @Config
-public class Claw implements Subsystem {
+public class OldClawV2 implements Subsystem {
 
 
     Debounce debounce = new Debounce(
@@ -28,8 +31,8 @@ public class Claw implements Subsystem {
     public static int RED_THRESHOLD = 50;
     public static int BLUE_THRESHOLD = 50;
     public static double DISTANCE_THRESHOLD = 3;
-    public static double vMax = 100;
-    public static double aMax = 100;
+    public static double vMax = 1;
+    public static double aMax = 1;
 
     public enum ClawStates {
         OPENED, CLOSED, SLIGHTLY_OPENED, OPEN_REQUESTED
@@ -63,8 +66,6 @@ public class Claw implements Subsystem {
     private boolean requestedLift = false;
 
     private ElapsedTime requestedTime = new ElapsedTime();
-
-    private ElapsedTime profileTime = new ElapsedTime();
     private MotionProfile clawProfile = new MotionProfile(openPosition, openPosition, vMax, aMax);
 
     @Override
@@ -89,14 +90,13 @@ public class Claw implements Subsystem {
 
         this.cacheCurrentFrameValues();
 
-        boolean coneInClaw = this.checkConeInClaw();
-
         telemetry.addData("Red: ", this.currentFrameRed);
         telemetry.addData("Blue: ", this.currentFrameBlue);
         telemetry.addData("Distance: ", this.currentDistance);
 
         telemetry.addData("Current Claw State: ", this.currentClawState.toString());
         if (this.enableAutoClose) {
+            boolean coneInClaw = this.checkConeInClaw();
 
             if (this.currentClawState == ClawStates.OPEN_REQUESTED) {
                 if (debounce.check(ClawStates.OPEN_REQUESTED.toString())) {
@@ -123,16 +123,6 @@ public class Claw implements Subsystem {
 
                 this.requestedLift = false;
             }
-        }
-
-        if (this.lift.getCurrentLiftTarget() != Lift.LIFT_POSITIONS.DEFAULT && this.lift.getCurrentLiftTarget() != Lift.LIFT_POSITIONS.GROUND_JUNCTION) {
-            if (this.currentClawState == ClawStates.CLOSED && coneInClaw) {
-                if (this.getServoPosition() < closePosition+0.1) {
-                    this.clawTilt.setCurrentState(ClawTilt.tiltState.ACTIVE);
-                }
-            }
-        } else {
-            this.clawTilt.setCurrentState(ClawTilt.tiltState.DEFAULT);
         }
         this.coneInClawLast = this.checkConeInClaw();
         clawGrabberServo.setPosition(getServoPosition(this.currentClawState));
@@ -165,21 +155,6 @@ public class Claw implements Subsystem {
                 debounce.reset(ClawStates.OPEN_REQUESTED.toString());
                 break;
         }
-       createProfile();
-    }
-
-    private void createProfile() {
-        this.clawProfile = new MotionProfile(
-                this.getServoPosition(),
-                this.getServoPosition(this.currentClawState),
-                vMax,
-                aMax
-        );
-        this.profileTime.reset();
-    }
-
-    public double getServoPosition() {
-        return this.clawProfile.getPositionFromTime(this.profileTime.seconds());
     }
 
     public double getServoPosition(ClawPositions clawPosition) {
@@ -234,11 +209,11 @@ public class Claw implements Subsystem {
     }
 
     public boolean checkRedConeInClaw() {
-        return this.getRedColor() > Claw.RED_THRESHOLD ;
+        return this.getRedColor() > OldClawV2.RED_THRESHOLD ;
     }
 
     public boolean checkBlueConeInClaw() {
-        return this.getBlueColor() > Claw.BLUE_THRESHOLD;
+        return this.getBlueColor() > OldClawV2.BLUE_THRESHOLD;
     }
 
     public boolean checkDistanceFromClaw() {

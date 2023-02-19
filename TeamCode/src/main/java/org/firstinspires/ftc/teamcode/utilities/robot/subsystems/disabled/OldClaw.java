@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.utilities.robot.subsystems;
+package org.firstinspires.ftc.teamcode.utilities.robot.subsystems.disabled;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.ColorRangeSensor;
@@ -8,31 +8,31 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.teamcode.utilities.controltheory.motionprofiler.MotionProfile;
 import org.firstinspires.ftc.teamcode.utilities.robot.RobotEx;
+import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.Lift;
+import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.Subsystem;
 import org.firstinspires.ftc.teamcode.utilities.statehandling.Debounce;
 import org.firstinspires.ftc.teamcode.utilities.statehandling.DebounceObject;
 
 @Config
-public class Claw implements Subsystem {
+public class OldClaw implements Subsystem {
 
 
     Debounce debounce = new Debounce(
-            new DebounceObject(ClawStates.OPEN_REQUESTED.toString(), 2000)
+            new DebounceObject("OPEN_REQUESTED", 2000)
     );
 
     Lift lift;
-    ClawTilt clawTilt;
 
     public static double TIME_THRESHOLD = 0.25;
     public static int RED_THRESHOLD = 50;
+    //    public static int RED_THRESHOLD2 = 100;
     public static int BLUE_THRESHOLD = 50;
-    public static double DISTANCE_THRESHOLD = 3;
-    public static double vMax = 100;
-    public static double aMax = 100;
+//    public static int BLUE_THRESHOLD2 = 100;
+
 
     public enum ClawStates {
-        OPENED, CLOSED, SLIGHTLY_OPENED, OPEN_REQUESTED
+        OPENED, CLOSED, SLIGHTLY_OPENED
     }
 
     public enum ClawPositions {
@@ -41,6 +41,7 @@ public class Claw implements Subsystem {
 
     public Servo clawGrabberServo;
     public ColorRangeSensor clawColorSensor;
+    public ColorRangeSensor clawColorSensor2;
 
     private Telemetry telemetry;
 
@@ -49,10 +50,9 @@ public class Claw implements Subsystem {
     public static double closePosition = 0;
     public static double slightlyOpenPosition = 0.2;
 
-    private boolean enableAutoClose = true;
+    private boolean enableAutoClose = false;
 
     private ClawStates currentClawState = ClawStates.OPENED;
-    private double previousClawPosition = openPosition;
 
     private int currentFrameBlue;
     private int currentFrameRed;
@@ -63,9 +63,6 @@ public class Claw implements Subsystem {
     private boolean requestedLift = false;
 
     private ElapsedTime requestedTime = new ElapsedTime();
-
-    private ElapsedTime profileTime = new ElapsedTime();
-    private MotionProfile clawProfile = new MotionProfile(openPosition, openPosition, vMax, aMax);
 
     @Override
     public void onInit(HardwareMap hardwareMap, Telemetry telemetry) {
@@ -80,107 +77,128 @@ public class Claw implements Subsystem {
     @Override
     public void onOpmodeStarted() {
         this.lift = RobotEx.getInstance().lift;
-        this.clawTilt = RobotEx.getInstance().clawTilt;
         this.onCyclePassed();
     }
 
     @Override
     public void onCyclePassed() {
 
-        this.cacheCurrentFrameValues();
 
-        boolean coneInClaw = this.checkConeInClaw();
+        this.cacheCurrentFrameColors();
 
         telemetry.addData("Red: ", this.currentFrameRed);
         telemetry.addData("Blue: ", this.currentFrameBlue);
-        telemetry.addData("Distance: ", this.currentDistance);
+        telemetry.addData("Distance: ", this.getDistanceFromI2C());
 
-        telemetry.addData("Current Claw State: ", this.currentClawState.toString());
+        // this.currentDistance = this.getDistanceFromI2C();
+
+/*
+        this.telemetry.addData("Claw -> Red: ", this.getRedColor());
+        this.telemetry.addData("Claw -> Blue: ", this.getBlueColor());
+        // this.telemetry.addData("Claw -> Distance: ", this.currentDistance);
+
+        this.telemetry.addData("Claw Servo Pos: ", this.clawGrabberServo.getPosition());
+        this.telemetry.addData("Cone in grabber: ", this.checkConeInClaw());
+*/
+
         if (this.enableAutoClose) {
-
-            if (this.currentClawState == ClawStates.OPEN_REQUESTED) {
-                if (debounce.check(ClawStates.OPEN_REQUESTED.toString())) {
-                    this.setClawState(ClawStates.OPENED);
-                }
-            } else if (this.checkConeInClaw() && this.currentClawState != ClawStates.CLOSED) {
-                telemetry.addLine("Closing claw");
+            if (this.checkConeInClaw() != this.coneInClawLast && this.checkConeInClaw() && this.currentClawState != ClawStates.CLOSED) {
                 this.setClawState(ClawStates.CLOSED);
 
-                if (this.checkConeInClaw() != this.coneInClawLast) {
-                    this.requestedLift = true;
-                    this.requestedTime.reset();
-                }
-            } else if (!coneInClaw) {
-                this.setClawState(ClawStates.OPENED);
-                this.requestedLift = false;
+                this.requestedLift = true;
+                this.requestedTime.reset();
             }
 
+            if (!this.checkConeInClaw()) {
+                this.requestedLift = false;
+            }
             if (this.requestedLift && this.requestedTime.seconds() > TIME_THRESHOLD) {
                 if (this.lift.getCurrentLiftTarget() == Lift.LIFT_POSITIONS.DEFAULT) {
                     this.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.GROUND_JUNCTION);
                 }
 
-
                 this.requestedLift = false;
             }
-        }
-
-        if (this.lift.getCurrentLiftTarget() != Lift.LIFT_POSITIONS.DEFAULT && this.lift.getCurrentLiftTarget() != Lift.LIFT_POSITIONS.GROUND_JUNCTION) {
-            if (this.currentClawState == ClawStates.CLOSED && coneInClaw) {
-                if (this.getServoPosition() < closePosition+0.1) {
-                    this.clawTilt.setCurrentState(ClawTilt.tiltState.ACTIVE);
-                }
+/*            if (this.lift.getCurrentLiftTarget() != Lift.LIFT_POSITIONS.DEFAULT || this.lift.getOffset() != 0) {
+                return;
             }
-        } else {
-            this.clawTilt.setCurrentState(ClawTilt.tiltState.DEFAULT);
+
+
+            if (this.currentClawState == ClawStates.CLOSED) {
+                if (this.requestedLift && this.requestedTime.seconds() > TIME_THRESHOLD) {
+                    this.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.GROUND_JUNCTION);
+                }
+            } else {
+                this.cacheCurrentFrameColors();
+
+                if (this.checkConeInClaw()) {
+                    this.setClawState(ClawStates.CLOSED);
+
+                    this.requestedLift = true;
+                    this.requestedTime.reset();
+                }
+            }*/
         }
         this.coneInClawLast = this.checkConeInClaw();
+
+        /*
+        switch (this.currentClawState) {
+            case OPENED:
+                telemetry.addLine("opened");
+                if (this.checkConeInClaw()) {
+                    telemetry.addLine("Cone in grabber");
+                    this.setClawStateOverride(ClawStates.CLOSED);
+                }
+                break;
+            case CLOSED:
+                telemetry.addLine("closed");
+                if (!this.checkRedConeInClaw()) {
+                    this.setClawStateOverride(ClawStates.OPENED);
+                    this.debounce.update("OPEN_REQUESTED");
+                }
+                break;
+            case OPEN_REQUESTED:
+                telemetry.addLine("open request");
+                if (this.debounce.check("OPEN_REQUESTED")) {
+                    this.setClawStateOverride(ClawStates.OPENED);
+                }
+                break;
+        }
+
+         */
+
         clawGrabberServo.setPosition(getServoPosition(this.currentClawState));
     }
 
-   public void setClawState(ClawStates newClawState) {
+    public void setClawState(ClawStates newClawState) {
+        this.currentClawState = newClawState;
 
-        if (this.currentClawState == ClawStates.OPEN_REQUESTED) {
-            if (!debounce.checkAndUpdate(ClawStates.OPEN_REQUESTED.toString())) {
-                return;
-            } else {
-                this.currentClawState = ClawStates.OPENED;
-            }
+        if (newClawState != ClawStates.CLOSED) {
+            this.requestedLift = false;
         }
+    }
 
+/*    public void setClawState(ClawStates newClawState) {
         switch (newClawState) {
             case OPENED:
-                if (this.currentClawState == ClawStates.CLOSED && this.checkConeInClaw()) {
-                    debounce.reset(ClawStates.OPEN_REQUESTED.toString());
+                if (this.currentClawState == ClawStates.CLOSED) {
                     this.currentClawState = ClawStates.OPEN_REQUESTED;
                 } else {
                     this.currentClawState = newClawState;
                 }
                 break;
             case CLOSED:
-                this.currentClawState = ClawStates.CLOSED;
+                if (!(this.currentClawState == ClawStates.OPEN_REQUESTED)) {
+                    this.currentClawState = ClawStates.CLOSED;
+                } else {
+                    this.currentClawState = newClawState;
+                }
                 break;
             case OPEN_REQUESTED:
                 this.currentClawState = newClawState;
-                debounce.reset(ClawStates.OPEN_REQUESTED.toString());
                 break;
         }
-       createProfile();
-    }
-
-    private void createProfile() {
-        this.clawProfile = new MotionProfile(
-                this.getServoPosition(),
-                this.getServoPosition(this.currentClawState),
-                vMax,
-                aMax
-        );
-        this.profileTime.reset();
-    }
-
-    public double getServoPosition() {
-        return this.clawProfile.getPositionFromTime(this.profileTime.seconds());
-    }
+    }*/
 
     public double getServoPosition(ClawPositions clawPosition) {
         switch (clawPosition) {
@@ -207,10 +225,9 @@ public class Claw implements Subsystem {
         return this.getServoPosition(ClawPositions.OPEN);
     }
 
-    public void cacheCurrentFrameValues() {
+    public void cacheCurrentFrameColors() {
         this.currentFrameBlue = this.getBlueColorFromI2C1();
         this.currentFrameRed = this.getRedColorFromI2C1();
-        this.currentDistance = this.getDistanceFromI2C();
     }
 
     private int getRedColorFromI2C1() {
@@ -230,19 +247,19 @@ public class Claw implements Subsystem {
     }
 
     public boolean checkConeInClaw() {
-        return (this.checkBlueConeInClaw() || this.checkRedConeInClaw()) && this.checkDistanceFromClaw();
+        return this.checkBlueConeInClaw() || this.checkRedConeInClaw();
     }
 
     public boolean checkRedConeInClaw() {
-        return this.getRedColor() > Claw.RED_THRESHOLD ;
+        return this.getRedColor() > OldClaw.RED_THRESHOLD ;
     }
 
     public boolean checkBlueConeInClaw() {
-        return this.getBlueColor() > Claw.BLUE_THRESHOLD;
+        return this.getBlueColor() > OldClaw.BLUE_THRESHOLD;
     }
 
     public boolean checkDistanceFromClaw() {
-        return this.currentDistance < DISTANCE_THRESHOLD;
+        return this.currentDistance < 4;
     }
 
     public double getDistanceFromI2C() {

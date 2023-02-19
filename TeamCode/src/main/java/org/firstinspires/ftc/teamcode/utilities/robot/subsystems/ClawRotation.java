@@ -14,8 +14,8 @@ public class ClawRotation implements Subsystem {
         DEFAULT,
         RIGHT
     }
-    public static double leftPosition = 0.1;
-    public static double defaultPosition = 0.2;
+    public static double leftPosition = 0.8;
+    public static double defaultPosition = 0.5;
     public static double rightPosition = 0.3;
 
     public static double MOVEMENT_THRESHOLD = 0.3;

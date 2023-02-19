@@ -12,6 +12,7 @@ import org.firstinspires.ftc.teamcode.utilities.robot.PersistentData;
 import org.firstinspires.ftc.teamcode.utilities.robot.RobotEx;
 import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.Claw;
 import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.ClawExtension;
+import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.ClawTilt;
 import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.Lift;
 
 /**
@@ -29,7 +30,7 @@ public class MainMecanumDrive extends LinearOpMode {
     public void runOpMode() {
 
         // telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
-        telemetry.setMsTransmissionInterval(500);
+        telemetry.setMsTransmissionInterval(25);
 
         // Initialize the robot
         robot.init(hardwareMap, telemetry);
@@ -137,6 +138,12 @@ public class MainMecanumDrive extends LinearOpMode {
                 robot.lift.setOffset(4);
             }
 
+            if (gamepad1.y) {
+                robot.clawTilt.setCurrentState(ClawTilt.tiltState.ACTIVE);
+            }
+            if (gamepad1.x) {
+                robot.clawTilt.setCurrentState(ClawTilt.tiltState.DEFAULT);
+            }
             robot.clawRotation.handleRotationFromGamepad(
                     currentFrameGamepad2.right_stick_y,
                     currentFrameGamepad2.right_stick_x
@@ -150,15 +157,16 @@ public class MainMecanumDrive extends LinearOpMode {
 
             double frameTime = robot.update();
 
-            telemetry.addData("Robot Tilt : ", robot.internalIMU.getCurrentFrameTilt());
+            // telemetry.addData("Robot Tilt : ", robot.internalIMU.getCurrentFrameTilt());
             telemetry.addData("Frame Time: ", frameTime);
             telemetry.addData("Refresh Rate: ", (frameTime != 0) ? (1000 / frameTime) : "inf");
-            telemetry.addData("Increment offset: ", robot.lift.getOffset());
-            telemetry.addData("Angular Velocity: ", robot.internalIMU.getCurrentFrameVelocity().xRotationRate);
+            // telemetry.addData("Increment offset: ", robot.lift.getOffset());
+            // telemetry.addData("Angular Velocity: ", robot.internalIMU.getCurrentFrameVelocity().xRotationRate);
             telemetry.addData("Lift at Target: ", robot.lift.checkAtTarget());
-            telemetry.addData("Cone in Claw: ", robot.claw.checkConeInClaw());
+            telemetry.addData("Claw Servo position: ", robot.claw.getServoPosition());
+            // telemetry.addData("Cone in Claw: ", robot.claw.checkConeInClaw());
             // telemetry.addData("IMU orientation: ", robot.internalIMU.getCurrentFrameOrientation());
-            telemetry.addData("CCW IMU orientation: ", robot.internalIMU.getCurrentFrameHeadingCCW());
+            // telemetry.addData("CCW IMU orientation: ", robot.internalIMU.getCurrentFrameHeadingCCW());
             // telemetry.addData("CW IMU orientation: ", robot.internalIMU.getCurrentFrameHeadingCW());
             // telemetry.addData("Robot Tilt Acceleration y: ", robot.internalIMU.getCurrentFrameVelocity().yRotationRate);
             // telemetry.addData("Joystick Orientation: ", Math.atan2(-currentFrameGamepad1.right_stick_x, -currentFrameGamepad1.right_stick_y));
