@@ -67,7 +67,6 @@ public class MainMecanumDrive extends LinearOpMode {
         robot.claw.enableAutoClose();
         robot.drivetrain.disableAntiTip();
 
-        robot.internalIMU.setHeadingOffset(Math.toRadians(90));
         while(opModeIsActive()) {
 
             // Retain information about the previous frame's gamepad

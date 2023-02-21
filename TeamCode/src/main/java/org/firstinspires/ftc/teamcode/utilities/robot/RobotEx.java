@@ -48,8 +48,8 @@ public class RobotEx {
             lift,
             claw,
             clawTilt,
-            clawExtension
-            //clawRotation
+            clawExtension,
+            clawRotation
     };
 
     Telemetry telemetry;
