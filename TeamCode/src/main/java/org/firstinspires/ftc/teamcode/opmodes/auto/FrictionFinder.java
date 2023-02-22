@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmodes.auto;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.robot.Robot;
@@ -10,6 +11,7 @@ import org.firstinspires.ftc.teamcode.utilities.robot.extensions.MotorGroup;
 
 import java.util.ArrayList;
 
+@TeleOp(name = "Friction Test")
 public class FrictionFinder extends LinearOpMode {
 
 
@@ -29,11 +31,14 @@ public class FrictionFinder extends LinearOpMode {
 
 
 
-        while (lastPos == drivetrainMotors.getAveragePosition()) {
+        while (lastPos == drivetrainMotors.getAveragePosition() && !isStopRequested()) {
             lastPos = drivetrainMotors.getAveragePosition();
             currentDriveTrainPower += 0.01;
             drivetrainMotors.setPower(currentDriveTrainPower);
-            robot.wait(1);
+            robot.pause(0.1);
+            telemetry.addData("MotorPower", currentDriveTrainPower);
+            telemetry.update();
+
         }
 
         while (opModeIsActive()){

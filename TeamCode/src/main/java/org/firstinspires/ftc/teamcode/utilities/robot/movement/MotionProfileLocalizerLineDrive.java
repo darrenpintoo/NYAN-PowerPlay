@@ -29,7 +29,8 @@ public class MotionProfileLocalizerLineDrive {
     public static double kV = 0.018;//1 / DriveConstants.MAX_VELOCITY;
     public static double kA = 0.003;
 
-    public static double kStatic = 0.05;
+    public static double kStaticTurn = 0.1;
+    public static double kStaticMovement = 0.08;
 
     RobotEx robot = RobotEx.getInstance();
 
@@ -138,7 +139,7 @@ public class MotionProfileLocalizerLineDrive {
 
             double output = feedforward + lateralFeedback;
 
-            output += Math.signum(output) * kStatic;
+            output += Math.signum(output) * kStaticMovement;
 
             this.dt.fieldCentricDriveFromGamepad(
                     -(forwardFeedback),
@@ -249,7 +250,7 @@ public class MotionProfileLocalizerLineDrive {
 
             double output = feedforward + forwardFeedback;
 
-            output += Math.signum(output) * kStatic;
+            output += Math.signum(output) * kStaticMovement;
 
             this.dt.fieldCentricDriveFromGamepad(
                     -(output),
@@ -361,7 +362,7 @@ public class MotionProfileLocalizerLineDrive {
 
             double output = feedforward + forwardFeedback;
 
-            output += Math.signum(output) * kStatic;
+            output += Math.signum(output) * kStaticMovement;
 
             this.dt.fieldCentricDriveFromGamepad(
                     -(output),
@@ -473,7 +474,7 @@ public class MotionProfileLocalizerLineDrive {
 
             double output = feedforward + lateralFeedback;
 
-            output += Math.signum(output) * kStatic;
+            output += Math.signum(output) * kStaticMovement;
 
             this.dt.fieldCentricDriveFromGamepad(
                     -(forwardFeedback),
@@ -580,7 +581,7 @@ public class MotionProfileLocalizerLineDrive {
 
             double output = feedforward + lateralFeedback;
 
-            output += Math.signum(output) * kStatic;
+            output += Math.signum(output) * kStaticMovement;
 
             this.dt.fieldCentricDriveFromGamepad(
                     -(forwardFeedback),
@@ -611,15 +612,18 @@ public class MotionProfileLocalizerLineDrive {
         double currentIMUVelocity;
         double turnError;
 
+        MotionProfile turnProfile = new MotionProfile(currentIMUPosition, angle, DriveConstants.MAX_ANGULAR_VELOCITY, DriveConstants.MAX_ANGULAR_VELOCITY);
+
         ElapsedTime turnTimer = new ElapsedTime();
         ElapsedTime elapsedTurnTime = new ElapsedTime();
 
         boolean atTarget = false;
         double atTargetStartTime = -1;
 
-        while (!atTarget && !this.currentOpmode.isStopRequested() && elapsedTurnTime.seconds() < DriveConstants.MAX_TURN_TIME) {
+        while (!atTarget && !this.currentOpmode.isStopRequested() && elapsedTurnTime.seconds() < turnProfile.getDuration()+DriveConstants.MAX_TURN_TIME) {
 
-            turnError = angle  - currentIMUPosition;
+            double currentTargetAngle = turnProfile.getPositionFromTime(elapsedTurnTime.seconds());
+            turnError = currentTargetAngle  - currentIMUPosition;
 
             if (Math.abs(turnError) > Math.PI) {
                 if (angle < 0) {
@@ -631,7 +635,7 @@ public class MotionProfileLocalizerLineDrive {
                 }
             }
 
-            double output = this.dt.headingPID.getOutputFromError(
+            double output = this.dt.profiledTurningPID.getOutputFromError(
                     turnError
             );
 
@@ -639,25 +643,14 @@ public class MotionProfileLocalizerLineDrive {
             this.dt.robotCentricDriveFromGamepad(
                     0,
                     0,
-                    Math.min(Math.max(output, -1), 1) + Math.signum(output) * kStatic
+                    Math.min(Math.max(output, -1), 1) + Math.signum(output) * kStaticTurn
             );
 
             currentIMUPosition = this.imu.getCurrentFrameRobotOrientation().getCCWHeading();
             currentIMUVelocity = this.imu.getCurrentFrameRobotVelocity().getTurnVelocity();
 
-            if (Math.abs(turnError) < DriveConstants.TURN_THRESHOLD && Math.abs(currentIMUVelocity) < DriveConstants.ANGULAR_VELOCITY_THRESHOLD) {
-                if (atTargetStartTime == -1) {
-                    atTargetStartTime = turnTimer.milliseconds();
-                } else if ((turnTimer.milliseconds() - atTargetStartTime) / 1000 > DriveConstants.ANGLE_AT_TIME) {
-                    atTarget = true;
-                }
-            } else {
-                atTargetStartTime = -1;
-            }
-
-
             if (telemetry != null) {
-                telemetry.addData("Target Angle: ", angle);
+                telemetry.addData("Target Angle: ", currentTargetAngle);
                 telemetry.addData("Turn Angle: ", turnError);
                 telemetry.addData("current angle: ", currentIMUPosition);
                 telemetry.update();

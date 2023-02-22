@@ -22,8 +22,8 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
 
-@Autonomous(name = "Left Cycle 1+6")
-public class LeftCycle_6Cone extends LinearOpMode {
+@Autonomous(name = "Motion Profiled Turns")
+public class MotionProfiledTurns extends LinearOpMode {
 
     // Create new Instance of the robot
     RobotEx robot = RobotEx.getInstance();
@@ -69,9 +69,6 @@ public class LeftCycle_6Cone extends LinearOpMode {
         robot.claw.disableAutoClose();
         waitForStart();
 
-        ParkingPosition parkPosition = sleeveDetection.getParkingPosition();
-
-        camera.stopStreaming();
         // Notify subsystems before loop
         robot.claw.setClawState(Claw.ClawStates.CLOSED);
         robot.postInit();
@@ -85,13 +82,11 @@ public class LeftCycle_6Cone extends LinearOpMode {
         robot.drivetrain.setRunMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         robot.drivetrain.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
-        robotDrivetrain.forwardXToPose(new Pose2d(16, 0));
-        robot.pause(1);
-        robotDrivetrain.forwardXToPose(new Pose2d(50, 0, 0));
-        robotDrivetrain.turnToAngle(Math.toRadians(-90));
-        robotDrivetrain.strafeYToPose(new Pose2d(50, -10, Math.toRadians(-90)));
-        robot.pause(1);
-        robot.persistData();
+        ParkingPosition parkPosition = sleeveDetection.getParkingPosition();
+
+        camera.stopStreaming();
+
+        robotDrivetrain.turnToAngle(Math.toRadians(90));
 
     }
 }

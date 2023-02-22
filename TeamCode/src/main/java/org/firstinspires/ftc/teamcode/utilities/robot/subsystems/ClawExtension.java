@@ -20,8 +20,8 @@ public class ClawExtension implements Subsystem {
 
     public static double aMax = 2.5;
     public static double vMax = 5;
-    public static double activeServoPosition = 0.45;
-    public static double defaultServoPosition = 0.78;
+    public static double activeServoPosition = 0.6;
+    public static double defaultServoPosition = 0.99;
 
     public Servo extensionServo;
 
@@ -57,6 +57,10 @@ public class ClawExtension implements Subsystem {
 
     public void setCurrentExtensionState(ExtensionState newExtensionState) {
 
+        if (newExtensionState == this.currentExtensionState) {
+            return;
+        }
+
         this.currentMovementProfile = new MotionProfile(
                 this.getPosition(),
                 this.getServoPositionFromState(newExtensionState),
@@ -70,5 +74,9 @@ public class ClawExtension implements Subsystem {
 
     public double getPosition() {
         return this.currentMovementProfile.getPositionFromTime(this.profileTimer.seconds());
+    }
+
+    public boolean isAtPosition() {
+        return this.profileTimer.seconds() > this.currentMovementProfile.getDuration();
     }
 }

@@ -28,10 +28,8 @@ public class Lift implements Subsystem {
     }
 
     public enum LIFT_STATES {
-        DEFAULT,
-        RETRACTING,
-        EXTENDING,
-        EXTENDED
+        ACTIVE,
+        WAITING
     }
 
     public enum PROFILE_TYPE {
@@ -40,12 +38,12 @@ public class Lift implements Subsystem {
 
     private final double GAMEPAD_THRESHOLD = 0.05;
 
-    public static double upvMax = 3000;
-    public static double upaMax = 2000;
-    public static double upkV = 0.00045;
-    public static double upkA = 0.0001;
+    public static double upvMax = 2000;
+    public static double upaMax = 4000;
+    public static double upkV = 0.0003;
+    public static double upkA = 0.000025;
 
-    public static double upkP = 0.005;
+    public static double upkP = 0.01;
     public static double upkI = 0;
     public static double upkD = 0;
     public static double upkF1 = 0.25;
@@ -69,7 +67,7 @@ public class Lift implements Subsystem {
     public static int GROUND_HEIGHT = 100;
     public static int LOW_HEIGHT = 750;
     public static int MIDDLE_HEIGHT = 1225;
-    public static int HIGH_HEIGHT = 1700;
+    public static int HIGH_HEIGHT = 1650;
 
     public DcMotorEx leftLiftMotor;
     public DcMotorEx rightLiftMotor;
@@ -85,7 +83,7 @@ public class Lift implements Subsystem {
     LIFT_POSITIONS currentLiftTargetPosition = LIFT_POSITIONS.DEFAULT;
     LIFT_POSITIONS lastLiftTargetPosition = LIFT_POSITIONS.DEFAULT;
 
-    LIFT_STATES currentLiftState = LIFT_STATES.DEFAULT;
+    LIFT_STATES currentLiftState = LIFT_STATES.ACTIVE;
 
     GeneralPIDController upLiftPID = new GeneralPIDController(upkP, upkI, upkD, 0);
     GeneralPIDController downLiftPID = new GeneralPIDController(downkP, downkI, downkD, 0);
@@ -97,6 +95,9 @@ public class Lift implements Subsystem {
 
     private ElapsedTime velocityTimer = new ElapsedTime();
     private ElapsedTime motionProfileTimer = new ElapsedTime();
+
+    private ClawExtension clawExtension;
+    private ClawRotation clawRotation;
 
     @Override
     public void onInit(HardwareMap hardwareMap, Telemetry telemetry) {
@@ -121,7 +122,10 @@ public class Lift implements Subsystem {
     @Override
     public void onOpmodeStarted() {
         this.currentLiftTargetPosition = LIFT_POSITIONS.DEFAULT;
-        this.currentLiftState = LIFT_STATES.DEFAULT;
+        this.currentLiftState = LIFT_STATES.ACTIVE;
+
+        this.clawExtension = RobotEx.getInstance().clawExtension;
+        this.clawRotation = RobotEx.getInstance().clawRotation;
     }
 
     @Override
@@ -148,19 +152,20 @@ public class Lift implements Subsystem {
         double kF = 0;
 
         if (this.profileType == PROFILE_TYPE.UP) {
-            kF = MathHelper.lerp(upkF1, upkF2, currentPosition / this.getEncoderPositionFromLevel(LIFT_POSITIONS.HIGH_JUNCTION));
+            kF = MathHelper.lerp(upkF1, upkF2, Math.min(currentPosition / this.getEncoderPositionFromLevel(LIFT_POSITIONS.HIGH_JUNCTION), 1));
             feedforward = targetAcceleration * upkA + targetVelocity * upkV + kF;
             feedback = upLiftPID.getOutputFromError(
                     targetPosition - currentPosition
             );
         } else {
-            kF = MathHelper.lerp(downkF1, downkF2, currentPosition / this.getEncoderPositionFromLevel(LIFT_POSITIONS.HIGH_JUNCTION));
+            kF = MathHelper.lerp(downkF1, downkF2, Math.min(currentPosition / this.getEncoderPositionFromLevel(LIFT_POSITIONS.HIGH_JUNCTION), 1));
             feedforward = targetAcceleration * downkA + targetVelocity * downkV + kF;
             feedback = downLiftPID.getOutputFromError(
                     targetPosition - currentPosition
             );
         }
 
+        telemetry.addData("kF: ", kF);
         telemetry.addData("feed forward: ", feedforward);
         telemetry.addData("feed back: ", feedback);
         currentFrameOutput = feedforward + feedback;
@@ -176,7 +181,14 @@ public class Lift implements Subsystem {
         } else {
             this.liftAtTarget = false;
         }*/
-
+        if (this.currentLiftState == LIFT_STATES.WAITING) {
+            if (this.clawExtension.isAtPosition() && this.clawRotation.atPosition()) {
+                this.currentLiftState = LIFT_STATES.ACTIVE;
+                motionProfileTimer.reset();
+            } else {
+                return;
+            }
+        }
         this.liftMotors.setPower(MathHelper.clamp(currentFrameOutput, -1, 1));
 
         telemetry.addData("output: ", currentFrameOutput);
@@ -203,6 +215,18 @@ public class Lift implements Subsystem {
     }
 
     public void setCurrentLiftTargetPosition(LIFT_POSITIONS targetListPosition) {
+
+        if (getEncoderPositionFromLevel(targetListPosition) == this.getTargetPosition()) {
+            return;
+        }
+
+        if (targetListPosition == LIFT_POSITIONS.DEFAULT) {
+            this.clawRotation.setCurrentState(ClawRotation.rotationState.DEFAULT);
+            this.clawExtension.setCurrentExtensionState(ClawExtension.ExtensionState.DEFAULT);
+            this.currentLiftState = LIFT_STATES.WAITING;
+        } else {
+            this.currentLiftState = LIFT_STATES.ACTIVE;
+        }
         this.resetOffset();
         this.currentLiftTargetPosition = targetListPosition;
 
@@ -210,6 +234,7 @@ public class Lift implements Subsystem {
     }
 
     public void updateMotionProfile() {
+
         if (this.previousFramePosition > this.getTargetPosition()) {
             this.currentMotionProfile = new MotionProfile(
                     this.previousFramePosition,

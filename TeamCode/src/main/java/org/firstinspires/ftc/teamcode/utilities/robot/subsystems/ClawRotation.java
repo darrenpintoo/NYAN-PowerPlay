@@ -3,8 +3,11 @@ package org.firstinspires.ftc.teamcode.utilities.robot.subsystems;
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.utilities.controltheory.motionprofiler.MotionProfile;
+import org.firstinspires.ftc.teamcode.utilities.robot.RobotEx;
 
 @Config
 public class ClawRotation implements Subsystem {
@@ -14,21 +17,36 @@ public class ClawRotation implements Subsystem {
         DEFAULT,
         RIGHT
     }
+
+    public enum movementState {
+        ACTIVE,
+        WAITING
+    }
+    public static double vMax = 3;
+    public static double aMax = 2;
     public static double leftPosition = 0.8;
     public static double defaultPosition = 0.5;
-    public static double rightPosition = 0.3;
+    public static double rightPosition = 0.2;
 
     public static double MOVEMENT_THRESHOLD = 0.3;
 
     public Servo rotationServo;
 
+    private double previousFramePosition = defaultPosition;
     public rotationState currentState = rotationState.DEFAULT;
+    public movementState currentMovementState = movementState.ACTIVE;
 
     Telemetry telemetry;
+
+    MotionProfile currentMovementProfile = new MotionProfile(defaultPosition, defaultPosition, vMax, aMax);
+    ElapsedTime profileTimer = new ElapsedTime();
+
+    ClawExtension extension;
 
     @Override
     public void onInit(HardwareMap hardwareMap, Telemetry telemetry) {
         this.rotationServo = hardwareMap.get(Servo.class, "extensionRotationServo");
+        this.extension = RobotEx.getInstance().clawExtension;
         this.telemetry = telemetry;
     }
 
@@ -39,9 +57,20 @@ public class ClawRotation implements Subsystem {
 
     @Override
     public void onCyclePassed() {
-        this.rotationServo.setPosition(this.getServoPositionFromState(currentState));
 
-        telemetry.addData("Current Tilt Position: ", this.rotationServo.getPosition());
+
+        if (this.currentMovementState == movementState.ACTIVE) {
+            double currentFramePosition = this.getPosition();
+            this.rotationServo.setPosition(currentFramePosition);
+            this.previousFramePosition = currentFramePosition;
+        } else {
+            if (this.extension.isAtPosition()) {
+                this.currentMovementState = movementState.ACTIVE;
+                this.profileTimer.reset();
+            }
+        }
+        telemetry.addData("Current rotation Position: ", this.rotationServo.getPosition());
+
     }
 
     public double getServoPositionFromState(rotationState state) {
@@ -57,17 +86,40 @@ public class ClawRotation implements Subsystem {
         return defaultPosition;
     }
 
-    public void setCurrentState(rotationState newRotationState) {
-        this.currentState = newRotationState;
-    }
-
     public void handleRotationFromGamepad(double y, double x) {
-        if (y > MOVEMENT_THRESHOLD) {
+        if (-y > MOVEMENT_THRESHOLD) {
             this.setCurrentState(rotationState.DEFAULT);
         } else if (x < -MOVEMENT_THRESHOLD) {
             this.setCurrentState(rotationState.LEFT);
         } else if (x > MOVEMENT_THRESHOLD) {
             this.setCurrentState(rotationState.RIGHT);
         }
+    }
+
+    public void setCurrentState(rotationState newRotationState) {
+
+        if (newRotationState == currentState) {
+            return;
+        }
+
+        this.currentMovementProfile = new MotionProfile(
+                this.getPosition(),
+                this.getServoPositionFromState(newRotationState),
+                vMax,
+                aMax
+        );
+
+        this.currentMovementState = movementState.WAITING;
+        this.extension.setCurrentExtensionState(ClawExtension.ExtensionState.DEFAULT);
+        this.currentState = newRotationState;
+
+    }
+
+    public double getPosition() {
+        return this.currentMovementProfile.getPositionFromTime(this.profileTimer.seconds());
+    }
+
+    public boolean atPosition() {
+        return this.currentMovementState != movementState.WAITING && this.profileTimer.seconds() > this.currentMovementProfile.getDuration();
     }
 }

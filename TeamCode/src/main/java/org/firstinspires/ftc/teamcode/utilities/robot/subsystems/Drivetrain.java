@@ -46,6 +46,8 @@ public class Drivetrain implements Subsystem {
     private boolean enableHeadingRetention = false;
 
     public GeneralPIDController headingPID = new GeneralPIDController(0.6, 0, 20, 0);
+    public GeneralPIDController profiledTurningPID = new GeneralPIDController(0.7, 0, 40, 0);
+
     public GeneralPIDController translationalPID = new GeneralPIDController(1, 0, 0, 0);
 
     public GeneralPIDController tiltPID = new GeneralPIDController(1, 0, 0, 0);
@@ -73,7 +75,7 @@ public class Drivetrain implements Subsystem {
 
     private double weight = 1;
 
-    public static double kP = 0.6;
+    public static double kP = 0.7;
     public static double kI = 0;
     public static double kD = 40;
 
@@ -144,7 +146,7 @@ public class Drivetrain implements Subsystem {
     @Override
     public void onCyclePassed() {
 
-        this.headingPID.updateCoefficients(Drivetrain.kP, Drivetrain.kI, Drivetrain.kD, 0);
+        this.profiledTurningPID.updateCoefficients(Drivetrain.kP, Drivetrain.kI, Drivetrain.kD, 0);
 
         RobotOrientation currentOrientation = this.internalIMU.getCurrentFrameRobotOrientation();
         RobotOrientation startOrientation = this.internalIMU.getStartFrameRobotOrientation();
@@ -231,6 +233,9 @@ public class Drivetrain implements Subsystem {
         this.lastX = leftJoystickX;
         this.lastY = leftJoystickY;
         this.lastRot = rightJoystickX;
+
+        telemetry.addData("Rot: ", rightJoystickX);
+        telemetry.addData("for: ", leftJoystickY);
 
     }
 

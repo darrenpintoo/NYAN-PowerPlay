@@ -93,7 +93,7 @@ public class MainMecanumDrive extends LinearOpMode {
                 robot.claw.setClawState(Claw.ClawStates.SLIGHTLY_OPENED);
             }
 
-            robot.drivetrain.robotCentricDriveFromGamepad(
+            robot.drivetrain.fieldCentricDriveFromGamepad(
                     currentFrameGamepad1.left_stick_y,
                     currentFrameGamepad1.left_stick_x,
                     currentFrameGamepad1.right_stick_x * 0.55
@@ -174,8 +174,8 @@ public class MainMecanumDrive extends LinearOpMode {
             //        Math.atan2(currentFrameGamepad1.right_stick_y, currentFrameGamepad1.right_stick_x) - Math.PI / 2
             // );
             // ^ https://www.desmos.com/calculator/jp45vcfcbt
-
-
+            
+            telemetry.addData("Rotation At Position: ", this.robot.clawRotation.atPosition());
 
             telemetry.update();
 
