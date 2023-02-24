@@ -47,7 +47,7 @@ public class Claw implements Subsystem {
     //need to tune still
     public static double openPosition = 0.38;
     public static double closePosition = 0;
-    public static double slightlyOpenPosition = 0.2;
+    public static double slightlyOpenPosition = 0.25;
 
     private boolean enableAutoClose = true;
 

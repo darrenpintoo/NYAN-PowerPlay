@@ -35,7 +35,7 @@ public class DriveConstants {
     public static double MAX_CORRECTION_TIME = 0.75;
 
     public static double MAX_VELOCITY = 55; // If doing 1
-    public static double MAX_ACCELERATION = 40;
+    public static double MAX_ACCELERATION = 30;
 
     public static double MAX_ANGULAR_VELOCITY = Math.toRadians(270);
     public static double trackWidth = 10;
