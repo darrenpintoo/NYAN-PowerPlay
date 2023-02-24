@@ -15,6 +15,7 @@ import org.firstinspires.ftc.teamcode.utilities.controltheory.motionprofiler.Mot
 import org.firstinspires.ftc.teamcode.utilities.localizer.RoadrunnerLocalizer;
 import org.firstinspires.ftc.teamcode.utilities.math.AngleHelper;
 import org.firstinspires.ftc.teamcode.utilities.math.MathHelper;
+import org.firstinspires.ftc.teamcode.utilities.math.linearalgebra.Pose;
 import org.firstinspires.ftc.teamcode.utilities.robot.DriveConstants;
 import org.firstinspires.ftc.teamcode.utilities.robot.RobotEx;
 import org.firstinspires.ftc.teamcode.utilities.robot.extensions.MotorGroup;
@@ -23,13 +24,13 @@ import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.InternalIMU;
 
 @Config
 public class MotionProfileLocalizerLineDrive {
-    GeneralPIDController followerPID = new GeneralPIDController(0.1, 0, 0, 0);
-    GeneralPIDController laterialPID = new GeneralPIDController(0.1, 0, 0, 0);
+    GeneralPIDController followerPID = new GeneralPIDController(0.3, 0, 0, 0);
+    GeneralPIDController laterialPID = new GeneralPIDController(0.3, 0, 0, 0);
 
     public static double kV = 0.018;//1 / DriveConstants.MAX_VELOCITY;
-    public static double kA = 0.003;
+    public static double kA = 0.005;
 
-    public static double kStaticTurn = 0.1;
+    public static double kStaticTurn = 0.07;
     public static double kStaticMovement = 0.08;
 
     RobotEx robot = RobotEx.getInstance();
@@ -54,6 +55,12 @@ public class MotionProfileLocalizerLineDrive {
         this.telemetry = telemetry;
     }
 
+    private boolean withinPositionalThreshold(Pose2d differencePose) {
+        Pose2d threshold = DriveConstants.POSITION_THRESHOLD;
+
+        return differencePose.getX() < threshold.getX() &&
+                differencePose.getY() < threshold.getY();
+    }
     public void strafeY(double strafeInches) {
 
         robot.update();
@@ -299,7 +306,7 @@ public class MotionProfileLocalizerLineDrive {
 
         Pose2d previousFramePosition = startPosition;
 
-        while (duration > currentFrameTime && !this.currentOpmode.isStopRequested()) {
+        while (duration+DriveConstants.MAX_CORRECTION_TIME > currentFrameTime && !this.currentOpmode.isStopRequested()) {
 
             double dt = currentFrameTime - previousFrameTime;
 
@@ -329,7 +336,7 @@ public class MotionProfileLocalizerLineDrive {
                     currentFramePosition.getX()
             );
 
-            double lateralFeedback = -this.laterialPID.getOutputFromError(
+            double lateralFeedback = this.laterialPID.getOutputFromError(
                     targetPose.getY() - currentFramePosition.getY()
             );
 
@@ -376,7 +383,14 @@ public class MotionProfileLocalizerLineDrive {
 
             robot.update();
 
+            if (this.profileTimer.seconds() > duration) {
+                Pose2d differencePose = targetPose.minus(currentFramePosition);
+                boolean inBounds = withinPositionalThreshold(differencePose);
 
+                if (inBounds) {
+                    break;
+                }
+            }
             currentFrameTime = this.profileTimer.seconds();
 
 
@@ -411,7 +425,7 @@ public class MotionProfileLocalizerLineDrive {
 
         Pose2d previousFramePosition = startPosition;
 
-        while (duration > currentFrameTime && !this.currentOpmode.isStopRequested()) {
+        while (duration+DriveConstants.MAX_CORRECTION_TIME > currentFrameTime && !this.currentOpmode.isStopRequested()) {
 
             double dt = currentFrameTime - previousFrameTime;
 
@@ -436,7 +450,7 @@ public class MotionProfileLocalizerLineDrive {
 
             double feedforward = targetCurrentFrameVelocity * kV + targetCurrentFrameAcceleration * kA;
 
-            double forwardFeedback = -this.followerPID.getOutputFromError(
+            double forwardFeedback = this.followerPID.getOutputFromError(
                     targetPose.getX(),
                     currentFramePosition.getX()
             );
@@ -486,6 +500,15 @@ public class MotionProfileLocalizerLineDrive {
             previousFrameTime = currentFrameTime;
 
             robot.update();
+
+            if (this.profileTimer.seconds() > duration) {
+                Pose2d differencePose = targetPose.minus(currentFramePosition);
+                boolean inBounds = withinPositionalThreshold(differencePose);
+
+                if (inBounds) {
+                    break;
+                }
+            }
 
             currentFrameTime = this.profileTimer.seconds();
 
@@ -620,7 +643,7 @@ public class MotionProfileLocalizerLineDrive {
         boolean atTarget = false;
         double atTargetStartTime = -1;
 
-        while (!atTarget && !this.currentOpmode.isStopRequested() && elapsedTurnTime.seconds() < turnProfile.getDuration()+DriveConstants.MAX_TURN_TIME) {
+        while (!atTarget && !this.currentOpmode.isStopRequested() && elapsedTurnTime.seconds() < turnProfile.getDuration()+DriveConstants.MAX_CORRECTION_TIME) {
 
             double currentTargetAngle = turnProfile.getPositionFromTime(elapsedTurnTime.seconds());
             turnError = currentTargetAngle  - currentIMUPosition;

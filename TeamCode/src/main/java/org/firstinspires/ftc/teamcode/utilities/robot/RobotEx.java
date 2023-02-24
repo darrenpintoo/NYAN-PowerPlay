@@ -130,6 +130,7 @@ public class RobotEx {
 
         fieldOverlay.setStrokeWidth(1);
         fieldOverlay.setStroke("#4CAF50");
+
         drawRobot(fieldOverlay, currentPose);
 
 
@@ -169,5 +170,10 @@ public class RobotEx {
     }
     public void clearPersistData() {
         PersistentData.startPose = new Pose2d();
+    }
+
+    public void destroy() {
+        RobotEx.robotInstance = null;
+        internalIMU.destroy();
     }
 }

@@ -45,13 +45,13 @@ public class Drivetrain implements Subsystem {
     private boolean enableAntiTip = false;
     private boolean enableHeadingRetention = false;
 
-    public GeneralPIDController headingPID = new GeneralPIDController(0.6, 0, 20, 0);
+    public GeneralPIDController headingPID = new GeneralPIDController(1.3, 0, 20, 0);
     public GeneralPIDController profiledTurningPID = new GeneralPIDController(0.7, 0, 40, 0);
 
     public GeneralPIDController translationalPID = new GeneralPIDController(1, 0, 0, 0);
 
-    public GeneralPIDController tiltPID = new GeneralPIDController(1, 0, 0, 0);
-    public GeneralPIDController yawPID = new GeneralPIDController(1, 0, 0, 0);
+    public GeneralPIDController tiltPID = new GeneralPIDController(0.3, 0, 0, 0);
+    public GeneralPIDController yawPID = new GeneralPIDController(0.3, 0, 0, 0);
 
     private Telemetry telemetry;
 
@@ -81,7 +81,7 @@ public class Drivetrain implements Subsystem {
 
     private double trackWidth = 12;
     private double wheelBase = 6.5;
-    private double lateralMultiplier = 1;
+    private double lateralMultiplier = -1;
 
     @Override
     public void onInit(HardwareMap hardwareMap, Telemetry telemetry) {
@@ -148,7 +148,7 @@ public class Drivetrain implements Subsystem {
 
         this.profiledTurningPID.updateCoefficients(Drivetrain.kP, Drivetrain.kI, Drivetrain.kD, 0);
 
-        RobotOrientation currentOrientation = this.internalIMU.getCurrentFrameRobotOrientation();
+/*        RobotOrientation currentOrientation = this.internalIMU.getCurrentFrameRobotOrientation();
         RobotOrientation startOrientation = this.internalIMU.getStartFrameRobotOrientation();
 
         double tiltError = currentOrientation.getTilt() - startOrientation.getTilt();
@@ -159,7 +159,13 @@ public class Drivetrain implements Subsystem {
             double tiltOutput = this.tiltPID.getOutputFromError(startOrientation.getTilt(), currentOrientation.getTilt());
             double yawOutput = this.yawPID.getOutputFromError(startOrientation.getYaw(), currentOrientation.getYaw());
 
-            leftBackPower -= yawOutput;
+            telemetry.addData("Tilt Error: ", tiltError);
+            telemetry.addData("Yaw Error: ", yawError);
+
+            telemetry.addData("Tilt Output: ", tiltOutput);
+            telemetry.addData("Yaw Output: ", yawOutput);
+
+*//*            leftBackPower -= yawOutput;
             leftFrontPower += yawOutput;
             rightBackPower += yawOutput;
             rightFrontPower -= yawOutput;
@@ -167,13 +173,18 @@ public class Drivetrain implements Subsystem {
             leftBackPower += tiltOutput;
             leftFrontPower += tiltOutput;
             rightBackPower += tiltOutput;
-            rightFrontPower += tiltOutput;
-        }
+            rightFrontPower += tiltOutput;*//*
+        }*/
 
-        this.rightBackMotor.setPower(rightBackPower * this.weight);
-        this.rightFrontMotor.setPower(rightFrontPower * this.weight);
-        this.leftBackMotor.setPower(leftBackPower * this.weight);
-        this.leftFrontMotor.setPower(leftFrontPower * this.weight);
+        rightBackPower *= this.weight;
+        rightFrontPower *= this.weight;
+        leftBackPower *= this.weight;
+        leftFrontPower *= this.weight;
+
+        this.rightBackMotor.setPower(rightBackPower);
+        this.rightFrontMotor.setPower(rightFrontPower);
+        this.leftBackMotor.setPower(leftBackPower);
+        this.leftFrontMotor.setPower(leftFrontPower);
 
         this.lastRightBackPower = this.rightBackPower;
         this.lastLeftBackPower= this.leftBackPower;
@@ -233,9 +244,9 @@ public class Drivetrain implements Subsystem {
         this.lastX = leftJoystickX;
         this.lastY = leftJoystickY;
         this.lastRot = rightJoystickX;
-
+/*
         telemetry.addData("Rot: ", rightJoystickX);
-        telemetry.addData("for: ", leftJoystickY);
+        telemetry.addData("for: ", leftJoystickY);*/
 
     }
 

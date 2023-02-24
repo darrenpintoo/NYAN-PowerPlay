@@ -14,6 +14,9 @@ import org.firstinspires.ftc.teamcode.utilities.robot.movement.MotionProfileLoca
 import org.firstinspires.ftc.teamcode.utilities.robot.movement.MotionProfileLocalizerLineDrive;
 import org.firstinspires.ftc.teamcode.utilities.robot.movement.MotionProfilingDrive;
 import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.Claw;
+import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.ClawExtension;
+import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.ClawRotation;
+import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.ClawTilt;
 import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.Lift;
 import org.firstinspires.ftc.teamcode.vision.simulatortests.ApriltagDetectionPipeline;
 import org.firstinspires.ftc.teamcode.vision.simulatortests.ParkingPosition;
@@ -22,7 +25,7 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
 
-@Autonomous(name = "Left Cycle 1+6")
+@Autonomous(name = "Left Cycle 1+5 Low")
 public class LeftCycle_6Cone extends LinearOpMode {
 
     // Create new Instance of the robot
@@ -31,6 +34,27 @@ public class LeftCycle_6Cone extends LinearOpMode {
     ApriltagDetectionPipeline sleeveDetection;
     OpenCvCamera camera;
     String webcamName = "Webcam 1";
+
+    public void gotoLow() {
+        robot.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.LOW_JUNCTION);
+        robot.clawTilt.setCurrentState(ClawTilt.tiltState.ACTIVE);
+    }
+
+    public void rotateExtend(ClawRotation.rotationState rotationState) {
+        robot.clawRotation.setCurrentState(rotationState);
+        while (!robot.clawRotation.atPosition()) {
+            robot.update();
+        }
+
+        robot.clawExtension.setCurrentExtensionState(ClawExtension.ExtensionState.MID);
+        while (!robot.clawExtension.isAtPosition()) {
+            robot.update();
+        }
+    }
+
+    public void retract() {
+        robot.lift.setCurrentLiftTargetPosition(Lift.LIFT_POSITIONS.DEFAULT);
+    }
 
     @Override
     public void runOpMode() {
@@ -71,7 +95,6 @@ public class LeftCycle_6Cone extends LinearOpMode {
 
         ParkingPosition parkPosition = sleeveDetection.getParkingPosition();
 
-        camera.stopStreaming();
         // Notify subsystems before loop
         robot.claw.setClawState(Claw.ClawStates.CLOSED);
         robot.postInit();
@@ -85,11 +108,121 @@ public class LeftCycle_6Cone extends LinearOpMode {
         robot.drivetrain.setRunMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         robot.drivetrain.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
-        robotDrivetrain.forwardXToPose(new Pose2d(16, 0));
-        robot.pause(1);
-        robotDrivetrain.forwardXToPose(new Pose2d(50, 0, 0));
+        robot.internalIMU.setHeadingOffset(-robot.internalIMU.getCurrentFrameHeadingCCW());
+
+        robot.localizer.setPoseEstimate(
+                new Pose2d(0, 0, 0)
+        );
+
+        this.gotoLow();
+        robot.lift.setOffset(-1);
+        robot.clawRotation.setAngle(42);
+        robot.clawRotation.yieldTillAtPosition();
+        robot.pause(0.5);
+        robot.clawExtension.setCurrentExtensionState(ClawExtension.ExtensionState.ACTIVE);
+        robot.clawExtension.yieldTillAtPosition();
+        robot.pause(0.25);
+        robot.claw.setClawState(Claw.ClawStates.OPENED);
+        this.retract();
+        robotDrivetrain.forwardXToPose(new Pose2d(51.5, 0, Math.toRadians(0)));
         robotDrivetrain.turnToAngle(Math.toRadians(-90));
-        robotDrivetrain.strafeYToPose(new Pose2d(50, -10, Math.toRadians(-90)));
+        robot.lift.setOffset(4);
+        robot.clawExtension.setCurrentExtensionState(ClawExtension.ExtensionState.ACTIVE);
+        robotDrivetrain.strafeYToPose(new Pose2d(51.5, -13, Math.toRadians(-90)));
+        robot.clawExtension.yieldTillAtPosition();
+        robot.pause(0.25);
+        robot.claw.setClawState(Claw.ClawStates.CLOSED);
+        robot.pause(0.5);
+        this.gotoLow();
+        robot.lift.setOffset(3);
+        robotDrivetrain.strafeYToPose(new Pose2d(51.5, -9.5, Math.toRadians(-90)));
+        robot.clawRotation.setCurrentState(ClawRotation.rotationState.LEFT);
+        robot.clawRotation.yieldTillAtPosition();
+        robot.pause(0.25);
+        robot.lift.setOffset(-2);
+        robot.pause(1);
+        robot.claw.setClawState(Claw.ClawStates.OPENED);
+        this.retract();
+        robot.lift.setOffset(3);
+        robot.pause(0.1);
+        robot.clawExtension.setCurrentExtensionState(ClawExtension.ExtensionState.ACTIVE);
+        robotDrivetrain.strafeYToPose(new Pose2d(51.5, -11.5, Math.toRadians(-90)));
+        robot.clawExtension.yieldTillAtPosition();
+        robot.pause(0.25);
+        robot.claw.setClawState(Claw.ClawStates.CLOSED);
+        robot.pause(0.5);
+        this.gotoLow();
+        robot.lift.setOffset(3);
+        robotDrivetrain.strafeYToPose(new Pose2d(51.5, -9.5, Math.toRadians(-90)));
+        robot.clawRotation.setCurrentState(ClawRotation.rotationState.LEFT);
+        robot.pause(0.25);
+        robot.clawRotation.yieldTillAtPosition();
+        robot.lift.setOffset(-2);
+        robot.pause(1);
+        robot.claw.setClawState(Claw.ClawStates.OPENED);
+        this.retract();
+        robot.lift.setOffset(2);
+        robot.pause(0.1);
+        robot.clawExtension.setCurrentExtensionState(ClawExtension.ExtensionState.ACTIVE);
+        robotDrivetrain.strafeYToPose(new Pose2d(51.5, -11.5, Math.toRadians(-90)));
+        robot.clawExtension.yieldTillAtPosition();
+        robot.pause(0.25);
+        robot.claw.setClawState(Claw.ClawStates.CLOSED);
+        robot.pause(0.5);
+        this.gotoLow();
+        robot.lift.setOffset(3);
+        robotDrivetrain.strafeYToPose(new Pose2d(51.5, -9.5, Math.toRadians(-90)));
+        robot.clawRotation.setCurrentState(ClawRotation.rotationState.LEFT);
+        robot.pause(0.25);
+        robot.clawRotation.yieldTillAtPosition();
+        robot.lift.setOffset(-2);
+        robot.pause(1);
+        robot.claw.setClawState(Claw.ClawStates.OPENED);
+        this.retract();
+        robot.lift.setOffset(1);
+        robot.pause(0.1);
+        robot.clawExtension.setCurrentExtensionState(ClawExtension.ExtensionState.ACTIVE);
+        robotDrivetrain.strafeYToPose(new Pose2d(51.5, -11.5, Math.toRadians(-90)));
+        robot.clawExtension.yieldTillAtPosition();
+        robot.pause(0.25);
+        robot.claw.setClawState(Claw.ClawStates.CLOSED);
+        robot.pause(0.5);
+        this.gotoLow();
+        robot.lift.setOffset(3);
+        robotDrivetrain.strafeYToPose(new Pose2d(51.5, -9.5, Math.toRadians(-90)));
+        robot.clawRotation.setCurrentState(ClawRotation.rotationState.LEFT);
+        robot.pause(0.25);
+        robot.clawRotation.yieldTillAtPosition();
+        robot.lift.setOffset(-2);
+        robot.pause(1);
+        robot.claw.setClawState(Claw.ClawStates.OPENED);
+        this.retract();
+        robotDrivetrain.strafeYToPose(new Pose2d(51.5, 20, Math.toRadians(-90)));
+
+
+
+
+
+/*        robot.pause(1);
+        robotDrivetrain.strafeYToPose(new Pose2d(50, -12, Math.toRadians(-90)));
+        robot.pause(1);
+        robotDrivetrain.strafeYToPose(new Pose2d(50, -15.5, Math.toRadians(-90)));
+        robot.pause(1);
+        robotDrivetrain.strafeYToPose(new Pose2d(50, -12, Math.toRadians(-90)));
+        robot.pause(1);
+        robotDrivetrain.strafeYToPose(new Pose2d(50, -15.5, Math.toRadians(-90)));
+        robot.pause(1);
+        robotDrivetrain.strafeYToPose(new Pose2d(50, -12, Math.toRadians(-90)));
+        robot.pause(1);
+        robotDrivetrain.strafeYToPose(new Pose2d(50, -15.5, Math.toRadians(-90)));
+        robot.pause(1);
+        robotDrivetrain.strafeYToPose(new Pose2d(50, -12, Math.toRadians(-90)));
+        robot.pause(1);
+        robotDrivetrain.strafeYToPose(new Pose2d(50, -15.5, Math.toRadians(-90)));
+        robot.pause(1);
+        robotDrivetrain.strafeYToPose(new Pose2d(50, -12, Math.toRadians(-90)));
+        robot.pause(1);*/
+
         robot.pause(1);
         robot.persistData();
 

@@ -18,7 +18,7 @@ public class Claw implements Subsystem {
 
 
     Debounce debounce = new Debounce(
-            new DebounceObject(ClawStates.OPEN_REQUESTED.toString(), 2000)
+            new DebounceObject(ClawStates.OPEN_REQUESTED.toString(), 1000)
     );
 
     Lift lift;
@@ -103,7 +103,7 @@ public class Claw implements Subsystem {
                     this.setClawState(ClawStates.OPENED);
                 }
             } else if (this.checkConeInClaw() && this.currentClawState != ClawStates.CLOSED) {
-                telemetry.addLine("Closing claw");
+                // telemetry.addLine("Closing claw");
                 this.setClawState(ClawStates.CLOSED);
 
                 if (this.checkConeInClaw() != this.coneInClawLast) {

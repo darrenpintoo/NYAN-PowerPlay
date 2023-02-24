@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.utilities.controltheory.motionprofiler.MotionProfile;
+import org.firstinspires.ftc.teamcode.utilities.math.MathHelper;
 import org.firstinspires.ftc.teamcode.utilities.robot.RobotEx;
 
 @Config
@@ -24,9 +25,9 @@ public class ClawRotation implements Subsystem {
     }
     public static double vMax = 3;
     public static double aMax = 2;
-    public static double leftPosition = 0.8;
-    public static double defaultPosition = 0.5;
-    public static double rightPosition = 0.2;
+    public static double leftPosition = 0.85;
+    public static double defaultPosition = 0.53;
+    public static double rightPosition = 0.18;
 
     public static double MOVEMENT_THRESHOLD = 0.3;
 
@@ -43,11 +44,13 @@ public class ClawRotation implements Subsystem {
 
     ClawExtension extension;
 
+    RobotEx robot;
     @Override
     public void onInit(HardwareMap hardwareMap, Telemetry telemetry) {
         this.rotationServo = hardwareMap.get(Servo.class, "extensionRotationServo");
         this.extension = RobotEx.getInstance().clawExtension;
         this.telemetry = telemetry;
+        this.robot = RobotEx.getInstance();
     }
 
     @Override
@@ -69,7 +72,7 @@ public class ClawRotation implements Subsystem {
                 this.profileTimer.reset();
             }
         }
-        telemetry.addData("Current rotation Position: ", this.rotationServo.getPosition());
+        // telemetry.addData("Current rotation Position: ", this.rotationServo.getPosition());
 
     }
 
@@ -94,6 +97,22 @@ public class ClawRotation implements Subsystem {
         } else if (x > MOVEMENT_THRESHOLD) {
             this.setCurrentState(rotationState.RIGHT);
         }
+    }
+
+    public void setAngle(double position) {
+
+        position = position / 180;
+        position += 0.5;
+        this.currentMovementProfile = new MotionProfile(
+                this.getPosition(),
+                MathHelper.lerp(leftPosition, rightPosition, position),
+                vMax,
+                aMax
+        );
+
+        this.currentMovementState = movementState.WAITING;
+        this.currentState = rotationState.RIGHT;
+        this.extension.setCurrentExtensionState(ClawExtension.ExtensionState.DEFAULT);
     }
 
     public void setCurrentState(rotationState newRotationState) {
@@ -121,5 +140,15 @@ public class ClawRotation implements Subsystem {
 
     public boolean atPosition() {
         return this.currentMovementState != movementState.WAITING && this.profileTimer.seconds() > this.currentMovementProfile.getDuration();
+    }
+
+    public rotationState getTargetPosition() {
+        return this.currentState;
+    }
+
+    public void yieldTillAtPosition() {
+        while (!this.atPosition()) {
+            this.robot.update();
+        }
     }
 }

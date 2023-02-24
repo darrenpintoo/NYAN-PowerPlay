@@ -9,18 +9,21 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.State;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.utilities.controltheory.motionprofiler.MotionProfile;
+import org.firstinspires.ftc.teamcode.utilities.robot.RobotEx;
 
 @Config
 public class ClawExtension implements Subsystem {
 
     public enum ExtensionState {
         ACTIVE,
+        MID,
         DEFAULT
     }
 
     public static double aMax = 2.5;
     public static double vMax = 5;
-    public static double activeServoPosition = 0.6;
+    public static double activeServoPosition = 0.62;
+    public static double midServoPosition = 0.85;
     public static double defaultServoPosition = 0.99;
 
     public Servo extensionServo;
@@ -30,9 +33,13 @@ public class ClawExtension implements Subsystem {
     private MotionProfile currentMovementProfile = new MotionProfile(defaultServoPosition, defaultServoPosition, vMax, aMax);
 
     public ElapsedTime profileTimer = new ElapsedTime();
+
+    RobotEx robot;
+
     @Override
     public void onInit(HardwareMap hardwareMap, Telemetry telemetry) {
         this.extensionServo = hardwareMap.get(Servo.class, "extensionServo");
+        this.robot = RobotEx.getInstance();
     }
 
     @Override
@@ -50,6 +57,8 @@ public class ClawExtension implements Subsystem {
                 return defaultServoPosition;
             case ACTIVE:
                 return activeServoPosition;
+            case MID:
+                return midServoPosition;
             default:
                 return defaultServoPosition;
         }
@@ -78,5 +87,11 @@ public class ClawExtension implements Subsystem {
 
     public boolean isAtPosition() {
         return this.profileTimer.seconds() > this.currentMovementProfile.getDuration();
+    }
+
+    public void yieldTillAtPosition() {
+        while (!this.isAtPosition()) {
+            this.robot.update();
+        }
     }
 }

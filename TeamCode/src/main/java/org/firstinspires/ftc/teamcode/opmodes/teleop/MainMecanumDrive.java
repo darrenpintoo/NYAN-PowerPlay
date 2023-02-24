@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.opmodes.teleop;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.exception.RobotCoreException;
@@ -12,6 +13,7 @@ import org.firstinspires.ftc.teamcode.utilities.robot.PersistentData;
 import org.firstinspires.ftc.teamcode.utilities.robot.RobotEx;
 import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.Claw;
 import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.ClawExtension;
+import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.ClawRotation;
 import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.ClawTilt;
 import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.Lift;
 
@@ -25,12 +27,11 @@ public class MainMecanumDrive extends LinearOpMode {
     // Create new Instance of the robot
     RobotEx robot = RobotEx.getInstance();
 
-    public static double F = 0;
     @Override
     public void runOpMode() {
 
         // telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
-        telemetry.setMsTransmissionInterval(25);
+        telemetry.setMsTransmissionInterval(250);
 
         // Initialize the robot
         robot.init(hardwareMap, telemetry);
@@ -40,6 +41,7 @@ public class MainMecanumDrive extends LinearOpMode {
         if (PersistentData.startPose != null) {
             robot.localizer.setPoseEstimate(PersistentData.startPose);
             robot.internalIMU.setHeadingOffset(PersistentData.startPose.getHeading());
+            robot.internalIMU.enableHeadingOffsetCorrection();
         }
         // Notify subsystems before loop
         robot.postInit();
@@ -53,19 +55,11 @@ public class MainMecanumDrive extends LinearOpMode {
         Gamepad previousFrameGamepad1 = new Gamepad();
         Gamepad previousFrameGamepad2 = new Gamepad();
 
-        // robot.drivetrain.enableAntiTip();
-
-        // Declare state variables
-        boolean intakeOn = false;
-        boolean intakeDirection = false;
-
-        boolean robotCentric = true;
-
-        boolean fieldCentricAutomatedTurning = false;
-
-        robot.update();
         robot.claw.enableAutoClose();
         robot.drivetrain.disableAntiTip();
+        robot.internalIMU.stopAngularVelocityTracking();
+
+        robot.update();
 
         while(opModeIsActive()) {
 
@@ -80,7 +74,7 @@ public class MainMecanumDrive extends LinearOpMode {
 
             }
 
-            if (currentFrameGamepad1.right_bumper) {
+            if (currentFrameGamepad1.y) {
                 robot.drivetrain.enableHeadingRetention();
             }
 
@@ -93,7 +87,7 @@ public class MainMecanumDrive extends LinearOpMode {
                 robot.claw.setClawState(Claw.ClawStates.SLIGHTLY_OPENED);
             }
 
-            robot.drivetrain.fieldCentricDriveFromGamepad(
+            robot.drivetrain.robotCentricDriveFromGamepad(
                     currentFrameGamepad1.left_stick_y,
                     currentFrameGamepad1.left_stick_x,
                     currentFrameGamepad1.right_stick_x * 0.55
@@ -106,7 +100,11 @@ public class MainMecanumDrive extends LinearOpMode {
             );
 
             if (currentFrameGamepad1.right_bumper && previousFrameGamepad1.right_bumper != currentFrameGamepad1.right_bumper) {
-                robot.clawExtension.setCurrentExtensionState(ClawExtension.ExtensionState.ACTIVE);
+                if (robot.clawRotation.getTargetPosition() != ClawRotation.rotationState.DEFAULT) {
+                    robot.clawExtension.setCurrentExtensionState(ClawExtension.ExtensionState.MID);
+                } else {
+                    robot.clawExtension.setCurrentExtensionState(ClawExtension.ExtensionState.ACTIVE);
+                }
             } else if (currentFrameGamepad1.left_bumper && previousFrameGamepad1.left_bumper != currentFrameGamepad1.left_bumper) {
                 robot.clawExtension.setCurrentExtensionState(ClawExtension.ExtensionState.DEFAULT);
             }
@@ -143,6 +141,18 @@ public class MainMecanumDrive extends LinearOpMode {
             if (gamepad1.x) {
                 robot.clawTilt.setCurrentState(ClawTilt.tiltState.DEFAULT);
             }
+
+            if (currentFrameGamepad1.left_stick_button && currentFrameGamepad1.left_stick_button != previousFrameGamepad1.left_stick_button)  {
+                double x = robot.localizer.getPoseEstimate().getX();
+                double y = robot.localizer.getPoseEstimate().getY();
+
+                robot.internalIMU.setHeadingOffset(-robot.internalIMU.getCurrentFrameHeadingCCW());
+
+                robot.localizer.setPoseEstimate(
+                        new Pose2d(x, y, 0)
+                );
+
+            }
             robot.clawRotation.handleRotationFromGamepad(
                     currentFrameGamepad2.right_stick_y,
                     currentFrameGamepad2.right_stick_x
@@ -162,7 +172,7 @@ public class MainMecanumDrive extends LinearOpMode {
             // telemetry.addData("Increment offset: ", robot.lift.getOffset());
             // telemetry.addData("Angular Velocity: ", robot.internalIMU.getCurrentFrameVelocity().xRotationRate);
             telemetry.addData("Lift at Target: ", robot.lift.checkAtTarget());
-            telemetry.addData("Claw Servo position: ", robot.claw.getServoPosition());
+            // telemetry.addData("Claw Servo position: ", robot.claw.getServoPosition());
             // telemetry.addData("Cone in Claw: ", robot.claw.checkConeInClaw());
             // telemetry.addData("IMU orientation: ", robot.internalIMU.getCurrentFrameOrientation());
             // telemetry.addData("CCW IMU orientation: ", robot.internalIMU.getCurrentFrameHeadingCCW());
@@ -175,14 +185,15 @@ public class MainMecanumDrive extends LinearOpMode {
             // );
             // ^ https://www.desmos.com/calculator/jp45vcfcbt
             
-            telemetry.addData("Rotation At Position: ", this.robot.clawRotation.atPosition());
+            // telemetry.addData("Rotation At Position: ", this.robot.clawRotation.atPosition());
 
             telemetry.update();
 
 
         }
 
-        robot.clearPersistData();
+        robot.persistData();
+        robot.destroy();
     }
 
 }

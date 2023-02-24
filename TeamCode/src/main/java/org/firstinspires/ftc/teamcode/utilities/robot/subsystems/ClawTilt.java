@@ -43,7 +43,7 @@ public class ClawTilt implements Subsystem {
     public void onCyclePassed() {
         this.tiltServo.setPosition(this.getServoPosition());
 
-        telemetry.addData("Current Tilt Position: ", this.getServoPosition());
+        // telemetry.addData("Current Tilt Position: ", this.getServoPosition());
     }
 
     public double getServoPosition() {

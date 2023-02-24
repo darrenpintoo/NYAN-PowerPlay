@@ -60,14 +60,14 @@ public class Lift implements Subsystem {
     public static double downkF1 = 0.05;
     public static double downkF2 = 0.05;
 
-    public static int OFFSET_INCREASE = 70;// 80;
+    public static int OFFSET_INCREASE = 55;// 80;
     public static int AT_POSITION_THRESHOLD = 75;
-    public static int AT_VELOCITY_THRESHOLD = 10;
+    public static int AT_VELOCITY_THRESHOLD = 20;
 
     public static int GROUND_HEIGHT = 100;
-    public static int LOW_HEIGHT = 750;
-    public static int MIDDLE_HEIGHT = 1225;
-    public static int HIGH_HEIGHT = 1650;
+    public static int LOW_HEIGHT = 625;
+    public static int MIDDLE_HEIGHT = 1050;
+    public static int HIGH_HEIGHT = 1540;
 
     public DcMotorEx leftLiftMotor;
     public DcMotorEx rightLiftMotor;
@@ -140,11 +140,11 @@ public class Lift implements Subsystem {
         double targetPosition = this.currentMotionProfile.getPositionFromTime(currentMotionProfileTime);
         double targetVelocity = this.currentMotionProfile.getVelocityFromTime(currentMotionProfileTime);
         double targetAcceleration = this.currentMotionProfile.getAccelerationFromTime(currentMotionProfileTime);
-
+/*
         telemetry.addData("target Position: ", targetPosition);
         telemetry.addData("target Velocity: ", targetVelocity);
         telemetry.addData("target Acceleration: ", targetAcceleration);
-
+*/
         telemetry.addData("Current Position: ", currentPosition);
         telemetry.addData("Target pos: ", targetPosition);
         double feedforward = 0;
@@ -165,14 +165,18 @@ public class Lift implements Subsystem {
             );
         }
 
-        telemetry.addData("kF: ", kF);
+/*        telemetry.addData("kF: ", kF);
         telemetry.addData("feed forward: ", feedforward);
-        telemetry.addData("feed back: ", feedback);
+        telemetry.addData("feed back: ", feedback);*/
         currentFrameOutput = feedforward + feedback;
 
         if (this.getTargetPosition() == 0 && currentPosition < 200) {
             currentFrameOutput = -0.1 * currentPosition / 100;
         }
+
+        this.liftAtTarget = Math.abs(targetPosition - currentPosition) < AT_POSITION_THRESHOLD &&
+                ((currentPosition - this.previousFramePosition) / this.velocityTimer.seconds()) < AT_VELOCITY_THRESHOLD;
+
 /*        if (this.currentFrameOutput == 0) {
             currentFrameOutput = liftPID.getOutputFromError(targetPosition, currentPosition);
 
@@ -191,8 +195,8 @@ public class Lift implements Subsystem {
         }
         this.liftMotors.setPower(MathHelper.clamp(currentFrameOutput, -1, 1));
 
-        telemetry.addData("output: ", currentFrameOutput);
-        telemetry.addData("Type: ", this.profileType.toString());
+/*        telemetry.addData("output: ", currentFrameOutput);
+        telemetry.addData("Type: ", this.profileType.toString());*/
 
 
         this.currentFrameOutput = 0;
@@ -286,6 +290,7 @@ public class Lift implements Subsystem {
 
     public void setOffset(int offset) {
         this.offset = offset;
+        this.updateMotionProfile();
     }
 
     public void incrementOffset(int offsetIncrease) {

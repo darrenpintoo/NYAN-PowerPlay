@@ -16,8 +16,8 @@ import org.firstinspires.ftc.teamcode.utilities.robot.extensions.RobotOrientatio
  */
 public class InternalIMU implements Subsystem {
 
-    public static double TILT_THRESHOLD = Math.toRadians(20);
-    public static double YAW_THRESHOLD = Math.toRadians(20);
+    public static double TILT_THRESHOLD = Math.toRadians(10);
+    public static double YAW_THRESHOLD = Math.toRadians(10);
 
     private boolean trackAngularVelocity = true;
     private static InternalIMU imuInstance = null;
@@ -172,6 +172,10 @@ public class InternalIMU implements Subsystem {
     }
 
     public void enableHeadingOffsetCorrection() {
+        this.enabledHeadingOffset = true;
+    }
 
+    public void destroy() {
+        InternalIMU.imuInstance = null;
     }
 }
