@@ -50,7 +50,7 @@ public class Lift implements Subsystem {
     public static double upkF2 = 0.35;
 
     public static double downvMax = 4000;
-    public static double downaMax = 3000;
+    public static double downaMax = 4000;
     public static double downkV = 0.0001;
     public static double downkA = 0.00005;
 
@@ -60,14 +60,14 @@ public class Lift implements Subsystem {
     public static double downkF1 = 0.05;
     public static double downkF2 = 0.05;
 
-    public static int OFFSET_INCREASE = 55;// 80;
+    public static int OFFSET_INCREASE = 50;// 80;
     public static int AT_POSITION_THRESHOLD = 75;
     public static int AT_VELOCITY_THRESHOLD = 20;
 
     public static int GROUND_HEIGHT = 100;
-    public static int LOW_HEIGHT = 625;
-    public static int MIDDLE_HEIGHT = 1050;
-    public static int HIGH_HEIGHT = 1540;
+    public static int LOW_HEIGHT = 640;
+    public static int MIDDLE_HEIGHT = 1100;
+    public static int HIGH_HEIGHT = 1580;
 
     public DcMotorEx leftLiftMotor;
     public DcMotorEx rightLiftMotor;

@@ -24,10 +24,10 @@ public class ClawRotation implements Subsystem {
         WAITING
     }
     public static double vMax = 3;
-    public static double aMax = 2;
-    public static double leftPosition = 0.85;
-    public static double defaultPosition = 0.53;
-    public static double rightPosition = 0.18;
+    public static double aMax = 1;
+    public static double leftPosition = 0.83;
+    public static double defaultPosition = 0.51;
+    public static double rightPosition = 0.16;
 
     public static double MOVEMENT_THRESHOLD = 0.3;
 

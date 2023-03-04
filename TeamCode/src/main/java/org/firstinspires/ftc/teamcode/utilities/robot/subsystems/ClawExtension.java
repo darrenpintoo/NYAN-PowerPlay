@@ -22,9 +22,9 @@ public class ClawExtension implements Subsystem {
 
     public static double aMax = 2.5;
     public static double vMax = 5;
-    public static double activeServoPosition = 0.62;
-    public static double midServoPosition = 0.85;
-    public static double defaultServoPosition = 0.99;
+    public static double activeServoPosition = 0.4;
+    public static double midServoPosition = 0.68;
+    public static double defaultServoPosition = 0.74;
 
     public Servo extensionServo;
 

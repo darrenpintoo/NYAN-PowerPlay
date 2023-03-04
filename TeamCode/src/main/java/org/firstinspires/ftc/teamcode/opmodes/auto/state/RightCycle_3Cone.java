@@ -8,12 +8,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.utilities.math.linearalgebra.Pose;
 import org.firstinspires.ftc.teamcode.utilities.robot.RobotEx;
-import org.firstinspires.ftc.teamcode.utilities.robot.movement.EncoderDrive;
-import org.firstinspires.ftc.teamcode.utilities.robot.movement.MotionProfileLocalizerDrive;
 import org.firstinspires.ftc.teamcode.utilities.robot.movement.MotionProfileLocalizerLineDrive;
-import org.firstinspires.ftc.teamcode.utilities.robot.movement.MotionProfilingDrive;
 import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.Claw;
 import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.ClawExtension;
 import org.firstinspires.ftc.teamcode.utilities.robot.subsystems.ClawRotation;
@@ -25,9 +21,8 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
-
-@Autonomous(name = "Left Cycle 1+2 Low")
-public class LeftCycle_6Cone extends LinearOpMode {
+@Autonomous(name = "Right Cycle 1+2 Low")
+public class RightCycle_3Cone extends LinearOpMode {
 
     // Create new Instance of the robot
     RobotEx robot = RobotEx.getInstance();
@@ -118,9 +113,11 @@ public class LeftCycle_6Cone extends LinearOpMode {
 
         double openPosition = Claw.openPosition;
         double tiltPosition = ClawTilt.activePosition;
-        Claw.openPosition = Claw.slightlyOpenPosition;
+        Claw.openPosition = Claw.slightlyOpenPosition-0.03;
         this.gotoLow();
-        robot.clawRotation.setAngle(42);
+        robot.lift.setOffset(2);
+        robot.clawRotation.setAngle(-45);
+        ClawRotation.rightPosition = 0.22;
         robot.clawRotation.yieldTillAtPosition();
         robot.pause(0.5);
         robot.clawExtension.setCurrentExtensionState(ClawExtension.ExtensionState.ACTIVE);
@@ -130,10 +127,10 @@ public class LeftCycle_6Cone extends LinearOpMode {
         robot.claw.setClawState(Claw.ClawStates.OPENED);
         this.retract();
         robotDrivetrain.forwardXToPose(new Pose2d(52.5, 0, Math.toRadians(0)));
-        robotDrivetrain.turnToAngle(Math.toRadians(-90));
+        robotDrivetrain.turnToAngle(Math.toRadians(90));
         robot.lift.setOffset(8);
         robot.clawExtension.setCurrentExtensionState(ClawExtension.ExtensionState.ACTIVE);
-        robotDrivetrain.strafeYToPose(new Pose2d(52.5, -13.1, Math.toRadians(-90)));
+        robotDrivetrain.strafeYToPose(new Pose2d(52.5, 12.75, Math.toRadians(90)));
         robot.clawExtension.yieldTillAtPosition();
         robot.pause(0.5);
         robot.lift.setOffset(4);
@@ -142,8 +139,9 @@ public class LeftCycle_6Cone extends LinearOpMode {
         robot.pause(1);
         this.gotoLow();
         robot.lift.setOffset(3);
-        robotDrivetrain.strafeYToPose(new Pose2d(52.5, -6.5, Math.toRadians(-90)));
-        robot.clawRotation.setCurrentState(ClawRotation.rotationState.LEFT);
+        robotDrivetrain.strafeYToPose(new Pose2d(52.5, 6, Math.toRadians(90)));
+        robot.clawRotation.setCurrentState(ClawRotation.rotationState.RIGHT);
+        robot.clawExtension.setCurrentExtensionState(ClawExtension.ExtensionState.MID);
         robot.clawRotation.yieldTillAtPosition();
         robot.pause(0.75);
         robot.lift.setOffset(-2);
@@ -153,22 +151,23 @@ public class LeftCycle_6Cone extends LinearOpMode {
         robot.lift.setOffset(3);
         robot.pause(0.1);
         robot.clawExtension.setCurrentExtensionState(ClawExtension.ExtensionState.ACTIVE);
-        robotDrivetrain.strafeYToPose(new Pose2d(52.5, -12.5, Math.toRadians(-90)));
+        robotDrivetrain.strafeYToPose(new Pose2d(52.5, 12, Math.toRadians(90)));
         robot.clawExtension.yieldTillAtPosition();
         robot.pause(1);
         robot.claw.setClawState(Claw.ClawStates.CLOSED);
         robot.pause(1);
         this.gotoLow();
         robot.lift.setOffset(3);
-        robotDrivetrain.strafeYToPose(new Pose2d(52.5, -6, Math.toRadians(-90)));
-        robot.clawRotation.setCurrentState(ClawRotation.rotationState.LEFT);
+        robotDrivetrain.strafeYToPose(new Pose2d(52.5, 6, Math.toRadians(90)));
+        robot.clawRotation.setCurrentState(ClawRotation.rotationState.RIGHT);
+        robot.clawExtension.setCurrentExtensionState(ClawExtension.ExtensionState.MID);
         robot.pause(1);
         robot.clawRotation.yieldTillAtPosition();
         robot.lift.setOffset(-2);
         robot.pause(1);
         robot.claw.setClawState(Claw.ClawStates.OPENED);
         this.retract();
-        robot.clawRotation.setCurrentState(ClawRotation.rotationState.LEFT);
+        robot.clawRotation.setCurrentState(ClawRotation.rotationState.RIGHT);
 
         ClawTilt.activePosition = tiltPosition;
 /*        robot.lift.setOffset(2);
@@ -210,13 +209,13 @@ public class LeftCycle_6Cone extends LinearOpMode {
         this.retract();*/
         switch (parkPosition) {
             case RIGHT:
-                robotDrivetrain.strafeYToPose(new Pose2d(52, 24, Math.toRadians(-90)));
+                robotDrivetrain.strafeYToPose(new Pose2d(52, 24, Math.toRadians(90)));
                 break;
             case CENTER:
-                robotDrivetrain.strafeYToPose(new Pose2d(52, 0, Math.toRadians(-90)));
+                robotDrivetrain.strafeYToPose(new Pose2d(52, 0, Math.toRadians(90)));
                 break;
             case LEFT:
-                robotDrivetrain.strafeYToPose(new Pose2d(52,-20, Math.toRadians(-90)));
+                robotDrivetrain.strafeYToPose(new Pose2d(52,-20, Math.toRadians(90)));
                 break;
 
         }
@@ -249,4 +248,5 @@ public class LeftCycle_6Cone extends LinearOpMode {
         robot.persistData();
 
     }
+
 }

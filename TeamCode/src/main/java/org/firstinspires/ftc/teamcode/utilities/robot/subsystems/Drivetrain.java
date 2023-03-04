@@ -45,7 +45,7 @@ public class Drivetrain implements Subsystem {
     private boolean enableAntiTip = false;
     private boolean enableHeadingRetention = false;
 
-    public GeneralPIDController headingPID = new GeneralPIDController(1.3, 0, 20, 0);
+    public GeneralPIDController headingPID = new GeneralPIDController(1, 0, 20, 0);
     public GeneralPIDController profiledTurningPID = new GeneralPIDController(0.7, 0, 40, 0);
 
     public GeneralPIDController translationalPID = new GeneralPIDController(1, 0, 0, 0);

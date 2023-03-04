@@ -27,7 +27,7 @@ public class Claw implements Subsystem {
     public static double TIME_THRESHOLD = 0.25;
     public static int RED_THRESHOLD = 50;
     public static int BLUE_THRESHOLD = 50;
-    public static double DISTANCE_THRESHOLD = 3;
+    public static double DISTANCE_THRESHOLD = 3.5;
     public static double vMax = 100;
     public static double aMax = 100;
 
@@ -111,7 +111,11 @@ public class Claw implements Subsystem {
                     this.requestedTime.reset();
                 }
             } else if (!coneInClaw) {
-                this.setClawState(ClawStates.OPENED);
+                if (this.currentClawState == ClawStates.SLIGHTLY_OPENED) {
+                    this.setClawState(ClawStates.SLIGHTLY_OPENED);
+                } else {
+                    this.setClawState(ClawStates.OPENED);
+                }
                 this.requestedLift = false;
             }
 
