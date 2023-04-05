@@ -81,7 +81,7 @@ public class Drivetrain implements Subsystem {
 
     private double trackWidth = 12;
     private double wheelBase = 6.5;
-    private double lateralMultiplier = -1;
+    private double lateralMultiplier = -1.2;
 
     @Override
     public void onInit(HardwareMap hardwareMap, Telemetry telemetry) {

@@ -27,8 +27,8 @@ public class MotionProfileLocalizerLineDrive {
     GeneralPIDController followerPID = new GeneralPIDController(0.3, 0, 0, 0);
     GeneralPIDController laterialPID = new GeneralPIDController(0.3, 0, 0, 0);
 
-    public static double kV = 0.018;//1 / DriveConstants.MAX_VELOCITY;
-    public static double kA = 0.005;
+    public static double kV = 0.01;//1 / DriveConstants.MAX_VELOCITY;
+    public static double kA = 0.001;
 
     public static double kStaticTurn = 0.07;
     public static double kStaticMovement = 0.08;

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opmodes.auto.state;
+package org.firstinspires.ftc.teamcode.opmodes.auto.motionprofiletesting;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
@@ -26,8 +26,8 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
 
-@Autonomous(name = "Left Cycle 1+2 Low")
-public class LeftCycle_6Cone extends LinearOpMode {
+@Autonomous(name = "Square")
+public class Square extends LinearOpMode {
 
     // Create new Instance of the robot
     RobotEx robot = RobotEx.getInstance();
@@ -116,61 +116,12 @@ public class LeftCycle_6Cone extends LinearOpMode {
                 new Pose2d(0, 0, 0)
         );
 
-        double openPosition = Claw.openPosition;
-        double tiltPosition = ClawTilt.activePosition;
-        Claw.openPosition = Claw.slightlyOpenPosition;
-        this.gotoLow();
-        robot.clawRotation.setAngle(42);
-        robot.clawRotation.yieldTillAtPosition();
-        robot.pause(0.5);
-        robot.clawExtension.setCurrentExtensionState(ClawExtension.ExtensionState.ACTIVE);
-        robot.clawExtension.yieldTillAtPosition();
-        robot.lift.setOffset(-2);
-        robot.pause(0.5);
-        robot.claw.setClawState(Claw.ClawStates.OPENED);
-        this.retract();
-        robotDrivetrain.forwardXToPose(new Pose2d(50, 0, Math.toRadians(0)));
-        robotDrivetrain.turnToAngle(Math.toRadians(-90));
-        robot.lift.setOffset(8);
-        robot.clawExtension.setCurrentExtensionState(ClawExtension.ExtensionState.ACTIVE);
-        robotDrivetrain.strafeYToPose(new Pose2d(50, -13.1, Math.toRadians(-90)));
-        robot.clawExtension.yieldTillAtPosition();
-        robot.pause(0.5);
-        robot.lift.setOffset(4);
-        robot.pause(1);
-        robot.claw.setClawState(Claw.ClawStates.CLOSED);
-        robot.pause(1);
-        this.gotoLow();
-        robot.lift.setOffset(3);
-        robotDrivetrain.strafeYToPose(new Pose2d(50, -6.5, Math.toRadians(-90)));
-        robot.clawRotation.setCurrentState(ClawRotation.rotationState.LEFT);
-        robot.clawRotation.yieldTillAtPosition();
-        robot.pause(0.75);
-        robot.lift.setOffset(-2);
-        robot.pause(1);
-        robot.claw.setClawState(Claw.ClawStates.OPENED);
-        this.retract();
-        robot.lift.setOffset(3);
-        robot.pause(0.1);
-        robot.clawExtension.setCurrentExtensionState(ClawExtension.ExtensionState.ACTIVE);
-        robotDrivetrain.strafeYToPose(new Pose2d(50, -12.5, Math.toRadians(-90)));
-        robot.clawExtension.yieldTillAtPosition();
-        robot.pause(1);
-        robot.claw.setClawState(Claw.ClawStates.CLOSED);
-        robot.pause(1);
-        this.gotoLow();
-        robot.lift.setOffset(3);
-        robotDrivetrain.strafeYToPose(new Pose2d(50, -6, Math.toRadians(-90)));
-        robot.clawRotation.setCurrentState(ClawRotation.rotationState.LEFT);
-        robot.pause(1);
-        robot.clawRotation.yieldTillAtPosition();
-        robot.lift.setOffset(-2);
-        robot.pause(1);
-        robot.claw.setClawState(Claw.ClawStates.OPENED);
-        this.retract();
-        robot.clawRotation.setCurrentState(ClawRotation.rotationState.LEFT);
-
-        ClawTilt.activePosition = tiltPosition;
+        for (int i = 0; i < 10; i++) {
+            robotDrivetrain.forwardXToPose(new Pose2d(48, 0, 0));
+            robotDrivetrain.strafeYToPose(new Pose2d(48, 48, 0));
+            robotDrivetrain.forwardXToPose(new Pose2d(0, 48, 0));
+            robotDrivetrain.strafeYToPose(new Pose2d(0, 0, 0));
+        }
 /*        robot.lift.setOffset(2);
         robot.pause(0.1);
         robot.clawExtension.setCurrentExtensionState(ClawExtension.ExtensionState.ACTIVE);
@@ -208,23 +159,8 @@ public class LeftCycle_6Cone extends LinearOpMode {
         robot.pause(1);
         robot.claw.setClawState(Claw.ClawStates.OPENED);
         this.retract();*/
-        switch (parkPosition) {
-            case RIGHT:
-                robotDrivetrain.strafeYToPose(new Pose2d(52, 24, Math.toRadians(-90)));
-                break;
-            case CENTER:
-                robotDrivetrain.strafeYToPose(new Pose2d(52, 0, Math.toRadians(-90)));
-                break;
-            case LEFT:
-                robotDrivetrain.strafeYToPose(new Pose2d(52,-20, Math.toRadians(-90)));
-                break;
 
-        }
 
-        robotDrivetrain.turnToAngle(0);
-        robotDrivetrain.forwardXToPose(new Pose2d(0, 0, 0));
-        Claw.openPosition = openPosition;
-        ClawRotation.leftPosition = 0.85;
 
 
 
